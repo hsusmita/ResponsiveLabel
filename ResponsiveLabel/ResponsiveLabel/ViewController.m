@@ -35,15 +35,12 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   CustomTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"customCell" forIndexPath:indexPath];
-//  [cell.customLabel setText:@"A long text"];
-//  cell.customLabel.truncationToken = @"... Read More";
   [cell.customLabel layoutIfNeeded];
   NSString *str = @"A long text";
   for (NSInteger i = 0 ; i < indexPath.row ; i++) {
     str = [NSString stringWithFormat:@"%@ %@",str,@"A long text"];
   }
   str = [NSString stringWithFormat:@"%@ %ld",str,indexPath.row];
-  [cell.customLabel setText:str AndTruncationToken:@"... Read More"];
 
   return cell;
 }
@@ -53,6 +50,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  [tableView deselectRowAtIndexPath:indexPath animated:NO];
   NSLog(@"did tap the cell");
 }
 
