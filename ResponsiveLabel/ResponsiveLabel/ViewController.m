@@ -47,17 +47,16 @@
   [cell.customLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor cyanColor],NSUnderlineStyleAttributeName:[NSNumber numberWithInt:1]} withAction:^(NSString *tappedString) {
     NSLog(@"URL tapped = %ld",indexPath.row);
   }];
-//  [cell.customLabel setText:str withTruncationToken:@"...Read More" withTapAction:^(NSString *tappedString) {
-//    NSLog(@"did tap on read  more");
-//  }];
 
  NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:@"...Read More."];
   [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor greenColor]} range:NSMakeRange(0, 3)];
   [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor]} range:NSMakeRange(3, @"...Read More".length -3)];
-  [cell.customLabel setText:str withAttributedTruncationToken:attribString withTapAction:^(NSString *tappedString) {
-    NSLog(@"read more");
-}];
   
+  [cell.customLabel enableTruncationTokenDetectionWithToken:attribString withAction:^(NSString *tappedString) {
+    NSLog(@"read more");
+
+  }];
+  [cell.customLabel setText:str];
   
 //  PatternTapHandler handler = ^(NSString *string ){
 //    NSLog(@"read more");

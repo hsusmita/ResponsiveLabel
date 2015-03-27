@@ -14,12 +14,9 @@ typedef void (^PatternTapHandler)(NSString *tappedString);
 
 @interface ResponsiveLabel : UILabel
 
-- (void)setText:(NSString *)text withTruncationToken:(NSString *)truncationToken withTapAction:(PatternTapHandler)block;
-- (void)setText:(NSString *)text withAttributedTruncationToken:(NSAttributedString *)truncationToken withTapAction:(PatternTapHandler)block;
-
-- (void)enableDetectionForRange:(NSRange)range withAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)block;
 - (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action;
 - (void)enableTruncationTokenDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action;
 - (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action;
+- (void)enableTruncationTokenDetectionWithToken:(NSAttributedString*)truncationToken withAction:(PatternTapHandler)action;
 
 @end

@@ -28,6 +28,8 @@ typedef enum {
 withPatternAttributes:(NSDictionary *)patternAttributes
     andTapResponder:(PatternTapResponder)tapResponder;
 
+- (NSArray *)patternRangesForString:(NSString *)string;
+
 @end
 
 @interface PatternDetector : NSObject

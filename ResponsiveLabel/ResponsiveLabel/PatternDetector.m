@@ -49,8 +49,35 @@ withPatternAttributes:(NSDictionary *)patternAttributes
   return self;
 }
 
-///get ranges for this pattern
-// on searching-- we need range,attribute, action at once
+- (NSArray *)patternRangesForString:(NSString *)string {
+  NSMutableArray *generatedRanges = [NSMutableArray array];
+  NSArray *finalRanges = [NSArray new];
+  NSRegularExpression *expression = self.patternExpression;
+  NSArray *matches = [expression matchesInString:string options:0 range:NSMakeRange(0,  string.length)];
+  for (NSTextCheckingResult *match in matches) {
+    NSRange matchRange = [match range];
+    [generatedRanges addObject:[NSValue valueWithRange:matchRange]];
+  }
+  if (generatedRanges.count == 0) return finalRanges;
+  switch (self.searchType) {
+    case kPatternSearchTypeFirst:
+      finalRanges = [NSArray arrayWithObject:generatedRanges.firstObject];
+      break;
+      
+    case kPatternSearchTypeLast:
+      finalRanges = [NSArray arrayWithObject:generatedRanges.lastObject];
+      break;
+      
+    case kPatternSearchTypeAll:
+      finalRanges = [NSArray arrayWithArray:generatedRanges];
+      break;
+  
+    default:
+      break;
+  }
+  return finalRanges;
+}
+
 @end
 
 @interface PatternDetector()
