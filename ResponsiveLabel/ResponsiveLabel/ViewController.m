@@ -44,10 +44,9 @@
   [cell.customLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]} withAction:^(NSString *tappedString) {
     NSLog(@"Tap on hashtag = %@",tappedString);
   }];
-  [cell.customLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor cyanColor]} withAction:^(NSString *tappedString) {
+  [cell.customLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor cyanColor],NSUnderlineStyleAttributeName:[NSNumber numberWithInt:1]} withAction:^(NSString *tappedString) {
     NSLog(@"URL tapped = %ld",indexPath.row);
   }];
-//  [cell.customLabel setText:str];
 //  [cell.customLabel setText:str withTruncationToken:@"...Read More" withTapAction:^(NSString *tappedString) {
 //    NSLog(@"did tap on read  more");
 //  }];
@@ -58,15 +57,21 @@
   [cell.customLabel setText:str withAttributedTruncationToken:attribString withTapAction:^(NSString *tappedString) {
     NSLog(@"read more");
 }];
-
-//  cell.customLabel setText:str withAttributedTruncationToken:@"" withTapAction:<#^(NSString *tappedString)block#>
-//  [cell.customLabel enableDetectionForRange:NSMakeRange(0, 5) withAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]} withAction:nil];
+  
+  
+//  PatternTapHandler handler = ^(NSString *string ){
+//    NSLog(@"read more");
+//  };
+//  NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc]initWithString:str];
+//  [attributed addAttribute:RLTapResponderAttributeName value:handler range:NSMakeRange(0, 10)];
+//  [attributed addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, 10)];
+//  cell.customLabel.attributedText = attributed;
   
   return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-  return 50.0;
+  return 150.0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

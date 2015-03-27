@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+static NSString *RLTapResponderAttributeName = @"Tap Responder Name";
+
 typedef void (^PatternTapHandler)(NSString *tappedString);
 
 @interface ResponsiveLabel : UILabel

@@ -129,25 +129,13 @@ const NSString *kPatternAction  = @"PatternAction";
 - (void)setAttributedText:(NSAttributedString *)attributedText {
   [super setAttributedText:attributedText];
   [self.textStorage setAttributedString:attributedText];
-  self.patternDetector.stringTobeParsed = self.textStorage;
-  [self.patternDetector generateRangeForString:self.textStorage.string];
-  NSArray *ranges = [self.patternDetector patternRanges];
-  [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:obj.rangeValue];
-    [self.textStorage addAttributes:descriptor.patternAttributes range:obj.rangeValue];
-  }];
+  [self generateRangesForPatterns];
 }
 
 - (void)setText:(NSString *)text {
   [super setText:text];
   [self.textStorage setAttributedString:[[NSAttributedString alloc] initWithString:text]];
-  self.patternDetector.stringTobeParsed = self.textStorage;
-  [self.patternDetector generateRangeForString:self.textStorage.string];
-  NSArray *ranges = [self.patternDetector patternRanges];
-  [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:obj.rangeValue];
-    [self.textStorage addAttributes:descriptor.patternAttributes range:obj.rangeValue];
-  }];
+  [self generateRangesForPatterns];
 }
 
 #pragma mark - Drawing
@@ -340,7 +328,7 @@ const NSString *kPatternAction  = @"PatternAction";
   [self appendTruncationToken];
   [self enableTruncationTokenDetectionWithAttributes: [self.attributedTruncationToken attributesAtIndex:0 effectiveRange:nil] withAction:block];
   [self.patternDetector generateRangeForString:self.textStorage.string];
-
+  [self.textStorage addAttribute:RLTapResponderAttributeName value:block range:[self.textStorage.string rangeOfString:self.truncationToken]];
 }
 
 - (void)setText:(NSString *)text withAttributedTruncationToken:(NSAttributedString *)truncationToken withTapAction:(PatternTapHandler)block {
@@ -351,8 +339,8 @@ const NSString *kPatternAction  = @"PatternAction";
   NSDictionary *attributes = [self.attributedTruncationToken attributesAtIndex:0 effectiveRange:nil];
   [self enableTruncationTokenDetectionWithAttributes:attributes withAction:block];
   [self.patternDetector generateRangeForString:self.textStorage.string];
+  [self.textStorage addAttribute:RLTapResponderAttributeName value:block range:[self.textStorage.string rangeOfString:self.attributedTruncationToken.string]];
   NSLog(@"pattern detector = %@",[self.patternDetector patternRanges]);
-
 }
 
 - (void)appendTruncationToken {
@@ -423,11 +411,24 @@ const NSString *kPatternAction  = @"PatternAction";
   CGPoint touchLocation = [[touches anyObject] locationInView:self];
   
   NSInteger index = [self stringIndexAtLocation:touchLocation];
-  NSRange range = [self.patternDetector patternRangeAtIndex:index];
-  if (range.location == NSNotFound) {
-    [super touchesEnded:touches withEvent:event];
+  
+  NSRange aRange;
+  if (index < self.textStorage.length) {
+    PatternTapResponder attrib =[self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:&aRange];
+    if (attrib) {
+    }else {
+      [super touchesBegan:touches withEvent:event];
+    }
   }else {
+    [super touchesBegan:touches withEvent:event];
+
   }
+//  NSRange range = [self.patternDetector patternRangeAtIndex:index];
+//
+//  if (range.location == NSNotFound) {
+//    [super touchesEnded:touches withEvent:event];
+//  }else {
+//  }
 
 }
 
@@ -440,16 +441,32 @@ const NSString *kPatternAction  = @"PatternAction";
   CGPoint touchLocation = [[touches anyObject] locationInView:self];
   
   NSInteger index = [self stringIndexAtLocation:touchLocation];
-  NSRange range = [self.patternDetector patternRangeAtIndex:index];
-  if (range.location == NSNotFound) {
-    [super touchesEnded:touches withEvent:event];
-  }else {
-    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:range];
-     NSString *string = [self.attributedText.string substringWithRange:range];
-    if (descriptor.tapResponder) {
-      descriptor.tapResponder(string);
+//  NSRange range = [self.patternDetector patternRangeAtIndex:index];
+//  if (range.location == NSNotFound) {
+//    [super touchesEnded:touches withEvent:event];
+//  }else {
+//    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:range];
+//     NSString *string = [self.attributedText.string substringWithRange:range];
+//    if (descriptor.tapResponder) {
+//      descriptor.tapResponder(string);
+//    }
+//  }
+  NSRange aRange;
+  if (index < self.textStorage.length) {
+    PatternTapResponder attrib =[self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:&aRange];
+    if (attrib) {
+      NSString *string = [self.attributedText.string substringWithRange:aRange];
+      attrib(string);
+    }else {
+      [super touchesEnded:touches withEvent:event];
     }
+  }else {
+    [super touchesEnded:touches withEvent:event];
+
   }
+}
+
+- (void)performActionForIndex:(NSInteger) index {
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -496,6 +513,17 @@ const NSString *kPatternAction  = @"PatternAction";
 
 #pragma mark - Pattern matching
 
+- (void)generateRangesForPatterns {
+  self.patternDetector.stringTobeParsed = self.textStorage;
+  [self.patternDetector generateRangeForString:self.textStorage.string];
+  NSArray *ranges = [self.patternDetector patternRanges];
+  [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:obj.rangeValue];
+    [self.textStorage addAttributes:descriptor.patternAttributes range:obj.rangeValue];
+    [self.textStorage addAttribute:RLTapResponderAttributeName value:descriptor.tapResponder range:obj.rangeValue];
+  }];
+}
+
 - (void)enableDetectionForRange:(NSRange)range withAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)block {
   //TODO: (SH) Implementation pending
 
@@ -530,6 +558,5 @@ const NSString *kPatternAction  = @"PatternAction";
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector withSearchType:kPatternSearchTypeAll withPatternAttributes:dictionary andTapResponder:action];
   [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
 }
-
 
 @end
