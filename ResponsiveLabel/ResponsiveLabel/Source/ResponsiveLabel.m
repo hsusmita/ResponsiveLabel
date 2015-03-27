@@ -136,12 +136,6 @@ const NSString *kPatternAction  = @"PatternAction";
     PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:obj.rangeValue];
     [self.textStorage addAttributes:descriptor.patternAttributes range:obj.rangeValue];
   }];
-  
-//  if (attributes == nil) return;
-//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
-//    [attributedString addAttributes:attributes range:range];
-//    [self setAttributedText:attributedString];
-//  }
 }
 
 - (void)setText:(NSString *)text {
@@ -364,8 +358,6 @@ const NSString *kPatternAction  = @"PatternAction";
 - (void)appendTruncationToken {
   NSString *currentText = self.attributedText.string;
   NSRange range = [self rangeForTokenInsertion:currentText];
-  NSLog(@"range = %ld %ld",range.location,range.length);
-
   if (range.location == NSNotFound) {
     range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
   }
@@ -377,7 +369,6 @@ const NSString *kPatternAction  = @"PatternAction";
 - (void)appendAttributedTruncationToken {
   NSString *currentText = self.attributedText.string;
   NSRange range = [self rangeForTokenInsertion:currentText];
-  NSLog(@"range = %ld %ld",range.location,range.length);
   if (range.location == NSNotFound) {
     range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
   }
@@ -504,67 +495,12 @@ const NSString *kPatternAction  = @"PatternAction";
 }
 
 #pragma mark - Pattern matching
-//Low level handler
 
 - (void)enableDetectionForRange:(NSRange)range withAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)block {
-  //update patternDetector
-  //
-  [self applyAttributes:dictionary forRange:range];
-
-  //Boundary conditions
-  // Text length = 0
-  // dictionary and action passed as nil
-  if ((range.location + range.length <= self.attributedText.length)||(range.location + range.length <= self.text.length)) {
-    NSMutableDictionary *pattern = [NSMutableDictionary new];
-    [pattern setObject:dictionary ? dictionary : [NSNull null] forKey:kPatternAttribute];
-    if (block) {
-      [pattern setObject:block forKey:kPatternAction];
-    }else {
-      [pattern setObject:[NSNull null] forKey:kPatternAction];
-    }
-    [self.patternDictionary setObject:[NSDictionary dictionaryWithDictionary:pattern]
-                               forKey:[NSValue valueWithRange:range]];
-    [self applyAttributes:dictionary forRange:range];
-  }else {
-    NSAssert(@"Out of Bounds ", @"Range exceeds text length");
-
-  }
+  //TODO: (SH) Implementation pending
 
 }
 
-- (void)applyAttributes:(NSDictionary *)attributes forRange:(NSRange)range {
-  if (attributes == nil) return;
-  NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
-  [attributedString addAttributes:attributes range:range];
-  [self setAttributedText:attributedString];
-}
-
-- (NSValue *)rangeKeyForIndex:(NSInteger)index {
-  NSArray *keys = [self.patternDictionary allKeys];
-  NSInteger keyIndex = [keys indexOfObjectPassingTest:^BOOL(NSValue *key, NSUInteger idx, BOOL *stop) {
-    NSRange range = key.rangeValue;
-    return (index > range.location && index < range.location + range.length);
-  }];
-
-  if (keyIndex == NSNotFound) {
-    return NULL;
-  }else {
-    return [keys objectAtIndex:keyIndex];
-  }
-}
-
-//Higher level handler
-
-- (void)enableDetectionForRegexString:(NSString *)string withAttributes:(NSDictionary*)dictionary withAction:action {
-  NSError *error;
-  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:string options:0 error:&error];
-  NSArray *matches = [regex matchesInString:self.attributedText.string options:0 range:NSMakeRange(0, self.attributedText.length)];
-
-  for (NSTextCheckingResult *match in matches) {
-    NSRange matchRange = [match range];
-    [self enableDetectionForRange:matchRange withAttributes:dictionary withAction:action];
- 	}
-}
 
 - (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
   NSError *error;
@@ -586,7 +522,6 @@ const NSString *kPatternAction  = @"PatternAction";
   NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeLast withPatternAttributes:dictionary andTapResponder:action];
   [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
-
 }
 
 - (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {  
@@ -594,21 +529,6 @@ const NSString *kPatternAction  = @"PatternAction";
   NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector withSearchType:kPatternSearchTypeAll withPatternAttributes:dictionary andTapResponder:action];
   [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
-
-/*  NSString *plainText = self.textStorage.string;
-  NSArray *matches = [detector matchesInString:plainText
-                                       options:0
-                                         range:NSMakeRange(0, self.textStorage.length)];
-    for (NSTextCheckingResult *match in matches) {
-    NSRange matchRange = [match range];
-    NSString *realURL = [self.textStorage attribute:NSLinkAttributeName atIndex:matchRange.location effectiveRange:nil];
-    if (realURL == nil) {
-      realURL = [plainText substringWithRange:matchRange];
-    }
-    NSMutableDictionary *urlAttributes = [NSMutableDictionary dictionaryWithDictionary:dictionary];
-    [urlAttributes setObject:NSLinkAttributeName forKey:realURL];
-    [self enableDetectionForRange:matchRange withAttributes:urlAttributes withAction:action];
-  }*/
 }
 
 

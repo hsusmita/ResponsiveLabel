@@ -130,48 +130,4 @@ withPatternAttributes:(NSDictionary *)patternAttributes
 
 #pragma mark - Internal methods
 
-//- (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapResponder)action {
-//  NSError *error = nil;
-//  NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
-//  NSString *plainText = self.stringTobeParsed.string;
-//  NSArray *matches = [detector matchesInString:plainText
-//                                       options:0
-//                                         range:NSMakeRange(0, self.stringTobeParsed.length)];
-//  for (NSTextCheckingResult *match in matches) {
-//    NSRange matchRange = [match range];
-//    NSString *realURL = [self.stringTobeParsed attribute:NSLinkAttributeName atIndex:matchRange.location effectiveRange:nil];
-//    if (realURL == nil) {
-//      realURL = [plainText substringWithRange:matchRange];
-//    }
-//    NSMutableDictionary *urlAttributes = [NSMutableDictionary dictionaryWithDictionary:dictionary];
-//    [urlAttributes setObject:NSLinkAttributeName forKey:realURL];
-//    [self generateRangeDescriptorsMatchingRegex:detector withAttributes:urlAttributes andAction:action];
-//  }
-//}
-//
-//- (void)enableDetectionForRegexString:(NSString *)string withAttributes:(NSDictionary*)dictionary withAction:action {
-//  NSError *error;
-//  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:string options:0 error:&error];
-//  NSArray *matches = [regex matchesInString:self.stringTobeParsed.string options:0 range:NSMakeRange(0, self.stringTobeParsed.length)];
-//  
-//  for (NSTextCheckingResult *match in matches) {
-//    NSRange matchRange = [match range];
-//    [self enableDetectionForRange:matchRange withAttributes:dictionary withAction:action];
-// 	}
-//  
-//}
-
-//- (void)enableDetectionForRange:(NSRange)range withAttributes:(NSDictionary*)dictionary withAction:(PatternTapResponder)block {
-//  if (range.location + range.length <= self.stringTobeParsed.length) {
-//    RangeDescriptor *rangeDescriptor = [[RangeDescriptor alloc]init];
-//    rangeDescriptor.range = range;
-//    rangeDescriptor.rangeAttributes = dictionary;
-//    rangeDescriptor.tapResponder = block;
-//    [self.patternDescriptors addObject:rangeDescriptor];
-//  
-//  }else {
-//    NSAssert(@"Out of Bounds ", @"Range exceeds text length");
-//  }
-//}
-
 @end

@@ -2,7 +2,7 @@
 //  PatternDetector.h
 //  ResponsiveLabel
 //
-//  Created by sah-fueled on 25/03/15.
+//  Created by hsusmita on 25/03/15.
 //  Copyright (c) 2015 hsusmita.com. All rights reserved.
 //
 
@@ -35,7 +35,6 @@ withPatternAttributes:(NSDictionary *)patternAttributes
 @property (nonatomic, strong) NSAttributedString *stringTobeParsed;
 
 - (id)initWithAttributedString:(NSAttributedString *)attibutedString;
-- (void)generateRangeDescriptorsMatchingRegex:(NSRegularExpression *)regex withAttributes:(NSDictionary *)rangeAttributes andAction:(PatternTapResponder)action;
 - (NSArray *)patternRanges;
 - (NSRange)patternRangeAtIndex:(NSInteger)index;
 - (void)enableDetectionForPatternDescriptor:(PatternDescriptor *)patternDescriptor;
