@@ -8,6 +8,7 @@
 
 #import "ResponsiveLabel.h"
 #import "TouchGestureRecognizer.h"
+#import "PatternDetector.h"
 
 const NSString *kPatternAttribute = @"PatternAttribue";
 const NSString *kPatternAction  = @"PatternAction";
@@ -25,6 +26,7 @@ const NSString *kPatternAction  = @"PatternAction";
 @property (nonatomic, strong) NSString *truncationToken;
 @property (nonatomic, strong) NSAttributedString *attributedTruncationToken;
 @property (nonatomic, strong) NSMutableDictionary *patternDictionary;
+@property (nonatomic, strong) PatternDetector *patternDetector;
 
 @end
 @implementation ResponsiveLabel
@@ -35,6 +37,7 @@ const NSString *kPatternAction  = @"PatternAction";
       [self setupTextSystem];
       [self configureForGestures];
       self.patternDictionary = [NSMutableDictionary new];
+      self.patternDetector = [PatternDetector new];
       }
     return self;
   }
@@ -45,6 +48,8 @@ const NSString *kPatternAction  = @"PatternAction";
     [self setupTextSystem];
     [self configureForGestures];
     self.patternDictionary = [NSMutableDictionary new];
+    self.patternDetector = [PatternDetector new];
+
   }
   return self;
 }
@@ -124,11 +129,31 @@ const NSString *kPatternAction  = @"PatternAction";
 - (void)setAttributedText:(NSAttributedString *)attributedText {
   [super setAttributedText:attributedText];
   [self.textStorage setAttributedString:attributedText];
+  self.patternDetector.stringTobeParsed = self.textStorage;
+  [self.patternDetector generateRangeForString:self.textStorage.string];
+  NSArray *ranges = [self.patternDetector patternRanges];
+  [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:obj.rangeValue];
+    [self.textStorage addAttributes:descriptor.patternAttributes range:obj.rangeValue];
+  }];
+  
+//  if (attributes == nil) return;
+//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
+//    [attributedString addAttributes:attributes range:range];
+//    [self setAttributedText:attributedString];
+//  }
 }
 
 - (void)setText:(NSString *)text {
   [super setText:text];
   [self.textStorage setAttributedString:[[NSAttributedString alloc] initWithString:text]];
+  self.patternDetector.stringTobeParsed = self.textStorage;
+  [self.patternDetector generateRangeForString:self.textStorage.string];
+  NSArray *ranges = [self.patternDetector patternRanges];
+  [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:obj.rangeValue];
+    [self.textStorage addAttributes:descriptor.patternAttributes range:obj.rangeValue];
+  }];
 }
 
 #pragma mark - Drawing
@@ -319,45 +344,47 @@ const NSString *kPatternAction  = @"PatternAction";
   self.truncationToken = truncationToken;
   [self setText:text];
   [self appendTruncationToken];
-  [self enableDetectionForRange:[self.textStorage.string rangeOfString:truncationToken] withAttributes:nil withAction:block];
+  [self enableTruncationTokenDetectionWithAttributes: [self.attributedTruncationToken attributesAtIndex:0 effectiveRange:nil] withAction:block];
+  [self.patternDetector generateRangeForString:self.textStorage.string];
+
 }
 
 - (void)setText:(NSString *)text withAttributedTruncationToken:(NSAttributedString *)truncationToken withTapAction:(PatternTapHandler)block {
   self.attributedTruncationToken = truncationToken;
+  self.truncationToken = truncationToken.string;
   [self setText:text];
-  
-  NSString *currentText = self.attributedText.string;
-  NSRange range = [self rangeForTokenInsertion:currentText];
-  if (range.location == NSNotFound) {
-    range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
-  }
-  
-  if (range.location != NSNotFound) {
-    [self.textStorage replaceCharactersInRange:range withAttributedString:self.attributedTruncationToken];
-    
-    //    NSString *finalString = [currentText stringByReplacingCharactersInRange:range withString:self.truncationToken];
-    //    [self setAttributedText:[[NSAttributedString alloc] initWithString:finalString]];
-    //    [self setText:finalString];
-  }
-  [self enableDetectionForRange:[self.textStorage.string rangeOfString:self.attributedTruncationToken.string]
-                 withAttributes:[self.textStorage attributesAtIndex:self.textStorage.string.length - 1 effectiveRange:NULL]
-                     withAction:block];
+  [self appendAttributedTruncationToken];
+  NSDictionary *attributes = [self.attributedTruncationToken attributesAtIndex:0 effectiveRange:nil];
+  [self enableTruncationTokenDetectionWithAttributes:attributes withAction:block];
+  [self.patternDetector generateRangeForString:self.textStorage.string];
+  NSLog(@"pattern detector = %@",[self.patternDetector patternRanges]);
+
 }
 
 - (void)appendTruncationToken {
   NSString *currentText = self.attributedText.string;
   NSRange range = [self rangeForTokenInsertion:currentText];
+  NSLog(@"range = %ld %ld",range.location,range.length);
+
   if (range.location == NSNotFound) {
     range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
   }
   if (range.location != NSNotFound) {
     [self.textStorage replaceCharactersInRange:range withString:self.truncationToken];
-
-//    NSString *finalString = [currentText stringByReplacingCharactersInRange:range withString:self.truncationToken];
-//    [self setAttributedText:[[NSAttributedString alloc] initWithString:finalString]];
-//    [self setText:finalString];
   }
-  
+}
+
+- (void)appendAttributedTruncationToken {
+  NSString *currentText = self.attributedText.string;
+  NSRange range = [self rangeForTokenInsertion:currentText];
+  NSLog(@"range = %ld %ld",range.location,range.length);
+  if (range.location == NSNotFound) {
+    range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
+  }
+  if (range.location != NSNotFound) {
+      [self.textStorage replaceCharactersInRange:range withString:@""];
+    [self.textStorage appendAttributedString:self.attributedTruncationToken];
+  }
 }
 
 - (NSRange )rangeForTokenInsertion:(NSString *)text {
@@ -399,37 +426,18 @@ const NSString *kPatternAction  = @"PatternAction";
   
   // Default background colour looks good on a white background
   self.selectedLinkBackgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
-  
-  // Attach a default detection handler to help with debugging
-//  self.linkTapHandler = ^(NSURL *URL) {
-//    NSLog(@"Default handler for %@", URL);
-//  };
-  
-//  TouchGestureRecognizer *touch = [[TouchGestureRecognizer alloc] initWithTarget:self
-//                                                                          action:@selector(handleTouch:)];
-//  touch.delegate = self;
-//  [self addGestureRecognizer:touch];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   CGPoint touchLocation = [[touches anyObject] locationInView:self];
   
   NSInteger index = [self stringIndexAtLocation:touchLocation];
-  
-  NSRange effectiveRange;
-  NSURL *touchedURL = nil;
-  
-  if (index != NSNotFound)
-    {
-    touchedURL = [self.attributedText attribute:NSLinkAttributeName atIndex:index effectiveRange:&effectiveRange];
-    }
-  
-  NSValue *rangeKeyForTouchPoint = [self rangeKeyForIndex:index];
-  if (rangeKeyForTouchPoint == NULL) {
-    [super touchesBegan:touches withEvent:event];
+  NSRange range = [self.patternDetector patternRangeAtIndex:index];
+  if (range.location == NSNotFound) {
+    [super touchesEnded:touches withEvent:event];
   }else {
-
   }
+
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -441,27 +449,15 @@ const NSString *kPatternAction  = @"PatternAction";
   CGPoint touchLocation = [[touches anyObject] locationInView:self];
   
   NSInteger index = [self stringIndexAtLocation:touchLocation];
-  
-  NSRange effectiveRange;
-  NSURL *touchedURL = nil;
-  
-  if (index != NSNotFound)
-    {
-    touchedURL = [self.attributedText attribute:NSLinkAttributeName atIndex:index effectiveRange:&effectiveRange];
-    }
-  
-  NSValue *rangeKeyForTouchPoint = [self rangeKeyForIndex:index];
-  if (rangeKeyForTouchPoint == NULL) {
+  NSRange range = [self.patternDetector patternRangeAtIndex:index];
+  if (range.location == NSNotFound) {
     [super touchesEnded:touches withEvent:event];
-    NSLog(@"if");
   }else {
-    NSDictionary *patternObject = [self.patternDictionary objectForKey:rangeKeyForTouchPoint];
-    PatternTapHandler action = [patternObject objectForKey:kPatternAction];
-    if (action) {
-      NSString *string = [self.attributedText.string substringWithRange:rangeKeyForTouchPoint.rangeValue];
-      action (string);
+    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:range];
+     NSString *string = [self.attributedText.string substringWithRange:range];
+    if (descriptor.tapResponder) {
+      descriptor.tapResponder(string);
     }
-    NSLog(@"else");
   }
 }
 
@@ -495,8 +491,7 @@ const NSString *kPatternAction  = @"PatternAction";
   CGRect lineRect = [self.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
                                                              effectiveRange:&lineRange];
   
-  if (!CGRectContainsPoint(lineRect, location))
-    {
+  if (!CGRectContainsPoint(lineRect, location)) {
     return NSNotFound;
     }
   
@@ -512,7 +507,10 @@ const NSString *kPatternAction  = @"PatternAction";
 //Low level handler
 
 - (void)enableDetectionForRange:(NSRange)range withAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)block {
-  
+  //update patternDetector
+  //
+  [self applyAttributes:dictionary forRange:range];
+
   //Boundary conditions
   // Text length = 0
   // dictionary and action passed as nil
@@ -531,15 +529,7 @@ const NSString *kPatternAction  = @"PatternAction";
     NSAssert(@"Out of Bounds ", @"Range exceeds text length");
 
   }
-  
-//  if (text == nil) {
-//    NSAssert(text not specified);
-//  }
-//  //check if the range exceeds from the text
-//  NSAssert(out of bound);
-//  
-//  create range object --> key --> range
-//  value -->{dictionary, action }
+
 }
 
 - (void)applyAttributes:(NSDictionary *)attributes forRange:(NSRange)range {
@@ -577,22 +567,35 @@ const NSString *kPatternAction  = @"PatternAction";
 }
 
 - (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
-  [self enableDetectionForRegexString:@"(?<!\\w)#([\\w\\_]+)?" withAttributes:dictionary withAction:action];
+  NSError *error;
+  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:@"(?<!\\w)#([\\w\\_]+)?" options:0 error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeAll withPatternAttributes:dictionary andTapResponder:action];
+  [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
 }
 
 - (void)enableUserHandleDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
-  [self enableDetectionForRegexString:@"(?<!\\w)@([\\w\\_]+)?" withAttributes:dictionary withAction:action];
+  NSError *error;
+  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:@"(?<!\\w)@([\\w\\_]+)?" options:0 error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeAll withPatternAttributes:dictionary andTapResponder:action];
+  [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
 }
 
 - (void)enableTruncationTokenDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
-  NSRange tokenRange = [self.textStorage.string rangeOfString:self.truncationToken];
-  [self enableDetectionForRange:tokenRange withAttributes:dictionary withAction:action];
+  NSError *error;
+  NSString *pattern = [NSString stringWithFormat:@"(\\w|^)%@(\\w|$)",self.attributedTruncationToken.string];
+  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeLast withPatternAttributes:dictionary andTapResponder:action];
+  [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
+
 }
 
 - (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {  
   NSError *error = nil;
   NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
-  NSString *plainText = self.textStorage.string;
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector withSearchType:kPatternSearchTypeAll withPatternAttributes:dictionary andTapResponder:action];
+  [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
+
+/*  NSString *plainText = self.textStorage.string;
   NSArray *matches = [detector matchesInString:plainText
                                        options:0
                                          range:NSMakeRange(0, self.textStorage.length)];
@@ -605,7 +608,8 @@ const NSString *kPatternAction  = @"PatternAction";
     NSMutableDictionary *urlAttributes = [NSMutableDictionary dictionaryWithDictionary:dictionary];
     [urlAttributes setObject:NSLinkAttributeName forKey:realURL];
     [self enableDetectionForRange:matchRange withAttributes:urlAttributes withAction:action];
-  }
+  }*/
 }
+
 
 @end

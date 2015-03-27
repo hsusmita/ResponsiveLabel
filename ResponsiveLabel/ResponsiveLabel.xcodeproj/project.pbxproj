@@ -16,6 +16,7 @@
 		69D5E5851AB3040D00B64BDE /* ResponsiveLabelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E5841AB3040D00B64BDE /* ResponsiveLabelTests.m */; };
 		69D5E5901AB3045B00B64BDE /* ResponsiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */; };
 		69D5E5941AB30DBA00B64BDE /* CustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E5931AB30DBA00B64BDE /* CustomTableViewCell.m */; };
+		69ECF1A61AC2DDDE00E879C2 /* PatternDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 69ECF1A51AC2DDDE00E879C2 /* PatternDetector.m */; };
 		69F6714C1AB82CA30045ACF8 /* TouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F6714B1AB82CA30045ACF8 /* TouchGestureRecognizer.m */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +48,8 @@
 		69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResponsiveLabel.m; path = Source/ResponsiveLabel.m; sourceTree = "<group>"; };
 		69D5E5921AB30DBA00B64BDE /* CustomTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableViewCell.h; sourceTree = "<group>"; };
 		69D5E5931AB30DBA00B64BDE /* CustomTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableViewCell.m; sourceTree = "<group>"; };
+		69ECF1A41AC2DDDE00E879C2 /* PatternDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternDetector.h; sourceTree = "<group>"; };
+		69ECF1A51AC2DDDE00E879C2 /* PatternDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatternDetector.m; sourceTree = "<group>"; };
 		69F6714A1AB82CA30045ACF8 /* TouchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchGestureRecognizer.h; path = Source/TouchGestureRecognizer.h; sourceTree = "<group>"; };
 		69F6714B1AB82CA30045ACF8 /* TouchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TouchGestureRecognizer.m; path = Source/TouchGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -138,6 +141,8 @@
 				69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */,
 				69F6714A1AB82CA30045ACF8 /* TouchGestureRecognizer.h */,
 				69F6714B1AB82CA30045ACF8 /* TouchGestureRecognizer.m */,
+				69ECF1A41AC2DDDE00E879C2 /* PatternDetector.h */,
+				69ECF1A51AC2DDDE00E879C2 /* PatternDetector.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -242,6 +247,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69ECF1A61AC2DDDE00E879C2 /* PatternDetector.m in Sources */,
 				69D5E5711AB3040D00B64BDE /* ViewController.m in Sources */,
 				69D5E56E1AB3040D00B64BDE /* AppDelegate.m in Sources */,
 				69D5E5901AB3045B00B64BDE /* ResponsiveLabel.m in Sources */,
