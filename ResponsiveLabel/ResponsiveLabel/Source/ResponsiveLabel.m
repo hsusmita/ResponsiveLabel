@@ -322,28 +322,30 @@ static NSString *kRegexFormatForSearchWord = @"(\\w|^)%@(\\w|$)";
   }
 }
 
-- (NSRange )rangeForTokenInsertion:(NSString *)text {
+- (NSRange)rangeForTokenInsertion:(NSString *)text {
   NSInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:text.length - 1];
   NSRange range = [self.layoutManager truncatedGlyphRangeInLineFragmentForGlyphAtIndex:glyphIndex];
   NSString *tokenString = self.attributedTruncationToken ? self.attributedTruncationToken.string : self.truncationToken;
- if (range.location != NSNotFound) {
+  if (range.location != NSNotFound) {
     range.length += tokenString.length;
     range.location -= tokenString.length;
   }
   return range;
 }
 
-- (NSRange )rangeForTokenInsertionForStringWithNewLine:(NSString *)text {
+- (NSRange)rangeForTokenInsertionForStringWithNewLine:(NSString *)text {
   NSRange newLineRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]];
   NSRange rangeOfText = NSMakeRange(NSNotFound, 0);
   if (newLineRange.location != NSNotFound) {
     
     NSInteger numberOfLines, index, numberOfGlyphs = [self.layoutManager numberOfGlyphs];
     NSRange lineRange;
+    NSInteger approximateNumberOfLines = CGRectGetHeight([self.layoutManager usedRectForTextContainer:self.textContainer])/self.font.lineHeight;
+
     for (numberOfLines = 0, index = 0; index < numberOfGlyphs; numberOfLines++){
       [self.layoutManager lineFragmentRectForGlyphAtIndex:index
                                            effectiveRange:&lineRange];
-      if (numberOfLines == self.numberOfLines - 1) break;
+      if (numberOfLines == approximateNumberOfLines - 1) break;
       index = NSMaxRange(lineRange);
     }
     rangeOfText = lineRange;
