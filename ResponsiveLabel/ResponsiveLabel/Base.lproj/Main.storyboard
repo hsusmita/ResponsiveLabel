@@ -25,16 +25,25 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BwM-D7-Ojg" id="qjv-uc-wOT">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A long text1 A long text2 A long text3 A long text4 A long text5 A long text6 A long text7" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dXR-Ge-9gA" customClass="ResponsiveLabel">
+                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A long text1 A long text2 A long text3 A long text4 A long text5 A long text6 A long text7" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dXR-Ge-9gA" customClass="ResponsiveLabel">
                                                     <rect key="frame" x="10" y="10" width="580" height="23"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="Ov9-Dq-Ez4"/>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="999" constant="23" id="cka-xh-mGm"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="Ov9-Dq-Ez4"/>
+                                                            <exclude reference="cka-xh-mGm"/>
+                                                        </mask>
+                                                    </variation>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="dXR-Ge-9gA" secondAttribute="bottom" constant="10" id="NNd-wa-yo5"/>
-                                                <constraint firstAttribute="trailing" secondItem="dXR-Ge-9gA" secondAttribute="trailing" constant="10" id="Y2n-ke-L55"/>
+                                                <constraint firstAttribute="bottom" secondItem="dXR-Ge-9gA" secondAttribute="bottom" priority="999" constant="10" id="NNd-wa-yo5"/>
+                                                <constraint firstAttribute="trailing" secondItem="dXR-Ge-9gA" secondAttribute="trailing" priority="999" constant="10" id="Y2n-ke-L55"/>
                                                 <constraint firstItem="dXR-Ge-9gA" firstAttribute="top" secondItem="qjv-uc-wOT" secondAttribute="top" constant="10" id="bf4-da-kOl"/>
                                                 <constraint firstItem="dXR-Ge-9gA" firstAttribute="leading" secondItem="qjv-uc-wOT" secondAttribute="leading" constant="10" id="zJF-e7-AQV"/>
                                             </constraints>

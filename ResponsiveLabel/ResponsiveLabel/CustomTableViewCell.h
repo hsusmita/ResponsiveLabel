@@ -8,8 +8,20 @@
 
 #import <UIKit/UIKit.h>
 #import "ResponsiveLabel.h"
+#import "KILabel.h"
+
+@protocol CustomTableViewCellDelegate;
 
 @interface CustomTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet ResponsiveLabel *customLabel;
+
+@property (nonatomic, weak) id<CustomTableViewCellDelegate>delegate;
+
+- (void)configureText:(NSString*)str forExpandedState:(BOOL)isExpanded;
+@end
+
+@protocol CustomTableViewCellDelegate<NSObject>
+
+- (void)didTapOnMoreButton:(CustomTableViewCell *)cell;
 
 @end

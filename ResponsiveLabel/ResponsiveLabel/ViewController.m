@@ -10,9 +10,10 @@
 #import "ResponsiveLabel.h"
 #import "CustomTableViewCell.h"
 
-@interface ViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface ViewController ()<UITableViewDataSource,UITableViewDelegate,CustomTableViewCellDelegate>
 @property (weak, nonatomic) IBOutlet ResponsiveLabel *label;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) NSMutableArray *expandedIndexPaths;
 
 @end
 
@@ -22,6 +23,8 @@
   [super viewDidLoad];
   self.label.userInteractionEnabled =  YES;
   [self.label setText:@"A long text"];
+  self.expandedIndexPaths = [NSMutableArray array];
+  self.tableView.estimatedRowHeight = 50.0f;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,37 +44,20 @@
     str = [NSString stringWithFormat:@"%@ %@",str,@"A long text"];
   }
   str = [NSString stringWithFormat:@"%@ %ld",str,indexPath.row];
-  [cell.customLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]} withAction:^(NSString *tappedString) {
-    NSLog(@"Tap on hashtag = %@",tappedString);
-  }];
-  [cell.customLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor cyanColor],NSUnderlineStyleAttributeName:[NSNumber numberWithInt:1]} withAction:^(NSString *tappedString) {
-    NSLog(@"URL tapped = %ld",indexPath.row);
-  }];
-
- NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:@"...Read More."];
-  [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor greenColor]} range:NSMakeRange(0, 3)];
-  [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor]} range:NSMakeRange(3, @"...Read More".length -3)];
+  [cell configureText:str forExpandedState:[self.expandedIndexPaths containsObject:indexPath]];
   
-  [cell.customLabel enableTruncationTokenDetectionWithToken:attribString withAction:^(NSString *tappedString) {
-    NSLog(@"read more");
-
-  }];
-  [cell.customLabel setText:str];
-  
-//  PatternTapHandler handler = ^(NSString *string ){
-//    NSLog(@"read more");
-//  };
-//  NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc]initWithString:str];
-//  [attributed addAttribute:RLTapResponderAttributeName value:handler range:NSMakeRange(0, 10)];
-//  [attributed addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, 10)];
-//  cell.customLabel.attributedText = attributed;
-  
+  cell.delegate = self;
   return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-  return 150.0;
+  if ([self.expandedIndexPaths containsObject:indexPath]) {
+    return UITableViewAutomaticDimension;
+  }else {
+    return 50.0;
+  }
 }
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -79,4 +65,14 @@
   
 }
 
+- (void)didTapOnMoreButton:(CustomTableViewCell *)cell {
+  NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+  if (indexPath == nil)return;
+  if ([self.expandedIndexPaths containsObject:indexPath]) {
+    [self.expandedIndexPaths removeObject:indexPath];
+  }else {
+    [self.expandedIndexPaths addObject:indexPath];
+  }
+  [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
 @end
