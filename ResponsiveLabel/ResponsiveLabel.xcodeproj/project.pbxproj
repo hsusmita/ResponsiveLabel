@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		691BF3321AC92F8B0042FC65 /* KILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 691BF3311AC92F8B0042FC65 /* KILabel.m */; };
+		69CCA6ED1AC58ADD00D8CAC0 /* PatternDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */; };
 		69D5E56B1AB3040D00B64BDE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E56A1AB3040D00B64BDE /* main.m */; };
 		69D5E56E1AB3040D00B64BDE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E56D1AB3040D00B64BDE /* AppDelegate.m */; };
 		69D5E5711AB3040D00B64BDE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E5701AB3040D00B64BDE /* ViewController.m */; };
@@ -16,7 +18,6 @@
 		69D5E5851AB3040D00B64BDE /* ResponsiveLabelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E5841AB3040D00B64BDE /* ResponsiveLabelTests.m */; };
 		69D5E5901AB3045B00B64BDE /* ResponsiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */; };
 		69D5E5941AB30DBA00B64BDE /* CustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E5931AB30DBA00B64BDE /* CustomTableViewCell.m */; };
-		69ECF1A61AC2DDDE00E879C2 /* PatternDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 69ECF1A51AC2DDDE00E879C2 /* PatternDetector.m */; };
 		69F6714C1AB82CA30045ACF8 /* TouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F6714B1AB82CA30045ACF8 /* TouchGestureRecognizer.m */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		691BF3301AC92F8B0042FC65 /* KILabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KILabel.h; path = ../../../KILabel/KILabel/Source/KILabel.h; sourceTree = "<group>"; };
+		691BF3311AC92F8B0042FC65 /* KILabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KILabel.m; path = ../../../KILabel/KILabel/Source/KILabel.m; sourceTree = "<group>"; };
+		69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatternDescriptor.h; path = Source/PatternDescriptor.h; sourceTree = "<group>"; };
+		69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PatternDescriptor.m; path = Source/PatternDescriptor.m; sourceTree = "<group>"; };
 		69D5E5651AB3040D00B64BDE /* ResponsiveLabel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResponsiveLabel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D5E5691AB3040D00B64BDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69D5E56A1AB3040D00B64BDE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -48,8 +53,6 @@
 		69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResponsiveLabel.m; path = Source/ResponsiveLabel.m; sourceTree = "<group>"; };
 		69D5E5921AB30DBA00B64BDE /* CustomTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableViewCell.h; sourceTree = "<group>"; };
 		69D5E5931AB30DBA00B64BDE /* CustomTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableViewCell.m; sourceTree = "<group>"; };
-		69ECF1A41AC2DDDE00E879C2 /* PatternDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternDetector.h; sourceTree = "<group>"; };
-		69ECF1A51AC2DDDE00E879C2 /* PatternDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatternDetector.m; sourceTree = "<group>"; };
 		69F6714A1AB82CA30045ACF8 /* TouchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchGestureRecognizer.h; path = Source/TouchGestureRecognizer.h; sourceTree = "<group>"; };
 		69F6714B1AB82CA30045ACF8 /* TouchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TouchGestureRecognizer.m; path = Source/TouchGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,6 +96,8 @@
 		69D5E5671AB3040D00B64BDE /* ResponsiveLabel */ = {
 			isa = PBXGroup;
 			children = (
+				691BF3301AC92F8B0042FC65 /* KILabel.h */,
+				691BF3311AC92F8B0042FC65 /* KILabel.m */,
 				69D5E56C1AB3040D00B64BDE /* AppDelegate.h */,
 				69D5E56D1AB3040D00B64BDE /* AppDelegate.m */,
 				69D5E56F1AB3040D00B64BDE /* ViewController.h */,
@@ -141,8 +146,8 @@
 				69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */,
 				69F6714A1AB82CA30045ACF8 /* TouchGestureRecognizer.h */,
 				69F6714B1AB82CA30045ACF8 /* TouchGestureRecognizer.m */,
-				69ECF1A41AC2DDDE00E879C2 /* PatternDetector.h */,
-				69ECF1A51AC2DDDE00E879C2 /* PatternDetector.m */,
+				69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */,
+				69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -247,9 +252,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				69ECF1A61AC2DDDE00E879C2 /* PatternDetector.m in Sources */,
+				691BF3321AC92F8B0042FC65 /* KILabel.m in Sources */,
 				69D5E5711AB3040D00B64BDE /* ViewController.m in Sources */,
 				69D5E56E1AB3040D00B64BDE /* AppDelegate.m in Sources */,
+				69CCA6ED1AC58ADD00D8CAC0 /* PatternDescriptor.m in Sources */,
 				69D5E5901AB3045B00B64BDE /* ResponsiveLabel.m in Sources */,
 				69D5E5941AB30DBA00B64BDE /* CustomTableViewCell.m in Sources */,
 				69D5E56B1AB3040D00B64BDE /* main.m in Sources */,

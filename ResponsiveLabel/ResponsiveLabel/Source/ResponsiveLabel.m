@@ -8,14 +8,17 @@
 
 #import "ResponsiveLabel.h"
 #import "TouchGestureRecognizer.h"
-#import "PatternDetector.h"
+#import "PatternDescriptor.h"
 
 const NSString *kPatternAttribute = @"PatternAttribue";
 const NSString *kPatternAction  = @"PatternAction";
 
+static NSString *kRegexStringForHashTag = @"(?<!\\w)#([\\w\\_]+)?";
+static NSString *kRegexStringForUserHandle = @"(?<!\\w)@([\\w\\_]+)?";
+static NSString *kRegexFormatForSearchWord = @"(\\w|^)%@(\\w|$)";
+
 @interface ResponsiveLabel ()<NSLayoutManagerDelegate, UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) NSMutableArray *searchStrings;
 @property (nonatomic, retain) NSLayoutManager *layoutManager;
 @property (nonatomic, retain) NSTextContainer *textContainer;
 @property (nonatomic, retain) NSTextStorage *textStorage;
@@ -23,10 +26,7 @@ const NSString *kPatternAction  = @"PatternAction";
 @property (nonatomic, strong) UIColor *selectedLinkBackgroundColor;
 @property (nonatomic, assign) NSRange selectedRange;
 @property (nonatomic, assign) BOOL isTouchMoved;
-@property (nonatomic, strong) NSString *truncationToken;
-@property (nonatomic, strong) NSAttributedString *attributedTruncationToken;
 @property (nonatomic, strong) NSMutableArray *patternDescriptors;
-//@property (nonatomic, strong) PatternDetector *patternDetector;
 
 @end
 @implementation ResponsiveLabel
@@ -34,10 +34,8 @@ const NSString *kPatternAction  = @"PatternAction";
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-      [self setupTextSystem];
       [self configureForGestures];
       self.patternDescriptors = [NSMutableArray new];
-//      self.patternDetector = [PatternDetector new];
       }
     return self;
   }
@@ -45,11 +43,8 @@ const NSString *kPatternAction  = @"PatternAction";
 - (id)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    [self setupTextSystem];
     [self configureForGestures];
     self.patternDescriptors = [NSMutableArray new];
-//    self.patternDetector = [PatternDetector new];
-
   }
   return self;
 }
@@ -68,7 +63,6 @@ const NSString *kPatternAction  = @"PatternAction";
     [_textStorage addLayoutManager:self.layoutManager];
     [self.layoutManager setTextStorage:_textStorage];
   }
-  
   return _textStorage;
 }
 
@@ -80,7 +74,6 @@ const NSString *kPatternAction  = @"PatternAction";
     _textContainer.lineBreakMode = self.lineBreakMode;
     _textContainer.widthTracksTextView = YES;
     _textContainer.size = self.frame.size;
-    
     [_textContainer setLayoutManager:self.layoutManager];
   }
   
@@ -89,7 +82,6 @@ const NSString *kPatternAction  = @"PatternAction";
 
 - (NSLayoutManager *)layoutManager {
   if (!_layoutManager) {
-    // Create a layout manager for rendering
     _layoutManager = [[NSLayoutManager alloc] init];
     _layoutManager.delegate = self;
     [_layoutManager addTextContainer:self.textContainer];
@@ -118,6 +110,7 @@ const NSString *kPatternAction  = @"PatternAction";
   self.textContainer.size = size;
 }
 
+
 - (void)setPreferredMaxLayoutWidth:(CGFloat)preferredMaxLayoutWidth {
   [super setPreferredMaxLayoutWidth:preferredMaxLayoutWidth];
   
@@ -127,17 +120,40 @@ const NSString *kPatternAction  = @"PatternAction";
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
-  [super setAttributedText:attributedText];
-  [self.textStorage setAttributedString:attributedText];
-  [self configureTruncationToken];
-  [self generateRangesForPatterns];
+  [self setAttributedText:attributedText withTruncation:NO];
 }
 
 - (void)setText:(NSString *)text {
+  [self setText:text withTruncation:NO];
+}
+
+- (void)setText:(NSString *)text withTruncation:(BOOL)truncation {
   [super setText:text];
-  [self.textStorage setAttributedString:[[NSAttributedString alloc] initWithString:text]];
-  [self configureTruncationToken];
+  NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text attributes:[self attributesFromProperties]];
+  [self.textStorage setAttributedString:attributedText];
+
+  if (truncation) {
+    [self configureTruncationToken];
+  }
   [self generateRangesForPatterns];
+}
+
+- (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation {
+  [super setAttributedText:attributedText];
+  [self.textStorage setAttributedString:attributedText];
+
+  if (truncation) {
+    [self configureTruncationToken];
+  }
+  [self generateRangesForPatterns];
+}
+
+- (void)setTruncationToken:(NSString *)truncationToken {
+  _truncationToken = truncationToken;
+}
+
+- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken {
+  _attributedTruncationToken = attributedTruncationToken;
 }
 
 #pragma mark - Drawing
@@ -145,7 +161,7 @@ const NSString *kPatternAction  = @"PatternAction";
 - (void)drawTextInRect:(CGRect)rect {
   // Don't call super implementation. Might want to uncomment this out when
   // debugging layout and rendering problems.
-  // [super drawTextInRect:rect];
+//   [super drawTextInRect:rect];
   
   // Calculate the offset of the text in the view
   CGPoint textOffset;
@@ -168,90 +184,39 @@ const NSString *kPatternAction  = @"PatternAction";
   return textOffset;
 }
 
-- (void)setupTextSystem
-{
-  // Create a text container and set it up to match our label properties
-//  _textContainer = [[NSTextContainer alloc] init];
-  _textContainer.lineFragmentPadding = 0;
-  _textContainer.maximumNumberOfLines = self.numberOfLines;
-  _textContainer.lineBreakMode = self.lineBreakMode;
-  _textContainer.size = self.frame.size;
-  
-  // Create a layout manager for rendering
-//  _layoutManager = [[NSLayoutManager alloc] init];
-  _layoutManager.delegate = self;
-  [_layoutManager addTextContainer:_textContainer];
-  
-  // Attach the layou manager to the container and storage
-  [_textContainer setLayoutManager:_layoutManager];
-  
-  // Make sure user interaction is enabled so we can accept touches
-  self.userInteractionEnabled = YES;
-  
-//  // Don't go via public setter as this will have undesired side effect
-//  _automaticLinkDetectionEnabled = YES;
-//  
-//  // All links are detectable by default
-//  _linkDetectionTypes = KILinkTypeAll;
-//  
-//  // Link Type Attributes. Default is empty (no attributes).
-//  _linkTypeAttributes = [NSMutableDictionary dictionary];
-//  
-//  // Don't underline URL links by default.
-//  _systemURLStyle = NO;
-  
-  self.selectedLinkBackgroundColor = nil;//[UIColor colorWithWhite:0.95 alpha:1.0];
-  
-  // Establish the text store with our current text
-  [self updateTextStoreWithText];
+- (void)setNumberOfLines:(NSInteger)numberOfLines {
+  [super setNumberOfLines:numberOfLines];
+  _textContainer.maximumNumberOfLines = numberOfLines;
 }
 
-- (void)updateTextStoreWithText
++ (NSAttributedString *)sanitizeAttributedString:(NSAttributedString *)attributedString
 {
-  // Now update our storage from either the attributedString or the plain text
-  if (self.attributedText)
-    [self updateTextStoreWithAttributedString:self.attributedText];
-  else if (self.text)
-    [self updateTextStoreWithAttributedString:[[NSAttributedString alloc] initWithString:self.text attributes:[self attributesFromProperties]]];
-  else
-    [self updateTextStoreWithAttributedString:[[NSAttributedString alloc] initWithString:@"" attributes:[self attributesFromProperties]]];
+  // Setup paragraph alignement properly. IB applies the line break style
+  // to the attributed string. The problem is that the text container then
+  // breaks at the first line of text. If we set the line break to wrapping
+  // then the text container defines the break mode and it works.
+  // NOTE: This is either an Apple bug or something I've misunderstood.
   
-  [self setNeedsDisplay];
+  // Get the current paragraph style. IB only allows a single paragraph so
+  // getting the style of the first char is fine.
+  NSRange range;
+  NSParagraphStyle *paragraphStyle = [attributedString attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:&range];
+  
+  if (paragraphStyle == nil)
+    return attributedString;
+  
+  // Remove the line breaks
+  NSMutableParagraphStyle *mutableParagraphStyle = [paragraphStyle mutableCopy];
+  mutableParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+  
+  // Apply new style
+  NSMutableAttributedString *restyled = [[NSMutableAttributedString alloc] initWithAttributedString:attributedString];
+  [restyled addAttribute:NSParagraphStyleAttributeName value:mutableParagraphStyle range:NSMakeRange(0, restyled.length)];
+  
+  return restyled;
 }
 
-- (void)updateTextStoreWithAttributedString:(NSAttributedString *)attributedString
-{
- /* if (attributedString.length != 0)
-    {
-    attributedString = [KILabel sanitizeAttributedString:attributedString];
-    }
-  
-  if (self.isAutomaticLinkDetectionEnabled && (attributedString.length != 0))
-    {
-//    self.linkRanges = [self getRangesForLinks:attributedString];
-//    attributedString = [self addLinkAttributesToAttributedString:attributedString linkRanges:self.linkRanges];
-    }
-  else
-    {
-    self.linkRanges = nil;
-    }
-  */
-  if (_textStorage)
-    {
-    // Set the string on the storage
-    [_textStorage setAttributedString:attributedString];
-    }
-  else
-    {
-    // Create a new text storage and attach it correctly to the layout manager
-    _textStorage = [[NSTextStorage alloc] initWithAttributedString:attributedString];
-    [_textStorage addLayoutManager:_layoutManager];
-    [_layoutManager setTextStorage:_textStorage];
-    }
-}
-
-- (NSDictionary *)attributesFromProperties
-{
+- (NSDictionary *)attributesFromProperties {
   // Setup shadow attributes
   NSShadow *shadow = shadow = [[NSShadow alloc] init];
   if (self.shadowColor)
@@ -327,7 +292,7 @@ const NSString *kPatternAction  = @"PatternAction";
 - (void)configureTruncationToken {
   if (self.attributedTruncationToken) {
     [self appendAttributedTruncationToken];
-  }else {
+  }else if (self.truncationToken) {
     [self appendTruncationToken];
   }
 }
@@ -364,8 +329,8 @@ const NSString *kPatternAction  = @"PatternAction";
   NSRange range = [self.layoutManager truncatedGlyphRangeInLineFragmentForGlyphAtIndex:glyphIndex];
   NSString *tokenString = self.attributedTruncationToken ? self.attributedTruncationToken.string : self.truncationToken;
  if (range.location != NSNotFound) {
-    range.length += tokenString.length + 1;
-    range.location -= tokenString.length + 1;
+    range.length += tokenString.length;
+    range.location -= tokenString.length;
   }
   return range;
 }
@@ -417,13 +382,6 @@ const NSString *kPatternAction  = @"PatternAction";
     [super touchesBegan:touches withEvent:event];
 
   }
-//  NSRange range = [self.patternDetector patternRangeAtIndex:index];
-//
-//  if (range.location == NSNotFound) {
-//    [super touchesEnded:touches withEvent:event];
-//  }else {
-//  }
-
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -435,16 +393,6 @@ const NSString *kPatternAction  = @"PatternAction";
   CGPoint touchLocation = [[touches anyObject] locationInView:self];
   
   NSInteger index = [self stringIndexAtLocation:touchLocation];
-//  NSRange range = [self.patternDetector patternRangeAtIndex:index];
-//  if (range.location == NSNotFound) {
-//    [super touchesEnded:touches withEvent:event];
-//  }else {
-//    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:range];
-//     NSString *string = [self.attributedText.string substringWithRange:range];
-//    if (descriptor.tapResponder) {
-//      descriptor.tapResponder(string);
-//    }
-//  }
   NSRange aRange;
   if (index < self.textStorage.length) {
     PatternTapResponder attrib =[self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:&aRange];
@@ -508,81 +456,54 @@ const NSString *kPatternAction  = @"PatternAction";
 #pragma mark - Pattern matching
 
 - (void)generateRangesForPatterns {
-//  self.patternDetector.stringTobeParsed = self.textStorage;
-//  [self.patternDetector generateRangeForString:self.textStorage.string];
-//  NSLog(@"self. text storage generation = %@",self.textStorage);
-
   [self.patternDescriptors enumerateObjectsUsingBlock:^(PatternDescriptor *descriptor, NSUInteger idx, BOOL *stop) {
     NSArray *ranges = [descriptor patternRangesForString:self.textStorage.string];
-
-    if ([self.textStorage.string rangeOfString:self.attributedTruncationToken.string].location != NSNotFound) {
-    }
     [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
       if (descriptor.patternAttributes)
         [self.textStorage addAttributes: descriptor.patternAttributes range:obj.rangeValue];
       if (descriptor.tapResponder)
         [self.textStorage addAttribute:RLTapResponderAttributeName value:descriptor.tapResponder range:obj.rangeValue];
-
     }];
-//    NSRegularExpression *expression = descriptor.patternExpression;
-//    NSArray *matches = [expression matchesInString:self.textStorage.string options:0 range:NSMakeRange(0,  self.textStorage.length)];
-//    for (NSTextCheckingResult *match in matches) {
-//      NSRange matchRange = [match range];
-////      [self.rangeCache setObject:obj forKey:[NSValue valueWithRange:matchRange]];
-//      [self.textStorage addAttributes:descriptor.patternAttributes range:matchRange];
-//      [self.textStorage addAttribute:RLTapResponderAttributeName value:descriptor.tapResponder range:matchRange];
-//    }
   }];
-//  NSArray *ranges = [self.patternDetector patternRanges];
-//  [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-//    PatternDescriptor *descriptor = [self.patternDetector patternDescriptorForRange:obj.rangeValue];
-//    [self.textStorage addAttributes:descriptor.patternAttributes range:obj.rangeValue];
-//    [self.textStorage addAttribute:RLTapResponderAttributeName value:descriptor.tapResponder range:obj.rangeValue];
-//  }];
+}
+
+- (void)setTruncationToken:(NSString *)truncationToken withAction:(PatternTapHandler)action {
+  self.truncationToken = truncationToken;
+  NSError *error;
+  NSString *pattern = [NSString stringWithFormat:@"(\\w|^)%@(\\w|$)",self.truncationToken];
+  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeLast withPatternAttributes:@{RLTapResponderAttributeName:action} andTapResponder:action];
+  [self.patternDescriptors addObject:descriptor];
+}
+
+- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapHandler)action {
+  self.attributedTruncationToken = attributedTruncationToken;
+  NSError *error;
+  NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
+  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeLast withPatternAttributes:@{RLTapResponderAttributeName:action} andTapResponder:action];
+  [self.patternDescriptors addObject:descriptor];
+}
+
+- (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {  
+  NSError *error = nil;
+  NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector withSearchType:kPatternSearchTypeAll withPatternAttributes:dictionary andTapResponder:action];
+  [self.patternDescriptors addObject:descriptor];
 }
 
 - (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
   NSError *error;
-  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:@"(?<!\\w)#([\\w\\_]+)?" options:0 error:&error];
+  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:kRegexStringForHashTag options:0 error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeAll withPatternAttributes:dictionary andTapResponder:action];
-//  [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
   [self.patternDescriptors addObject:descriptor];
 }
 
 - (void)enableUserHandleDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
   NSError *error;
-  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:@"(?<!\\w)@([\\w\\_]+)?" options:0 error:&error];
+  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:kRegexStringForUserHandle options:0 error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeAll withPatternAttributes:dictionary andTapResponder:action];
-//  [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
   [self.patternDescriptors addObject:descriptor];
-
-}
-
-- (void)enableTruncationTokenDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
-  NSError *error;
-  NSString *pattern = [NSString stringWithFormat:@"(\\w|^)%@(\\w|$)",self.attributedTruncationToken.string];
-  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
-  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeLast withPatternAttributes:@{RLTapResponderAttributeName:action} andTapResponder:action];
-  [self.patternDescriptors addObject:descriptor];
-//  [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
-}
-
-- (void)enableTruncationTokenDetectionWithToken:(NSAttributedString*)truncationToken withAction:(PatternTapHandler)action {
-  self.attributedTruncationToken = truncationToken;
-  NSError *error;
-  NSString *pattern = [NSString stringWithFormat:@"(\\w|^)%@(\\w|$)",self.attributedTruncationToken.string];
-  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
-  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex withSearchType:kPatternSearchTypeLast withPatternAttributes:@{RLTapResponderAttributeName:action} andTapResponder:action];
-  [self.patternDescriptors addObject:descriptor];
-  //  [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
-}
-- (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {  
-  NSError *error = nil;
-  NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
-  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector withSearchType:kPatternSearchTypeAll withPatternAttributes:dictionary andTapResponder:action];
-//  [self.patternDetector enableDetectionForPatternDescriptor:descriptor];
-  [self.patternDescriptors addObject:descriptor];
-
 }
 
 @end
