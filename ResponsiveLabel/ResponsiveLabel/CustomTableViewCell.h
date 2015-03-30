@@ -21,6 +21,11 @@
 
 @protocol CustomTableViewCellDelegate<NSObject>
 
+@optional
+
 - (void)didTapOnMoreButton:(CustomTableViewCell *)cell;
+- (void)customTableViewCell:(CustomTableViewCell *)cell didTapOnHashTag:(NSString *)hashTag;
+- (void)customTableViewCell:(CustomTableViewCell *)cell didTapOnUserHandle:(NSString *)userHandle;
+- (void)customTableViewCell:(CustomTableViewCell *)cell didTapOnURL:(NSString *)urlString;
 
 @end

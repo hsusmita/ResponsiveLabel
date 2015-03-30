@@ -33,17 +33,17 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return 10;
+  return 20;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   CustomTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"customCell" forIndexPath:indexPath];
   [cell.customLabel layoutIfNeeded];
-  NSString *str = @"A long text #hashTag text www.google.com\";
+  NSString *str = @"A long text #hashTag text http://www.google.com  @username";
   for (NSInteger i = 0 ; i < indexPath.row ; i++) {
     str = [NSString stringWithFormat:@"%@ %@",str,@"A long text"];
   }
-  str = [NSString stringWithFormat:@"%@ %ld",str,indexPath.row];
+  str = [NSString stringWithFormat:@"%@ %d",str,indexPath.row];
   [cell configureText:str forExpandedState:[self.expandedIndexPaths containsObject:indexPath]];
   
   cell.delegate = self;
@@ -75,4 +75,34 @@
   }
   [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
+
+- (void)customTableViewCell:(CustomTableViewCell *)cell didTapOnHashTag:(NSString *)hashTag {
+  NSString *message = [NSString stringWithFormat:@"You have tapped hashTag = %@!",hashTag];
+  [self showAlertWithMessage:message];
+}
+
+- (void)customTableViewCell:(CustomTableViewCell *)cell didTapOnUserHandle:(NSString *)userHandle {
+  NSString *message = [NSString stringWithFormat:@"You have tapped user handle = %@!",userHandle];
+  [self showAlertWithMessage:message];
+}
+
+- (void)customTableViewCell:(CustomTableViewCell *)cell didTapOnURL:(NSString *)urlString {
+  NSURL *url = [NSURL URLWithString:urlString];
+  if ([[UIApplication sharedApplication] canOpenURL:url]){
+    [[UIApplication sharedApplication] openURL:url];
+    }
+  else {
+    [self showAlertWithMessage:@"The selected link cannot be opened."];
+    }
+}
+
+- (void)showAlertWithMessage:(NSString *)message {
+  UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Message" message:message preferredStyle:UIAlertControllerStyleAlert];
+  [self presentViewController:controller animated:YES completion:nil];
+  UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [controller dismissViewControllerAnimated:YES completion:nil];
+  }];
+  [controller addAction:action];
+}
+
 @end

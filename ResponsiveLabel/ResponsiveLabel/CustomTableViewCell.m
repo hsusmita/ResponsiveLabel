@@ -14,19 +14,26 @@ static NSString *kCollapseToken = @"Read Less";
 @implementation CustomTableViewCell
 
 - (void)awakeFromNib {
-//    // Initialization code
+  self.customLabel.userInteractionEnabled = YES;
   [self.customLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]} withAction:^(NSString *tappedString) {
-    NSLog(@"Tap on hashtag = %@",tappedString);
+    if ([self.delegate respondsToSelector:@selector(customTableViewCell:didTapOnHashTag:)]) {
+      [self.delegate customTableViewCell:self didTapOnHashTag:tappedString];
+    }
   }];
   [self.customLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor cyanColor],NSUnderlineStyleAttributeName:[NSNumber numberWithInt:1]} withAction:^(NSString *tappedString) {
-    NSLog(@"URL tapped");
+    if ([self.delegate respondsToSelector:@selector(customTableViewCell:didTapOnURL:)]) {
+      [self.delegate customTableViewCell:self didTapOnURL:tappedString];
+    }
   }];
-  self.customLabel.userInteractionEnabled = YES;
+  [self.customLabel enableUserHandleDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor grayColor]} withAction:^(NSString *tappedString) {
+    if ([self.delegate respondsToSelector:@selector(customTableViewCell:didTapOnUserHandle:)]) {
+      [self.delegate customTableViewCell:self didTapOnUserHandle:tappedString];
+    }
+  }];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
     // Configure the view for the selected state
 }
 
@@ -41,24 +48,22 @@ static NSString *kCollapseToken = @"Read Less";
         [self.delegate didTapOnMoreButton:self];
       }
     };
-    [finalString addAttributes:@{NSForegroundColorAttributeName:[UIColor greenColor],RLTapResponderAttributeName:tap}
+    [finalString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],RLTapResponderAttributeName:tap}
                          range:[expandedString rangeOfString:kCollapseToken]];
     [finalString addAttributes:@{NSFontAttributeName:self.customLabel.font} range:NSMakeRange(0, finalString.length)];
     self.customLabel.attributedText = finalString;
 
   }else {
     NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
-    [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font} range:NSMakeRange(3, kExpansionToken.length -3)];
+    [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font}
+                          range:NSMakeRange(3, kExpansionToken.length - 3)];
     [self.customLabel setAttributedTruncationToken:attribString withAction:^(NSString *tappedString) {
       if ([self.delegate respondsToSelector:@selector(didTapOnMoreButton:)]) {
         [self.delegate didTapOnMoreButton:self];
       }
-      
     }];
     [self.customLabel setText:str withTruncation:YES];
   }
 }
-
-
 
 @end
