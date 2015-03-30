@@ -7,7 +7,6 @@
 //
 
 #import "ResponsiveLabel.h"
-#import "TouchGestureRecognizer.h"
 #import "PatternDescriptor.h"
 
 const NSString *kPatternAttribute = @"PatternAttribue";
@@ -252,8 +251,7 @@ static NSString *kRegexFormatForSearchWord = @"(\\w|^)%@(\\w|$)";
 
 #pragma mark - Override UILabel Methods
 
-- (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
-{
+- (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines {
   // Use our text container to calculate the bounds required. First save our
   // current text container setup
   CGSize savedTextContainerSize = self.textContainer.size;
@@ -319,7 +317,7 @@ static NSString *kRegexFormatForSearchWord = @"(\\w|^)%@(\\w|$)";
     range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
   }
   if (range.location != NSNotFound) {
-      [self.textStorage replaceCharactersInRange:range withString:@""];
+    [self.textStorage replaceCharactersInRange:range withString:@""];
     [self.textStorage appendAttributedString:self.attributedTruncationToken];
   }
 }
@@ -408,19 +406,15 @@ static NSString *kRegexFormatForSearchWord = @"(\\w|^)%@(\\w|$)";
   }
 }
 
-- (void)performActionForIndex:(NSInteger) index {
-}
-
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
   [super touchesCancelled:touches withEvent:event];
 }
 
 - (NSUInteger)stringIndexAtLocation:(CGPoint)location {
   // Do nothing if we have no text
-  if (self.textStorage.string.length == 0)
-    {
+  if (self.textStorage.string.length == 0) {
     return NSNotFound;
-    }
+  }
   
   // Work out the offset of the text in the view
   CGPoint textOffset;

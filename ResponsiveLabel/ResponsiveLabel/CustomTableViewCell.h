@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "ResponsiveLabel.h"
-#import "KILabel.h"
 
 @protocol CustomTableViewCellDelegate;
 

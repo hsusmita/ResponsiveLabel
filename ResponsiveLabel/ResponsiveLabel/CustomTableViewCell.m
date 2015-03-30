@@ -44,8 +44,6 @@ static NSString *kCollapseToken = @"Read Less";
     [finalString addAttributes:@{NSForegroundColorAttributeName:[UIColor greenColor],RLTapResponderAttributeName:tap}
                          range:[expandedString rangeOfString:kCollapseToken]];
     [finalString addAttributes:@{NSFontAttributeName:self.customLabel.font} range:NSMakeRange(0, finalString.length)];
-    self.customLabel.truncationToken = nil;
-    self.customLabel.attributedTruncationToken = nil;
     self.customLabel.attributedText = finalString;
 
   }else {
