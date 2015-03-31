@@ -322,6 +322,16 @@ static NSString *kRegexFormatForSearchWord = @"\\b%@?\\b";
   }
 }
 
+- (NSRange)truncationRange {
+  NSRange truncationRange = NSMakeRange(NSNotFound, 0);
+  if (self.attributedTruncationToken) {
+    truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
+  }else if (self.truncationToken){
+    truncationRange = [self.textStorage.string rangeOfString:self.truncationToken];
+  }
+  return truncationRange;
+}
+
 - (NSRange)rangeForTokenInsertion:(NSString *)text {
   NSInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:text.length - 1];
   NSRange range = [self.layoutManager truncatedGlyphRangeInLineFragmentForGlyphAtIndex:glyphIndex];
@@ -449,13 +459,18 @@ static NSString *kRegexFormatForSearchWord = @"\\b%@?\\b";
 #pragma mark - Pattern matching
 
 - (void)generateRangesForPatterns {
+  NSRange truncationRange = [self truncationRange];
   [self.patternDescriptors enumerateObjectsUsingBlock:^(PatternDescriptor *descriptor, NSUInteger idx, BOOL *stop) {
     NSArray *ranges = [descriptor patternRangesForString:self.textStorage.string];
     [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-      if (descriptor.patternAttributes)
-        [self.textStorage addAttributes: descriptor.patternAttributes range:obj.rangeValue];
-      if (descriptor.tapResponder)
-        [self.textStorage addAttribute:RLTapResponderAttributeName value:descriptor.tapResponder range:obj.rangeValue];
+      BOOL doesIntesectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0);
+      BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
+      if (doesIntesectTruncationRange || isTruncationRange) {
+        if (descriptor.patternAttributes)
+          [self.textStorage addAttributes: descriptor.patternAttributes range:obj.rangeValue];
+        if (descriptor.tapResponder)
+          [self.textStorage addAttribute:RLTapResponderAttributeName value:descriptor.tapResponder range:obj.rangeValue];
+        }
     }];
   }];
 }

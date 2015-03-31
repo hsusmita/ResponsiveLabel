@@ -43,7 +43,7 @@
   for (NSInteger i = 0 ; i < indexPath.row ; i++) {
     str = [NSString stringWithFormat:@"%@ %@",str,@"A long text"];
   }
-  str = [NSString stringWithFormat:@"%@ %d",str,indexPath.row];
+  str = [NSString stringWithFormat:@"%@ %ld",str,(long)indexPath.row];
   [cell configureText:str forExpandedState:[self.expandedIndexPaths containsObject:indexPath]];
   
   cell.delegate = self;
