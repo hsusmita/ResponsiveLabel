@@ -10,13 +10,21 @@
 
 typedef void (^PatternTapResponder)(NSString *tappedString);
 
-typedef enum {
+/**
+ Specifies the type of Pattern Search
+ */
+typedef NS_ENUM(NSInteger,PatternSearchType) {
   kPatternSearchTypeAll,
   kPatternSearchTypeFirst,
   kPatternSearchTypeLast
-}PatternSearchType;
+};
 
 @interface PatternDescriptor : NSObject
+
+/**
+ PatternDescriptor object encapsulates information regarding pattern to be matched,
+ the attrinutes the pattern should possess and the action on the tapping the pattern
+ */
 
 @property (nonatomic, strong) NSRegularExpression *patternExpression;
 @property (nonatomic, copy) PatternTapResponder tapResponder;
@@ -28,6 +36,9 @@ typedef enum {
 withPatternAttributes:(NSDictionary *)patternAttributes
     andTapResponder:(PatternTapResponder)tapResponder;
 
+/**
+  Generates array of ranges for the matches found in given string
+*/
 - (NSArray *)patternRangesForString:(NSString *)string;
 
 @end

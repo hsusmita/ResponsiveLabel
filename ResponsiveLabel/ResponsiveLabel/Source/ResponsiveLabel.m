@@ -108,7 +108,6 @@ static NSString *kRegexFormatForSearchWord = @"\\b%@?\\b";
   self.textContainer.size = size;
 }
 
-
 - (void)setPreferredMaxLayoutWidth:(CGFloat)preferredMaxLayoutWidth {
   [super setPreferredMaxLayoutWidth:preferredMaxLayoutWidth];
   
@@ -218,16 +217,14 @@ static NSString *kRegexFormatForSearchWord = @"\\b%@?\\b";
 - (NSDictionary *)attributesFromProperties {
   // Setup shadow attributes
   NSShadow *shadow = shadow = [[NSShadow alloc] init];
-  if (self.shadowColor)
-    {
+  if (self.shadowColor) {
     shadow.shadowColor = self.shadowColor;
     shadow.shadowOffset = self.shadowOffset;
-    }
-  else
-    {
+  }
+  else {
     shadow.shadowOffset = CGSizeMake(0, -1);
     shadow.shadowColor = nil;
-    }
+  }
   
   // Setup colour attributes
   UIColor *colour = self.textColor;
@@ -248,6 +245,7 @@ static NSString *kRegexFormatForSearchWord = @"\\b%@?\\b";
                                };
   return attributes;
 }
+
 
 #pragma mark - Override UILabel Methods
 
@@ -375,56 +373,59 @@ static NSString *kRegexFormatForSearchWord = @"\\b%@?\\b";
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   CGPoint touchLocation = [[touches anyObject] locationInView:self];
-  
   NSInteger index = [self stringIndexAtLocation:touchLocation];
-  
-  NSRange aRange;
-  if (index < self.textStorage.length) {
-    PatternTapResponder attrib =[self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:&aRange];
-    if (attrib) {
-    }else {
-      [super touchesBegan:touches withEvent:event];
-    }
-  }else {
-    [super touchesBegan:touches withEvent:event];
-
+  NSRange patternRange;
+  PatternTapHandler tapHandler = [self tapResponderAtIndex:index effectiveRange:&patternRange];
+  if (!tapHandler) {
+    [super touchesEnded:touches withEvent:event];
   }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
   [super touchesMoved:touches withEvent:event];
-  
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-  CGPoint touchLocation = [[touches anyObject] locationInView:self];
-  
-  NSInteger index = [self stringIndexAtLocation:touchLocation];
-  NSRange aRange;
-  if (index < self.textStorage.length) {
-    PatternTapResponder attrib =[self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:&aRange];
-    if (attrib) {
-      NSString *string = [self.attributedText.string substringWithRange:aRange];
-      attrib(string);
-    }else {
-      [super touchesEnded:touches withEvent:event];
-    }
-  }else {
-    [super touchesEnded:touches withEvent:event];
-
-  }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
   [super touchesCancelled:touches withEvent:event];
 }
 
-- (NSUInteger)stringIndexAtLocation:(CGPoint)location {
-  // Do nothing if we have no text
-  if (self.textStorage.string.length == 0) {
-    return NSNotFound;
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+  CGPoint touchLocation = [[touches anyObject] locationInView:self];
+  NSInteger index = [self stringIndexAtLocation:touchLocation];
+  NSRange patternRange;
+  PatternTapHandler tapHandler = [self tapResponderAtIndex:index effectiveRange:&patternRange];
+  if (tapHandler) {
+    tapHandler([self.attributedText.string substringWithRange:patternRange]);
+  }else {
+    [super touchesEnded:touches withEvent:event];
   }
-  
+}
+
+- (PatternTapHandler)tapResponderAtIndex:(NSInteger)index effectiveRange:(NSRangePointer)patternRange {
+  PatternTapHandler tapResponder = nil;
+  if (index < self.textStorage.length) {
+    tapResponder =[self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:patternRange];
+  }
+  return tapResponder;
+}
+
+- (NSUInteger)stringIndexAtLocation:(CGPoint)location {
+  NSUInteger stringIndex = NSNotFound;
+  if (self.textStorage.string.length > 0) {
+    NSUInteger glyphIndex = [self glyphIndexForLocation:location];
+    // If the touch is in white space after the last glyph on the line we don't
+    // count it as a hit on the text
+    NSRange lineRange;
+    CGRect lineRect = [self.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
+                                                               effectiveRange:&lineRange];
+    if (CGRectContainsPoint(lineRect, location)) {
+      stringIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+    }
+  }
+  return stringIndex;
+}
+
+- (NSUInteger)glyphIndexForLocation:(CGPoint)location {
   // Work out the offset of the text in the view
   CGPoint textOffset;
   NSRange glyphRange = [self.layoutManager
@@ -435,22 +436,10 @@ static NSString *kRegexFormatForSearchWord = @"\\b%@?\\b";
   location.x -= textOffset.x;
   location.y -= textOffset.y;
   
-  NSUInteger glyphIndex = [self.layoutManager glyphIndexForPoint:location
-                                                 inTextContainer:self.textContainer];
-  
-  // If the touch is in white space after the last glyph on the line we don't
-  // count it as a hit on the text
-  NSRange lineRange;
-  CGRect lineRect = [self.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
-                                                             effectiveRange:&lineRange];
-  
-  if (!CGRectContainsPoint(lineRect, location)) {
-    return NSNotFound;
-    }
-  
-  return [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
-}
+  return  [self.layoutManager glyphIndexForPoint:location
+                                 inTextContainer:self.textContainer];
 
+}
 
 + (BOOL)requiresConstraintBasedLayout {
   return YES;
