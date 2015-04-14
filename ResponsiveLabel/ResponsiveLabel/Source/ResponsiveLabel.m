@@ -14,7 +14,7 @@ const NSString *kPatternAction  = @"PatternAction";
 
 static NSString *kRegexStringForHashTag = @"(?<!\\w)#([\\w\\_]+)?";
 static NSString *kRegexStringForUserHandle = @"(?<!\\w)@([\\w\\_]+)?";
-static NSString *kRegexFormatForSearchWord = @"\\b%@?\\b";
+static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 @interface ResponsiveLabel ()<NSLayoutManagerDelegate>
 
