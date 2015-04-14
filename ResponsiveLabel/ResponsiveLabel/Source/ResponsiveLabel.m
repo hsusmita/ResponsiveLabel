@@ -347,7 +347,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
                           withAttributedString:tokenString];
     NSRange finalRange = [self rangeForTokenInsertion:self.textStorage.string];
     if (finalRange.location != NSNotFound){
-      NSRange furtherTruncationRange = NSMakeRange(finalRange.location,finalRange.length - self.truncationToken.length);
+      NSRange furtherTruncationRange = NSMakeRange(finalRange.location,finalRange.length - tokenString.length);
       [self.textStorage replaceCharactersInRange:furtherTruncationRange withString:@""];
     }
   }
@@ -390,10 +390,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
       index = NSMaxRange(lineRange);
     }
     rangeOfText = lineRange;
-//    NSLog(@"line range = %@",[self.textStorage.string substringWithRange:rangeOfText]);
-//    NSString *tokenString = self.attributedTruncationToken ? self.attributedTruncationToken.string : self.truncationToken;
-//    rangeOfText.location += rangeOfText.length - tokenString.length + 1;
-//    rangeOfText.length = text.length - rangeOfText.location;
   }
   return rangeOfText;
 }
@@ -492,7 +488,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self.patternDescriptors enumerateObjectsUsingBlock:^(PatternDescriptor *descriptor, NSUInteger idx, BOOL *stop) {
     NSArray *ranges = [descriptor patternRangesForString:self.textStorage.string];
     [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-      BOOL doesIntesectTruncationRange =(truncationRange.location != NSNotFound) && (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0);
+      BOOL doesIntesectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0);
       BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
       if (doesIntesectTruncationRange || isTruncationRange) {
         if (descriptor.patternAttributes)

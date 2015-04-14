@@ -39,9 +39,9 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   CustomTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"customCell" forIndexPath:indexPath];
   [cell.customLabel layoutIfNeeded];
-  NSString *str = @"A long text #hashTag text  http://www.google.com  @username";
+  NSString *str = @"A long text #hashTag text  http://www.google.com  @username\n\n";
   for (NSInteger i = 0 ; i < indexPath.row ; i++) {
-    str = [NSString stringWithFormat:@"%@ %@",str,@"A long text\n\n"];
+    str = [NSString stringWithFormat:@"%@ %@",str,@"A long text"];
   }
   str = [NSString stringWithFormat:@"%@ %ld",str,(long)indexPath.row];
   [cell configureText:str forExpandedState:[self.expandedIndexPaths containsObject:indexPath]];
@@ -54,7 +54,7 @@
   if ([self.expandedIndexPaths containsObject:indexPath]) {
     return UITableViewAutomaticDimension;
   }else {
-    return 100.0;
+    return 50.0;
   }
 }
 
