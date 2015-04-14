@@ -30,6 +30,14 @@ static NSString *kCollapseToken = @"Read Less";
       [self.delegate customTableViewCell:self didTapOnUserHandle:tappedString];
     }
   }];
+  NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
+  [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font}
+                        range:NSMakeRange(3, kExpansionToken.length - 3)];
+  [self.customLabel setTruncationToken:attribString.string withAction:^(NSString *tappedString) {
+    if ([self.delegate respondsToSelector:@selector(didTapOnMoreButton:)]) {
+      [self.delegate didTapOnMoreButton:self];
+    }
+  }];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -39,10 +47,10 @@ static NSString *kCollapseToken = @"Read Less";
 
 - (void)configureText:(NSString*)str forExpandedState:(BOOL)isExpanded {
   NSMutableAttributedString *finalString;
-
+  finalString = [[NSMutableAttributedString alloc]initWithString:str attributes:@{NSForegroundColorAttributeName:[UIColor blackColor],NSFontAttributeName:self.customLabel.font}];
   if (isExpanded) {
     NSString *expandedString = [NSString stringWithFormat:@"%@ %@",str,kCollapseToken];
-    finalString = [[NSMutableAttributedString alloc]initWithString:expandedString];
+    finalString = [[NSMutableAttributedString alloc]initWithString:expandedString attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
     PatternTapHandler tap = ^(NSString *string) {
       if ([self.delegate respondsToSelector:@selector(didTapOnMoreButton:)]) {
         [self.delegate didTapOnMoreButton:self];
@@ -54,15 +62,7 @@ static NSString *kCollapseToken = @"Read Less";
     self.customLabel.attributedText = finalString;
 
   }else {
-    NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
-    [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font}
-                          range:NSMakeRange(3, kExpansionToken.length - 3)];
-    [self.customLabel setAttributedTruncationToken:attribString withAction:^(NSString *tappedString) {
-      if ([self.delegate respondsToSelector:@selector(didTapOnMoreButton:)]) {
-        [self.delegate didTapOnMoreButton:self];
-      }
-    }];
-    [self.customLabel setText:str withTruncation:YES];
+    [self.customLabel setAttributedText:finalString withTruncation:YES];
   }
 }
 
