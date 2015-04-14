@@ -33,7 +33,7 @@ static NSString *kCollapseToken = @"Read Less";
   NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
   [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font}
                         range:NSMakeRange(3, kExpansionToken.length - 3)];
-  [self.customLabel setTruncationToken:attribString.string withAction:^(NSString *tappedString) {
+  [self.customLabel setAttributedTruncationToken:attribString withAction:^(NSString *tappedString) {
     if ([self.delegate respondsToSelector:@selector(didTapOnMoreButton:)]) {
       [self.delegate didTapOnMoreButton:self];
     }

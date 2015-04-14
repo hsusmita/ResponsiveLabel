@@ -286,10 +286,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 #pragma mark - Truncation Handlers
 
 - (void)configureTruncationToken {
-  if (self.attributedTruncationToken) {
-    [self appendAttributedTruncationToken];
-  }else if (self.truncationToken) {
-    [self appendTruncationToken];
+  NSString *currentText = self.attributedText.string;
+  NSRange newLineRange = [currentText rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]];
+  if (newLineRange.location == NSNotFound) {
+    [self appendTokenToText:currentText];
+  }else {
+    [self appendTokenToTextWithNewLine:currentText];
   }
 }
 
@@ -297,26 +299,57 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   return (self.truncationToken || self.attributedTruncationToken);
 }
 
-- (void)appendTruncationToken {
-  NSString *currentText = self.attributedText.string;
+//- (void)appendTruncationToken {
+//  NSString *currentText = self.attributedText.string;
+//  NSRange newLineRange = [currentText rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]];
+//  if (newLineRange.location == NSNotFound) {
+//    [self appendTokenToText:currentText];
+//  }else {
+//    [self appendTokenToTextWithNewLine:currentText];
+//  }
+//}
+//
+//- (void)appendAttributedTruncationToken {
+////  NSString *currentText = self.attributedText.string;
+////  NSRange range = [self rangeForTokenInsertion:currentText];
+////  if (range.location == NSNotFound) {
+////    range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
+////  }
+////  if (range.location != NSNotFound) {
+////    [self.textStorage replaceCharactersInRange:range withString:@""];
+////    [self.textStorage appendAttributedString:self.attributedTruncationToken];
+////  }
+//  NSString *currentText = self.attributedText.string;
+//  NSRange newLineRange = [currentText rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]];
+//  if (newLineRange.location == NSNotFound) {
+//    [self appendTokenToText:currentText];
+//  }else {
+//    [self appendTokenToTextWithNewLine:currentText];
+//  }
+//}
+//
+
+- (void)appendTokenToText:(NSString *)currentText {
   NSRange range = [self rangeForTokenInsertion:currentText];
-  if (range.location == NSNotFound) {
-    range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
-  }
   if (range.location != NSNotFound) {
-    [self.textStorage replaceCharactersInRange:range withString:self.truncationToken];
+    NSAttributedString *tokenString = self.attributedTruncationToken ? self.attributedTruncationToken :[[NSAttributedString alloc]initWithString:self.truncationToken] ;
+
+    [self.textStorage replaceCharactersInRange:range withAttributedString:tokenString];
   }
 }
 
-- (void)appendAttributedTruncationToken {
-  NSString *currentText = self.attributedText.string;
-  NSRange range = [self rangeForTokenInsertion:currentText];
-  if (range.location == NSNotFound) {
-    range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
-  }
+- (void)appendTokenToTextWithNewLine:(NSString *)currentText {
+  NSRange range = [self rangeForTokenInsertionForStringWithNewLine:currentText];
   if (range.location != NSNotFound) {
-    [self.textStorage replaceCharactersInRange:range withString:@""];
-    [self.textStorage appendAttributedString:self.attributedTruncationToken];
+    NSAttributedString *tokenString = self.attributedTruncationToken ? self.attributedTruncationToken :[[NSAttributedString alloc]initWithString:self.truncationToken] ;
+
+    [self.textStorage replaceCharactersInRange:NSMakeRange(range.location + range.length -1, self.textStorage.length - range.location - range.length+1)
+                          withAttributedString:tokenString];
+    NSRange finalRange = [self rangeForTokenInsertion:self.textStorage.string];
+    if (finalRange.location != NSNotFound){
+      NSRange furtherTruncationRange = NSMakeRange(finalRange.location,finalRange.length - self.truncationToken.length);
+      [self.textStorage replaceCharactersInRange:furtherTruncationRange withString:@""];
+    }
   }
 }
 
@@ -357,9 +390,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
       index = NSMaxRange(lineRange);
     }
     rangeOfText = lineRange;
-    NSString *tokenString = self.attributedTruncationToken ? self.attributedTruncationToken.string : self.truncationToken;
-    rangeOfText.location += rangeOfText.length - tokenString.length + 1;
-    rangeOfText.length = text.length - rangeOfText.location;
+//    NSLog(@"line range = %@",[self.textStorage.string substringWithRange:rangeOfText]);
+//    NSString *tokenString = self.attributedTruncationToken ? self.attributedTruncationToken.string : self.truncationToken;
+//    rangeOfText.location += rangeOfText.length - tokenString.length + 1;
+//    rangeOfText.length = text.length - rangeOfText.location;
   }
   return rangeOfText;
 }
@@ -392,10 +426,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
   CGPoint touchLocation = [[touches anyObject] locationInView:self];
   NSInteger index = [self stringIndexAtLocation:touchLocation];
+  NSLog(@"touch index = %ld",index);
   NSRange patternRange;
   PatternTapHandler tapHandler = [self tapResponderAtIndex:index effectiveRange:&patternRange];
   if (tapHandler) {
-    tapHandler([self.attributedText.string substringWithRange:patternRange]);
+    tapHandler([self.textStorage.string substringWithRange:patternRange]);
+    NSLog(@"tap on");
   }else {
     [super touchesEnded:touches withEvent:event];
   }
@@ -411,13 +447,17 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (NSUInteger)stringIndexAtLocation:(CGPoint)location {
   NSUInteger stringIndex = NSNotFound;
+  NSLog(@"count = %ld",self.textStorage.string.length);
   if (self.textStorage.string.length > 0) {
     NSUInteger glyphIndex = [self glyphIndexForLocation:location];
+    NSLog(@"glyph index = %ld",glyphIndex);
+
     // If the touch is in white space after the last glyph on the line we don't
     // count it as a hit on the text
     NSRange lineRange;
     CGRect lineRect = [self.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
                                                                effectiveRange:&lineRange];
+    lineRect.size.height = 60;
     if (CGRectContainsPoint(lineRect, location)) {
       stringIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
     }
@@ -452,14 +492,15 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self.patternDescriptors enumerateObjectsUsingBlock:^(PatternDescriptor *descriptor, NSUInteger idx, BOOL *stop) {
     NSArray *ranges = [descriptor patternRangesForString:self.textStorage.string];
     [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-      BOOL doesIntesectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0);
+      BOOL doesIntesectTruncationRange =(truncationRange.location != NSNotFound) && (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0);
       BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
       if (doesIntesectTruncationRange || isTruncationRange) {
         if (descriptor.patternAttributes)
           [self.textStorage addAttributes: descriptor.patternAttributes range:obj.rangeValue];
-        if (descriptor.tapResponder)
+        if (descriptor.tapResponder) {
           [self.textStorage addAttribute:RLTapResponderAttributeName value:descriptor.tapResponder range:obj.rangeValue];
         }
+      }
     }];
   }];
 }
