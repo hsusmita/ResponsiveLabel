@@ -62,7 +62,7 @@ static NSString *kCollapseToken = @"Read Less";
     self.customLabel.attributedText = finalString;
 
   }else {
-    [self.customLabel setAttributedText:finalString withTruncation:YES];
+    [self.customLabel setText:str withTruncation:YES];
   }
 }
 

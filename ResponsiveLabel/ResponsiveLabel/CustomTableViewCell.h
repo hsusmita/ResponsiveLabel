@@ -12,17 +12,17 @@
 @protocol CustomTableViewCellDelegate;
 
 @interface CustomTableViewCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet ResponsiveLabel *customLabel;
 
+@property (weak, nonatomic) IBOutlet ResponsiveLabel *customLabel;
 @property (nonatomic, weak) id<CustomTableViewCellDelegate>delegate;
 
 - (void)configureText:(NSString*)str forExpandedState:(BOOL)isExpanded;
+
 @end
 
 @protocol CustomTableViewCellDelegate<NSObject>
 
 @optional
-
 - (void)didTapOnMoreButton:(CustomTableViewCell *)cell;
 - (void)customTableViewCell:(CustomTableViewCell *)cell didTapOnHashTag:(NSString *)hashTag;
 - (void)customTableViewCell:(CustomTableViewCell *)cell didTapOnUserHandle:(NSString *)userHandle;
