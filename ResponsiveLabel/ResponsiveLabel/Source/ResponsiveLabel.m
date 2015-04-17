@@ -116,12 +116,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   self.textContainer.size = size;
 }
 
-- (void)setAttributedText:(NSAttributedString *)attributedText {
-  [self setAttributedText:attributedText withTruncation:NO];
-}
-
 - (void)setText:(NSString *)text {
   [self setText:text withTruncation:NO];
+}
+
+- (void)setAttributedText:(NSAttributedString *)attributedText {
+  [self setAttributedText:attributedText withTruncation:NO];
 }
 
 - (void)setText:(NSString *)text withTruncation:(BOOL)truncation {
@@ -139,10 +139,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     [self appendTokenToText:self.attributedText.string];
   }
   [self generateRangesForPatterns];
-}
-
-- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken {
-  _attributedTruncationToken = attributedTruncationToken;
 }
 
 #pragma mark - Drawing
@@ -176,33 +172,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (void)setNumberOfLines:(NSInteger)numberOfLines {
   [super setNumberOfLines:numberOfLines];
   _textContainer.maximumNumberOfLines = numberOfLines;
-}
-
-+ (NSAttributedString *)sanitizeAttributedString:(NSAttributedString *)attributedString
-{
-  // Setup paragraph alignement properly. IB applies the line break style
-  // to the attributed string. The problem is that the text container then
-  // breaks at the first line of text. If we set the line break to wrapping
-  // then the text container defines the break mode and it works.
-  // NOTE: This is either an Apple bug or something I've misunderstood.
-  
-  // Get the current paragraph style. IB only allows a single paragraph so
-  // getting the style of the first char is fine.
-  NSRange range;
-  NSParagraphStyle *paragraphStyle = [attributedString attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:&range];
-  
-  if (paragraphStyle == nil)
-    return attributedString;
-  
-  // Remove the line breaks
-  NSMutableParagraphStyle *mutableParagraphStyle = [paragraphStyle mutableCopy];
-  mutableParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-  
-  // Apply new style
-  NSMutableAttributedString *restyled = [[NSMutableAttributedString alloc] initWithAttributedString:attributedString];
-  [restyled addAttribute:NSParagraphStyleAttributeName value:mutableParagraphStyle range:NSMakeRange(0, restyled.length)];
-  
-  return restyled;
 }
 
 - (NSDictionary *)attributesFromProperties {
