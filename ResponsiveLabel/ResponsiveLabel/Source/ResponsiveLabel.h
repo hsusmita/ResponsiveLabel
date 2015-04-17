@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PatternDescriptor.h"
 
 /**
  Custom NSTextAttributeName which takes value of type PatternTapHandler.
@@ -19,6 +20,11 @@ static NSString *RLTapResponderAttributeName = @"Tap Responder Name";
  */
 typedef void (^PatternTapHandler)(NSString *tappedString);
 
+/**
+ UILabel subclass which responds to touch on specified patterns.
+ This allows to replace the default truncation token with tappable attributed string
+ */
+
 @interface ResponsiveLabel : UILabel
 
 @property (nonatomic, strong) NSAttributedString *attributedTruncationToken;
@@ -26,10 +32,13 @@ typedef void (^PatternTapHandler)(NSString *tappedString);
 - (void)setText:(NSString *)text withTruncation:(BOOL)truncation;
 - (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation;
 
-- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapHandler)action;
+- (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor;
+- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken
+                          withAction:(PatternTapHandler)action;
+
+- (void)enableStringDetection:(NSString *)string withAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action;
 - (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action;
 - (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action;
 - (void)enableUserHandleDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action;
-- (void)enableStringDetection:(NSString *)string withAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action;
 
 @end

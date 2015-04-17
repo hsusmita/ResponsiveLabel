@@ -7,7 +7,6 @@
 //
 
 #import "ResponsiveLabel.h"
-#import "PatternDescriptor.h"
 
 const NSString *kPatternAttribute = @"PatternAttribue";
 const NSString *kPatternAction  = @"PatternAction";
@@ -301,82 +300,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   }];
 }
 
-#pragma mark - Public Methods
-
-- (void)setText:(NSString *)text withTruncation:(BOOL)truncation {
-  [super setText:text];
-  NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text
-                                                                       attributes:[self attributesFromProperties]];
-  [self setAttributedText:attributedText withTruncation:truncation];
-}
-
-- (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation {
-  [super setAttributedText:attributedText];
-  [self.textStorage setAttributedString:attributedText];
-  
-  if (truncation && self.attributedText.length > 0) {
-    [self appendTokenToText:self.attributedText.string];
-  }
-  [self generateRangesForPatterns];
-}
-
-- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapHandler)action {
-  self.attributedTruncationToken = attributedTruncationToken;
-  NSError *error;
-  NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
-  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
-  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:kPatternSearchTypeLast
-                                                    withPatternAttributes:nil
-                                                          andTapResponder:action];
-  [self.patternDescriptors addObject:descriptor];
-}
-
-- (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {  
-  NSError *error = nil;
-  NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
-  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector
-                                                           withSearchType:kPatternSearchTypeAll
-                                                    withPatternAttributes:dictionary
-                                                          andTapResponder:action];
-  [self.patternDescriptors addObject:descriptor];
-}
-
-- (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
-  NSError *error;
-  NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:kRegexStringForHashTag options:0 error:&error];
-  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:kPatternSearchTypeAll
-                                                    withPatternAttributes:dictionary
-                                                          andTapResponder:action];
-  [self.patternDescriptors addObject:descriptor];
-}
-
-- (void)enableUserHandleDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
-  NSError *error;
-  NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:kRegexStringForUserHandle
-                                                                    options:0
-                                                                      error:&error];
-  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:kPatternSearchTypeAll
-                                                    withPatternAttributes:dictionary
-                                                          andTapResponder:action];
-  [self.patternDescriptors addObject:descriptor];
-}
-
-- (void)enableStringDetection:(NSString *)string withAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
-  NSError *error;
-  NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,string];
-  NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:pattern
-                                                                  options:0
-                                                                    error:&error];
-  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:kPatternSearchTypeAll
-                                                    withPatternAttributes:dictionary
-                                                          andTapResponder:action];
-  [self.patternDescriptors addObject:descriptor];
-}
-
 #pragma mark - Helper Methods
 
 - (NSUInteger)stringIndexAtLocation:(CGPoint)location {
@@ -462,6 +385,86 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
   }
   return truncationRange;
+}
+
+#pragma mark - Public Methods
+
+- (void)setText:(NSString *)text withTruncation:(BOOL)truncation {
+  [super setText:text];
+  NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text
+                                                                       attributes:[self attributesFromProperties]];
+  [self setAttributedText:attributedText withTruncation:truncation];
+}
+
+- (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation {
+  [super setAttributedText:attributedText];
+  [self.textStorage setAttributedString:attributedText];
+  
+  if (truncation && self.attributedText.length > 0) {
+    [self appendTokenToText:self.attributedText.string];
+  }
+  [self generateRangesForPatterns];
+}
+
+- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapHandler)action {
+  self.attributedTruncationToken = attributedTruncationToken;
+  NSError *error;
+  NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
+  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
+                                                           withSearchType:kPatternSearchTypeLast
+                                                    withPatternAttributes:nil
+                                                          andTapResponder:action];
+  [self enablePatternDetection:descriptor];
+}
+
+- (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
+  NSError *error = nil;
+  NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector
+                                                           withSearchType:kPatternSearchTypeAll
+                                                    withPatternAttributes:dictionary
+                                                          andTapResponder:action];
+  [self enablePatternDetection:descriptor];
+}
+
+- (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
+  NSError *error;
+  NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:kRegexStringForHashTag options:0 error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
+                                                           withSearchType:kPatternSearchTypeAll
+                                                    withPatternAttributes:dictionary
+                                                          andTapResponder:action];
+  [self enablePatternDetection:descriptor];
+}
+
+- (void)enableUserHandleDetectionWithAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
+  NSError *error;
+  NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:kRegexStringForUserHandle
+                                                                   options:0
+                                                                     error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
+                                                           withSearchType:kPatternSearchTypeAll
+                                                    withPatternAttributes:dictionary
+                                                          andTapResponder:action];
+  [self enablePatternDetection:descriptor];
+}
+
+- (void)enableStringDetection:(NSString *)string withAttributes:(NSDictionary*)dictionary withAction:(PatternTapHandler)action {
+  NSError *error;
+  NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,string];
+  NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:pattern
+                                                                   options:0
+                                                                     error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
+                                                           withSearchType:kPatternSearchTypeAll
+                                                    withPatternAttributes:dictionary
+                                                          andTapResponder:action];
+  [self enablePatternDetection:descriptor];
+}
+
+- (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor {
+  [self.patternDescriptors addObject:patternDescriptor];
 }
 
 @end
