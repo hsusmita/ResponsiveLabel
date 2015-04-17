@@ -27,7 +27,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 @property (nonatomic, strong) NSMutableArray *patternDescriptors;
 
 @end
+
 @implementation ResponsiveLabel
+
+#pragma mark - Initializers
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -49,7 +52,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)layoutSubviews {
   [super layoutSubviews];
-  // Update our container size when the view frame changes
   self.textContainer.size = self.bounds.size;
 }
 
@@ -61,6 +63,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     [_textStorage addLayoutManager:self.layoutManager];
     [self.layoutManager setTextStorage:_textStorage];
   }
+  
   return _textStorage;
 }
 
@@ -74,7 +77,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     _textContainer.size = self.frame.size;
     [_textContainer setLayoutManager:self.layoutManager];
   }
-  
+
   return _textContainer;
 }
 
@@ -124,21 +127,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self setAttributedText:attributedText withTruncation:NO];
 }
 
-- (void)setText:(NSString *)text withTruncation:(BOOL)truncation {
-  [super setText:text];
-  NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text
-                                                                       attributes:[self attributesFromProperties]];
-  [self setAttributedText:attributedText withTruncation:truncation];
-}
-
-- (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation {
-  [super setAttributedText:attributedText];
-  [self.textStorage setAttributedString:attributedText];
-
-  if (truncation && self.attributedText.length > 0) {
-    [self appendTokenToText:self.attributedText.string];
-  }
-  [self generateRangesForPatterns];
+- (void)setNumberOfLines:(NSInteger)numberOfLines {
+  [super setNumberOfLines:numberOfLines];
+  _textContainer.maximumNumberOfLines = numberOfLines;
 }
 
 #pragma mark - Drawing
@@ -169,43 +160,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   return textOffset;
 }
 
-- (void)setNumberOfLines:(NSInteger)numberOfLines {
-  [super setNumberOfLines:numberOfLines];
-  _textContainer.maximumNumberOfLines = numberOfLines;
++ (BOOL)requiresConstraintBasedLayout {
+  return YES;
 }
-
-- (NSDictionary *)attributesFromProperties {
-  // Setup shadow attributes
-  NSShadow *shadow = shadow = [[NSShadow alloc] init];
-  if (self.shadowColor) {
-    shadow.shadowColor = self.shadowColor;
-    shadow.shadowOffset = self.shadowOffset;
-  }
-  else {
-    shadow.shadowOffset = CGSizeMake(0, -1);
-    shadow.shadowColor = nil;
-  }
-  
-  // Setup colour attributes
-  UIColor *colour = self.textColor;
-  if (!self.isEnabled)
-    colour = [UIColor lightGrayColor];
-  else if (self.isHighlighted)
-    colour = self.highlightedTextColor;
-  
-  // Setup paragraph attributes
-  NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
-  paragraph.alignment = self.textAlignment;
-  
-  // Create the dictionary
-  NSDictionary *attributes = @{NSFontAttributeName : self.font,
-                               NSForegroundColorAttributeName : colour,
-                               NSShadowAttributeName : shadow,
-                               NSParagraphStyleAttributeName : paragraph,
-                               };
-  return attributes;
-}
-
 
 #pragma mark - Override UILabel Methods
 
@@ -245,11 +202,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 #pragma mark - Truncation Handlers
 
-- (BOOL)isNewLinePresent:(NSString *)currentText {
-  NSRange newLineRange = [currentText rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]];
-  return (newLineRange.location != NSNotFound);
-}
-
 - (void)appendTokenToText:(NSString *)currentText {
   NSRange tokenRange = NSMakeRange(NSNotFound, 0);
   NSString *stringToDisplay = currentText;
@@ -264,14 +216,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   if (tokenRange.location != NSNotFound) {
     [self.textStorage replaceCharactersInRange:tokenRange withAttributedString:self.attributedTruncationToken];
   }
-}
-
-- (NSRange)truncationRange {
-  NSRange truncationRange = NSMakeRange(NSNotFound, 0);
-  if (self.attributedTruncationToken) {
-    truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
-  }
-  return truncationRange;
 }
 
 - (NSRange)rangeForTokenInsertion:(NSString *)text {
@@ -337,51 +281,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   }
 }
 
-- (PatternTapHandler)tapResponderAtIndex:(NSInteger)index effectiveRange:(NSRangePointer)patternRange {
-  PatternTapHandler tapResponder = nil;
-  if (index < self.textStorage.length) {
-    tapResponder =[self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:patternRange];
-  }
-  return tapResponder;
-}
-
-- (NSUInteger)stringIndexAtLocation:(CGPoint)location {
-  NSUInteger stringIndex = NSNotFound;
-  if (self.textStorage.string.length > 0) {
-    NSUInteger glyphIndex = [self glyphIndexForLocation:location];
-    // If the touch is in white space after the last glyph on the line we don't
-    // count it as a hit on the text
-    NSRange lineRange;
-    CGRect lineRect = [self.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
-                                                               effectiveRange:&lineRange];
-    lineRect.size.height = 60;
-    if (CGRectContainsPoint(lineRect, location)) {
-      stringIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
-    }
-  }
-  return stringIndex;
-}
-
-- (NSUInteger)glyphIndexForLocation:(CGPoint)location {
-  // Work out the offset of the text in the view
-  CGPoint textOffset;
-  NSRange glyphRange = [self.layoutManager
-                        glyphRangeForTextContainer:self.textContainer];
-  textOffset = [self calcTextOffsetForGlyphRange:glyphRange];
-  
-  // Get the touch location and use text offset to convert to text cotainer coords
-  location.x -= textOffset.x;
-  location.y -= textOffset.y;
-  
-  return  [self.layoutManager glyphIndexForPoint:location
-                                 inTextContainer:self.textContainer];
-
-}
-
-+ (BOOL)requiresConstraintBasedLayout {
-  return YES;
-}
-
 #pragma mark - Pattern matching
 
 - (void)generateRangesForPatterns {
@@ -400,6 +299,25 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
       }
     }];
   }];
+}
+
+#pragma mark - Public Methods
+
+- (void)setText:(NSString *)text withTruncation:(BOOL)truncation {
+  [super setText:text];
+  NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text
+                                                                       attributes:[self attributesFromProperties]];
+  [self setAttributedText:attributedText withTruncation:truncation];
+}
+
+- (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation {
+  [super setAttributedText:attributedText];
+  [self.textStorage setAttributedString:attributedText];
+  
+  if (truncation && self.attributedText.length > 0) {
+    [self appendTokenToText:self.attributedText.string];
+  }
+  [self generateRangesForPatterns];
 }
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapHandler)action {
@@ -457,6 +375,93 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
                                                     withPatternAttributes:dictionary
                                                           andTapResponder:action];
   [self.patternDescriptors addObject:descriptor];
+}
+
+#pragma mark - Helper Methods
+
+- (NSUInteger)stringIndexAtLocation:(CGPoint)location {
+  NSUInteger stringIndex = NSNotFound;
+  if (self.textStorage.string.length > 0) {
+    NSUInteger glyphIndex = [self glyphIndexForLocation:location];
+    // If the touch is in white space after the last glyph on the line we don't
+    // count it as a hit on the text
+    NSRange lineRange;
+    CGRect lineRect = [self.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
+                                                               effectiveRange:&lineRange];
+    lineRect.size.height = 60;  //Adjustment to increase tap area
+    if (CGRectContainsPoint(lineRect, location)) {
+      stringIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+    }
+  }
+  return stringIndex;
+}
+
+- (NSUInteger)glyphIndexForLocation:(CGPoint)location {
+  // Work out the offset of the text in the view
+  CGPoint textOffset;
+  NSRange glyphRange = [self.layoutManager
+                        glyphRangeForTextContainer:self.textContainer];
+  textOffset = [self calcTextOffsetForGlyphRange:glyphRange];
+  
+  // Get the touch location and use text offset to convert to text cotainer coords
+  location.x -= textOffset.x;
+  location.y -= textOffset.y;
+  
+  return  [self.layoutManager glyphIndexForPoint:location
+                                 inTextContainer:self.textContainer];
+}
+
+- (NSDictionary *)attributesFromProperties {
+  // Setup shadow attributes
+  NSShadow *shadow = shadow = [[NSShadow alloc] init];
+  if (self.shadowColor) {
+    shadow.shadowColor = self.shadowColor;
+    shadow.shadowOffset = self.shadowOffset;
+  }
+  else {
+    shadow.shadowOffset = CGSizeMake(0, -1);
+    shadow.shadowColor = nil;
+  }
+  
+  // Setup colour attributes
+  UIColor *colour = self.textColor;
+  if (!self.isEnabled)
+    colour = [UIColor lightGrayColor];
+  else if (self.isHighlighted)
+    colour = self.highlightedTextColor;
+  
+  // Setup paragraph attributes
+  NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
+  paragraph.alignment = self.textAlignment;
+  
+  // Create the dictionary
+  NSDictionary *attributes = @{NSFontAttributeName : self.font,
+                               NSForegroundColorAttributeName : colour,
+                               NSShadowAttributeName : shadow,
+                               NSParagraphStyleAttributeName : paragraph,
+                               };
+  return attributes;
+}
+
+- (PatternTapHandler)tapResponderAtIndex:(NSInteger)index effectiveRange:(NSRangePointer)patternRange {
+  PatternTapHandler tapResponder = nil;
+  if (index < self.textStorage.length) {
+    tapResponder =[self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:patternRange];
+  }
+  return tapResponder;
+}
+
+- (BOOL)isNewLinePresent:(NSString *)currentText {
+  NSRange newLineRange = [currentText rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]];
+  return (newLineRange.location != NSNotFound);
+}
+
+- (NSRange)truncationRange {
+  NSRange truncationRange = NSMakeRange(NSNotFound, 0);
+  if (self.attributedTruncationToken) {
+    truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
+  }
+  return truncationRange;
 }
 
 @end

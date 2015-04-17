@@ -8,8 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ Custom NSTextAttributeName which takes value of type PatternTapHandler.
+ It specifies the action to be performed when a range of text with that attribute is tapped.
+ */
 static NSString *RLTapResponderAttributeName = @"Tap Responder Name";
 
+/**
+  Type for responder block to be specfied with RLTapResponderAttributeName
+ */
 typedef void (^PatternTapHandler)(NSString *tappedString);
 
 @interface ResponsiveLabel : UILabel
