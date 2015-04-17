@@ -12,15 +12,13 @@
 
 - (id)initWithRegex:(NSRegularExpression *)expression
      withSearchType:(PatternSearchType)searchType
-withPatternAttributes:(NSDictionary *)patternAttributes
-    andTapResponder:(PatternTapResponder)tapResponder {
+withPatternAttributes:(NSDictionary *)patternAttributes {
   
   self = [super init];
   if (self) {
     _patternExpression = expression;
     _searchType = searchType;
     _patternAttributes = patternAttributes;
-    _tapResponder = tapResponder;
   }
   return self;
 }

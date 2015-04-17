@@ -15,21 +15,30 @@ static NSString *kCollapseToken = @"Read Less";
 
 - (void)awakeFromNib {
   self.customLabel.userInteractionEnabled = YES;
-  [self.customLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]} withAction:^(NSString *tappedString) {
+  
+  PatternTapResponder hashTagTapAction = ^(NSString *tappedString){
     if ([self.delegate respondsToSelector:@selector(customTableViewCell:didTapOnHashTag:)]) {
       [self.delegate customTableViewCell:self didTapOnHashTag:tappedString];
     }
-  }];
-  [self.customLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor cyanColor],NSUnderlineStyleAttributeName:[NSNumber numberWithInt:1]} withAction:^(NSString *tappedString) {
+  };
+  [self.customLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],
+                                                           RLTapResponderAttributeName:hashTagTapAction}];
+ 
+  PatternTapResponder urlTapAction = ^(NSString *tappedString) {
     if ([self.delegate respondsToSelector:@selector(customTableViewCell:didTapOnURL:)]) {
       [self.delegate customTableViewCell:self didTapOnURL:tappedString];
     }
-  }];
-  [self.customLabel enableUserHandleDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor grayColor]} withAction:^(NSString *tappedString) {
+  };
+  [self.customLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor cyanColor],
+                                                       NSUnderlineStyleAttributeName:[NSNumber numberWithInt:1],
+                                                       RLTapResponderAttributeName:urlTapAction}];
+  PatternTapResponder userHandleTapAction = ^(NSString *tappedString){
     if ([self.delegate respondsToSelector:@selector(customTableViewCell:didTapOnUserHandle:)]) {
-      [self.delegate customTableViewCell:self didTapOnUserHandle:tappedString];
-    }
-  }];
+    [self.delegate customTableViewCell:self didTapOnUserHandle:tappedString];
+  }};
+  [self.customLabel enableUserHandleDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor grayColor],
+                                                              RLTapResponderAttributeName:userHandleTapAction}];
+  
   NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
   [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font}
                         range:NSMakeRange(3, kExpansionToken.length - 3)];
@@ -51,7 +60,7 @@ static NSString *kCollapseToken = @"Read Less";
   if (isExpanded) {
     NSString *expandedString = [NSString stringWithFormat:@"%@ %@",str,kCollapseToken];
     finalString = [[NSMutableAttributedString alloc]initWithString:expandedString attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
-    PatternTapHandler tap = ^(NSString *string) {
+    PatternTapResponder tap = ^(NSString *string) {
       if ([self.delegate respondsToSelector:@selector(didTapOnMoreButton:)]) {
         [self.delegate didTapOnMoreButton:self];
       }
