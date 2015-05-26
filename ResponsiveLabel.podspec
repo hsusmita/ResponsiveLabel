@@ -2,7 +2,7 @@ Pod:: Spec.new do |spec|
   spec.platform     = 'ios', '8.0'
   spec.name         = 'ResponsiveLabel'
   spec.version      = '1.0.0'
-  spec.summary      = 'A UILabel subclass which responds to touch on specified patterns.This allows to replace the default truncation token with tappable attributed string'
+  spec.summary      = 'A UILabel subclass which responds to touch on specified patterns and allows to set custom truncation token'
   spec.author = {
     'Susmita Horrow' => 'susmita.horrow@gmail.com'
   }
