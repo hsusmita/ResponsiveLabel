@@ -411,7 +411,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
   NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:kPatternSearchTypeLast
+                                                           withSearchType:PatternSearchTypeLast
                                                     withPatternAttributes:@{RLTapResponderAttributeName:action}];
   [self enablePatternDetection:descriptor];
 }
@@ -420,7 +420,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   NSError *error = nil;
   NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector
-                                                           withSearchType:kPatternSearchTypeAll
+                                                           withSearchType:PatternSearchTypeAll
                                                     withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
 }
@@ -429,7 +429,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   NSError *error;
   NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:kRegexStringForHashTag options:0 error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:kPatternSearchTypeAll
+                                                           withSearchType:PatternSearchTypeAll
                                                     withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
 }
@@ -440,7 +440,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
                                                                    options:0
                                                                      error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:kPatternSearchTypeAll
+                                                           withSearchType:PatternSearchTypeAll
                                                     withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
 }
@@ -453,7 +453,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
                                                                      error:&error];
 
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:kPatternSearchTypeAll
+                                                           withSearchType:PatternSearchTypeAll
                                                     withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
 }

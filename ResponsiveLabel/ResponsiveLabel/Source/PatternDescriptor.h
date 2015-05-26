@@ -12,9 +12,9 @@
  Specifies the type of Pattern Search
  */
 typedef NS_ENUM(NSInteger,PatternSearchType) {
-  kPatternSearchTypeAll,
-  kPatternSearchTypeFirst,
-  kPatternSearchTypeLast
+  PatternSearchTypeAll,
+  PatternSearchTypeFirst,
+  PatternSearchTypeLast
 };
 
 /**

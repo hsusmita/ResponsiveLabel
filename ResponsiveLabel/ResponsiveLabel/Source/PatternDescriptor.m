@@ -38,15 +38,15 @@ withPatternAttributes:(NSDictionary *)patternAttributes {
   if (generatedRanges.count == 0) return finalRanges;
   
   switch (self.searchType) {
-    case kPatternSearchTypeFirst:
+    case PatternSearchTypeFirst:
       finalRanges = [NSArray arrayWithObject:generatedRanges.firstObject];
       break;
       
-    case kPatternSearchTypeLast:
+    case PatternSearchTypeLast:
       finalRanges = [NSArray arrayWithObject:generatedRanges.lastObject];
       break;
       
-    case kPatternSearchTypeAll:
+    case PatternSearchTypeAll:
       finalRanges = [NSArray arrayWithArray:generatedRanges];
       break;
       
