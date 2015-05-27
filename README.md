@@ -3,7 +3,7 @@ A UILabel subclass which responds to touch on specified patterns. It has the fol
 
 1. It can detect pattern specified by regular expression and apply style like font, color etc.
 2. It allows to replace default ellipse with tappable attributed string to mark truncation
-3. Conveninece methods are provided to detect hashtags, username handler and URLs
+3. Convenience methods are provided to detect hashtags, username handler and URLs
 
 #Installation
 
@@ -71,3 +71,16 @@ NSLog(@"Tap on truncation text");
 }];
 [self.customLabel setText:str withTruncation:YES];
 ```
+# Screenshots
+<img src="https://cloud.githubusercontent.com/assets/3590619/7828584/f7ba853a-0452-11e5-9d6a-c9923d89ee8a.png" width="400" display="inline-block">
+<img src="https://cloud.githubusercontent.com/assets/3590619/7828632/b0425196-0453-11e5-911a-79d56e7a8539.png" width="400" display="inline-block">
+
+# References
+
+The underlying implementation of ResponsiveLabel is based on KILabel(https://github.com/Krelborn/KILabel).
+ResponsiveLabel is made flexible to enable detection of any pattern specified by regular expression.
+
+The following articles were helpful in enhancing the functionalities. 
+
+* http://www.cocoanetics.com/2015/03/customizing-uilabel-hyperlinks/
+* http://www.cocoanetics.com/2015/03/tappable-uilabel-hyperlinks/ 
