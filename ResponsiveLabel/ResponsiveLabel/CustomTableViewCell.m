@@ -47,6 +47,11 @@ static NSString *kCollapseToken = @"Read Less";
       [self.delegate didTapOnMoreButton:self];
     }
   }];
+  PatternTapResponder stringTapAction = ^(NSString *tappedString) {
+    NSLog(@"tapped string = %@",tappedString);
+  };
+  [self.customLabel enableDetectionForStrings:@[@"text",@"long"] withAttributes:@{NSForegroundColorAttributeName:[UIColor brownColor],
+                                                                                  RLTapResponderAttributeName:stringTapAction}];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

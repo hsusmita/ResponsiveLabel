@@ -458,6 +458,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self enablePatternDetection:descriptor];
 }
 
+- (void)enableDetectionForStrings:(NSArray *)stringsArray withAttributes:(NSDictionary *)dictionary {
+  [stringsArray enumerateObjectsUsingBlock:^(NSString *string, NSUInteger idx, BOOL *stop) {
+    [self enableStringDetection:string withAttributes:dictionary];
+  }];
+}
+
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor {
   [self.patternDescriptors addObject:patternDescriptor];
 }

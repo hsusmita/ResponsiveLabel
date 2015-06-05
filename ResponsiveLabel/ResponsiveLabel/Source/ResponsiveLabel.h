@@ -58,11 +58,21 @@ typedef void (^PatternTapResponder)(NSString *tappedString);
 
 /**
  Applies attributes to all the occurances of given string according to the attributes defines in the dictionary.
+ @param string:NSString
  @param dictionary:NSDictionary
  A dictionary containing the attributes to add. To make hashtags tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
 - (void)enableStringDetection:(NSString *)string withAttributes:(NSDictionary*)dictionary;
+
+/**
+ Applies attributes to all the occurances of strings specified in the array according to the attributes defines in the dictionary.
+ @param stringsArray : NSArray
+ @param dictionary:NSDictionary
+ A dictionary containing the attributes to add. To make hashtags tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
+ */
+
+- (void)enableDetectionForStrings:(NSArray *)stringsArray withAttributes:(NSDictionary*)dictionary;
 
 /**
  Applies attributes to all the occurances of hashtags according to the attributes defines in the dictionary.
