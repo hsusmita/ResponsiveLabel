@@ -8,7 +8,7 @@ A UILabel subclass which responds to touch on specified patterns. It has the fol
 #Installation
 
 Add following lines in your pod file  
-pod 'ResponsiveLabel', '~> 1.0.0'
+pod 'ResponsiveLabel', '~> 1.0.1'
 
 #Usage
 
