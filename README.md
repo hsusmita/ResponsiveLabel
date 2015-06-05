@@ -27,6 +27,26 @@ withPatternAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]}];
 [self.customLabel enablePatternDetection:descriptor];
 ```
 
+#### String Detection
+```
+self.customLabel.userInteractionEnabled = YES;
+PatternTapResponder tapResponder = ^(NSString *string) {
+    NSLog(@"tapped = %@",string);
+};
+[self.customLabel enableStringDetection:@"text" withAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],
+                                                                 RLTapResponderAttributeName: tapResponder}];
+```
+
+#### Array of String Detection
+```
+self.customLabel.userInteractionEnabled = YES;
+PatternTapResponder stringTapAction = ^(NSString *tappedString) {
+    NSLog(@"tapped string = %@",tappedString);
+  };
+[self.customLabel enableDetectionForStrings:@[@"text",@"long"] withAttributes:@{NSForegroundColorAttributeName:[UIColor brownColor],
+                                                                                  RLTapResponderAttributeName:stringTapAction}];
+```
+
 #### HashTag Detection
 ```
 self.customLabel.userInteractionEnabled = YES;
