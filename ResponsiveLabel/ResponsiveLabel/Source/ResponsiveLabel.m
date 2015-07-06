@@ -21,10 +21,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 @property (nonatomic, retain) NSTextContainer *textContainer;
 @property (nonatomic, retain) NSTextStorage *textStorage;
 
-@property (nonatomic, strong) UIColor *selectedLinkBackgroundColor;
 @property (nonatomic, assign) NSRange selectedRange;
 @property (nonatomic, strong) NSMutableArray *patternDescriptors;
 @property (nonatomic, strong) NSAttributedString *attributedTruncationToken;
+@property (nonatomic, strong) NSAttributedString *currentAttributedString;
 
 
 @end
@@ -249,7 +249,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)configureForGestures {
   self.userInteractionEnabled = YES;
-  self.selectedLinkBackgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -260,6 +259,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   if (!tapHandler) {
     [super touchesEnded:touches withEvent:event];
   }
+	[self showHighlightedStateForIndex:index];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -268,6 +268,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
   [super touchesCancelled:touches withEvent:event];
+	[self resetHighlightedState];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -277,7 +278,8 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   PatternTapResponder tapHandler = [self tapResponderAtIndex:index effectiveRange:&patternRange];
   if (tapHandler) {
     tapHandler([self.textStorage.string substringWithRange:patternRange]);
-  }else {
+	  [self resetHighlightedState];
+	}else {
     [super touchesEnded:touches withEvent:event];
   }
 }
@@ -368,10 +370,50 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (PatternTapResponder)tapResponderAtIndex:(NSInteger)index effectiveRange:(NSRangePointer)patternRange {
   PatternTapResponder tapResponder = nil;
   if (index < self.textStorage.length) {
-    tapResponder =[self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:patternRange];
+    tapResponder = [self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:patternRange];
   }
   return tapResponder;
 }
+
+- (void)showHighlightedStateForIndex:(NSInteger)index {
+	UIColor *backgroundcolor = nil;
+	UIColor *foregroundcolor = nil;
+	NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
+	self.currentAttributedString = [[NSAttributedString alloc]initWithAttributedString:self.textStorage];
+	NSRange patternRange;
+
+	if (index < self.textStorage.length) {
+		backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+		foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+		
+		if (backgroundcolor) {
+			[str addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
+		}
+		if (foregroundcolor) {
+			[str addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
+		}
+		[self.textStorage setAttributedString:str];
+		[super setAttributedText:self.textStorage];
+	}
+
+}
+
+- (void)resetHighlightedState {
+	if (self.currentAttributedString.length > 0) {
+		[self.textStorage setAttributedString:self.currentAttributedString];
+		[super setAttributedText:self.textStorage];
+	}
+}
+
+
+- (UIColor *)highlightedTextColorAtIndex:(NSInteger)index effectiveRange:(NSRangePointer)patternRange {
+	UIColor *color = nil;
+	if (index < self.textStorage.length) {
+		color = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName atIndex:index effectiveRange:patternRange];
+	}
+	return color;
+}
+
 
 - (BOOL)isNewLinePresent:(NSString *)currentText {
   NSRange newLineRange = [currentText rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]];
@@ -409,7 +451,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   self.attributedTruncationToken = attributedTruncationToken;
   NSError *error;
   NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
-  NSRegularExpression	*regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
+  NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
                                                            withSearchType:PatternSearchTypeLast
                                                     withPatternAttributes:@{RLTapResponderAttributeName:action}];

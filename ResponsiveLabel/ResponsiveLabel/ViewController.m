@@ -39,11 +39,11 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   CustomTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"customCell" forIndexPath:indexPath];
   [cell.customLabel layoutIfNeeded];
-  NSString *str = @"A long text #hashTag text  http://www.google.com  @username";
+  NSString *str = @"A long text with #hashTag text, with @username and URL http://www.google.com ";
   for (NSInteger i = 0 ; i < indexPath.row ; i++) {
     str = [NSString stringWithFormat:@"%@ %@",str,@"A long text\n"];
   }
-  str = [NSString stringWithFormat:@"%@ %ld",str,(long)indexPath.row];
+  str = [NSString stringWithFormat:@"%@",str];
   [cell configureText:str forExpandedState:[self.expandedIndexPaths containsObject:indexPath]];
   
   cell.delegate = self;

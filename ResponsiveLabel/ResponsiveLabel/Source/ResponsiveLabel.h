@@ -13,7 +13,9 @@
  Custom NSTextAttributeName which takes value of type PatternTapHandler.
  It specifies the action to be performed when a range of text with that attribute is tapped.
  */
-static NSString *RLTapResponderAttributeName = @"Tap Responder Name";
+static NSString *RLTapResponderAttributeName = @"TapResponder";
+static NSString *RLHighlightedForegroundColorAttributeName = @"HighlightedForegroundColor";
+static NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundColor";
 
 /**
  Type for responder block to be specfied with RLTapResponderAttributeName
