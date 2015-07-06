@@ -257,7 +257,8 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   NSRange patternRange;
   PatternTapResponder tapHandler = [self tapResponderAtIndex:index effectiveRange:&patternRange];
   if (!tapHandler) {
-    [super touchesEnded:touches withEvent:event];
+    [super touchesBegan:touches withEvent:event];
+	
   }
 	[self showHighlightedStateForIndex:index];
 }
