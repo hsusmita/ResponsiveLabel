@@ -38,7 +38,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     if (self) {
       [self configureForGestures];
       self.patternDescriptors = [NSMutableArray new];
-      }
+    }
     return self;
   }
 
@@ -212,7 +212,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 - (NSRange)rangeForTokenInsertion:(NSString *)text {
-  NSInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:text.length - 1];
+  NSInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:text.length-1];
   NSRange range = [self.layoutManager truncatedGlyphRangeInLineFragmentForGlyphAtIndex:glyphIndex];
   if (range.location != NSNotFound) {
     range.length += self.attributedTruncationToken.length;
@@ -280,17 +280,22 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 #pragma mark - Pattern matching
 
 - (void)generateRangesForPatterns {
-  NSRange truncationRange = [self truncationRange];
   [self.patternDescriptors enumerateObjectsUsingBlock:^(PatternDescriptor *descriptor, NSUInteger idx, BOOL *stop) {
-    NSArray *ranges = [descriptor patternRangesForString:self.textStorage.string];
-    [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-      BOOL doesIntesectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0);
-      BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
-      if (doesIntesectTruncationRange || isTruncationRange) {
-        if (descriptor.patternAttributes)
-          [self.textStorage addAttributes: descriptor.patternAttributes range:obj.rangeValue];
-      }
-    }];
+    [self applyAttributesForPatternDescriptor:descriptor];
+  }];
+}
+
+- (void)applyAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
+  NSRange truncationRange = [self truncationRange];
+  NSArray *ranges = [patternDescriptor patternRangesForString:self.textStorage.string];
+  [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+    BOOL doesIntesectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length > 0);
+    BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
+    //Don't apply attributes if the range gets truncated.
+    if (isTruncationRange || !doesIntesectTruncationRange) {
+      if (patternDescriptor.patternAttributes)
+        [self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
+    }
   }];
 }
 
@@ -447,6 +452,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
                                                            withSearchType:PatternSearchTypeLast
                                                     withPatternAttributes:@{RLTapResponderAttributeName:action}];
+  if (self.attributedTruncationToken.length > 0 && self.attributedText.length > 0) {
+    [self appendTokenToText:self.attributedText.string];
+  }
   [self enablePatternDetection:descriptor];
 }
 
@@ -500,6 +508,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor {
   [self.patternDescriptors addObject:patternDescriptor];
-}
+  [self applyAttributesForPatternDescriptor:patternDescriptor];
+ }
 
 @end
