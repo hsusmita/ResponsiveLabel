@@ -8,7 +8,7 @@ A UILabel subclass which responds to touch on specified patterns. It has the fol
 #Installation
 
 Add following lines in your pod file  
-pod 'ResponsiveLabel', '~> 1.0.1'
+pod 'ResponsiveLabel', '~> 1.0.2'
 
 #Usage
 
@@ -91,6 +91,20 @@ NSLog(@"Tap on truncation text");
 }];
 [self.customLabel setText:str withTruncation:YES];
 ```
+#### Highlight Patterns On Tap
+To highlight patterns, one can set the attributes:
+* RLHighlightedForegroundColorAttributeName
+* RLHighlightedBackgroundColorAttributeName
+
+```
+self.customLabel.userInteractionEnabled = YES;
+PatternTapResponder userHandleTapAction = ^(NSString *tappedString){
+NSLog(@"Username Handler Tapped = %@",tappedString);
+};
+[self.customLabel enableUserHandleDetectionWithAttributes:
+@{NSForegroundColorAttributeName:[UIColor grayColor],RLHighlightedForegroundColorAttributeName:[UIColor greenColor],RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],RLTapResponderAttributeName:userHandleTapAction}];
+```
+
 # Screenshots
 <img src="https://cloud.githubusercontent.com/assets/3590619/7828584/f7ba853a-0452-11e5-9d6a-c9923d89ee8a.png" width="400" display="inline-block">
 <img src="https://cloud.githubusercontent.com/assets/3590619/7828632/b0425196-0453-11e5-911a-79d56e7a8539.png" width="400" display="inline-block">
