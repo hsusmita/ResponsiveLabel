@@ -22,7 +22,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.label.userInteractionEnabled =  YES;
-  [self.label setText:@"A long text"];
+  [self.label setText:@"ResponsiveLabel Usage" withTruncation:NO];
   self.expandedIndexPaths = [NSMutableArray array];
   self.tableView.estimatedRowHeight = 50.0f;
 }
@@ -33,7 +33,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return 20;
+  return 5;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

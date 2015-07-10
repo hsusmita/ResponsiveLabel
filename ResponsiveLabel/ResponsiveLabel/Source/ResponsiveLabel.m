@@ -51,6 +51,11 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   return self;
 }
 
+- (void)awakeFromNib {
+  [super awakeFromNib];
+  [self updateTextStorage:self.attributedText];
+}
+
 - (void)layoutSubviews {
   [super layoutSubviews];
   self.textContainer.size = self.bounds.size;
@@ -98,7 +103,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [super setFrame:frame];
   
   CGSize size = frame.size;
-  size.width = MIN(size.width, self.preferredMaxLayoutWidth);
+  size.width = MAX(size.width, self.preferredMaxLayoutWidth);
   size.height = 0;
   self.textContainer.size = size;
 }
@@ -258,9 +263,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   PatternTapResponder tapHandler = [self tapResponderAtIndex:index effectiveRange:&patternRange];
   if (!tapHandler) {
     [super touchesBegan:touches withEvent:event];
-	
   }
-	[self showHighlightedStateForIndex:index];
+  self.currentAttributedString = [[NSAttributedString alloc]initWithAttributedString:self.textStorage];
+  [self updateTextStorage:[self highlightedTextForIndex:index]];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -269,7 +274,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
   [super touchesCancelled:touches withEvent:event];
-	[self resetHighlightedState];
+  [self updateTextStorage:self.currentAttributedString];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -279,10 +284,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   PatternTapResponder tapHandler = [self tapResponderAtIndex:index effectiveRange:&patternRange];
   if (tapHandler) {
     tapHandler([self.textStorage.string substringWithRange:patternRange]);
-	  [self resetHighlightedState];
 	}else {
     [super touchesEnded:touches withEvent:event];
   }
+  [self performSelector:@selector(updateTextStorage:) withObject:self.currentAttributedString afterDelay:0.05];
 }
 
 #pragma mark - Pattern matching
@@ -376,27 +381,29 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   return tapResponder;
 }
 
-- (void)showHighlightedStateForIndex:(NSInteger)index {
-	UIColor *backgroundcolor = nil;
-	UIColor *foregroundcolor = nil;
-	NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
-	self.currentAttributedString = [[NSAttributedString alloc]initWithAttributedString:self.textStorage];
-	NSRange patternRange;
+- (void)updateTextStorage:(NSAttributedString *)string {
+  [self.textStorage setAttributedString:string];
+  [super setAttributedText:self.textStorage];
+}
 
-	if (index < self.textStorage.length) {
-		backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName atIndex:index effectiveRange:&patternRange];
-		foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName atIndex:index effectiveRange:&patternRange];
-		
-		if (backgroundcolor) {
-			[str addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
-		}
-		if (foregroundcolor) {
-			[str addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
-		}
-		[self.textStorage setAttributedString:str];
-		[super setAttributedText:self.textStorage];
-	}
-
+- (NSAttributedString *)highlightedTextForIndex:(NSInteger)index {
+  UIColor *backgroundcolor = nil;
+  UIColor *foregroundcolor = nil;
+  NSMutableAttributedString *highlightedText = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
+  NSRange patternRange;
+  
+  if (index < self.textStorage.length) {
+    backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+    foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+    
+    if (backgroundcolor) {
+      [highlightedText addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
+    }
+    if (foregroundcolor) {
+      [highlightedText addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
+    }
+  }
+    return highlightedText;
 }
 
 - (void)resetHighlightedState {
@@ -405,16 +412,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 		[super setAttributedText:self.textStorage];
 	}
 }
-
-
-- (UIColor *)highlightedTextColorAtIndex:(NSInteger)index effectiveRange:(NSRangePointer)patternRange {
-	UIColor *color = nil;
-	if (index < self.textStorage.length) {
-		color = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName atIndex:index effectiveRange:patternRange];
-	}
-	return color;
-}
-
 
 - (BOOL)isNewLinePresent:(NSString *)currentText {
   NSRange newLineRange = [currentText rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]];
