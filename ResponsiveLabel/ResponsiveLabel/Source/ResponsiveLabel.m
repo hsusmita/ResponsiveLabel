@@ -127,20 +127,20 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 #pragma mark - Drawing
 
-- (void)drawTextInRect:(CGRect)rect {
-  // Don't call super implementation. Might want to uncomment this out when
-  // debugging layout and rendering problems.
-//   [super drawTextInRect:rect];
-  
-  // Calculate the offset of the text in the view
-  CGPoint textOffset;
-  NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
-  textOffset = [self calcTextOffsetForGlyphRange:glyphRange];
-  
-  // Drawing code
-  [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
-  [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
-}
+//- (void)drawTextInRect:(CGRect)rect {
+//  // Don't call super implementation. Might want to uncomment this out when
+//  // debugging layout and rendering problems.
+////   [super drawTextInRect:rect];
+//  
+//  // Calculate the offset of the text in the view
+//  CGPoint textOffset;
+//  NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
+//  textOffset = [self calcTextOffsetForGlyphRange:glyphRange];
+//  NSLog(@"text to be drawn = %@",self.textStorage.string);
+//  // Drawing code
+//  [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
+//  [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
+//}
 
 - (CGPoint)calcTextOffsetForGlyphRange:(NSRange)glyphRange {
   CGPoint textOffset = CGPointZero;
@@ -159,39 +159,43 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 #pragma mark - Override UILabel Methods
 
-- (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines {
-  // Use our text container to calculate the bounds required. First save our
-  // current text container setup
-  CGSize savedTextContainerSize = self.textContainer.size;
-  NSInteger savedTextContainerNumberOfLines = self.textContainer.maximumNumberOfLines;
-  
-  // Apply the new potential bounds and number of lines
-  self.textContainer.size = bounds.size;
-  self.textContainer.maximumNumberOfLines = numberOfLines;
-  
-  // Measure the text with the new state
-  CGRect textBounds;
-  @try
-  {
-  NSRange glyphRange = [self.layoutManager
-                        glyphRangeForTextContainer:self.textContainer];
-  textBounds = [self.layoutManager boundingRectForGlyphRange:glyphRange
-                                             inTextContainer:self.textContainer];
-  
-  // Position the bounds and round up the size for good measure
-  textBounds.origin = bounds.origin;
-  textBounds.size.width = ceilf(textBounds.size.width);
-  textBounds.size.height = ceilf(textBounds.size.height);
-  }
-  @finally
-  {
-  // Restore the old container state before we exit under any circumstances
-  self.textContainer.size = savedTextContainerSize;
-  self.textContainer.maximumNumberOfLines = savedTextContainerNumberOfLines;
-  }
-  
-  return textBounds;
-}
+//- (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines {
+//  // Use our text container to calculate the bounds required. First save our
+//  // current text container setup
+//  CGSize savedTextContainerSize = self.textContainer.size;
+//  NSInteger savedTextContainerNumberOfLines = self.textContainer.maximumNumberOfLines;
+//  // Apply the new potential bounds and number of lines
+//  self.textContainer.size = bounds.size;
+//  self.textContainer.maximumNumberOfLines = numberOfLines;
+//  
+//  // Measure the text with the new state
+//  CGRect textBounds;
+//  @try {
+//    NSRange glyphRange = [self.layoutManager
+//                          glyphRangeForTextContainer:self.textContainer];
+//    textBounds = [self.layoutManager boundingRectForGlyphRange:glyphRange
+//                                               inTextContainer:self.textContainer];
+//    NSInteger totalLines = textBounds.size.height / self.font.lineHeight;
+//    if (numberOfLines > 0 && numberOfLines < totalLines) {
+//      textBounds.size.height -= (totalLines - numberOfLines) * self.font.lineHeight;
+//    }
+//    NSLog(@"container = %f %f",self.textContainer.size.width,self.textContainer.size.height);
+//    NSLog(@"storage = %@",self.textStorage.string);
+//    NSLog(@"self bound = %f %f",self.bounds.size.width,self.bounds.size.height);
+//    // Position the bounds and round up the size for good measure
+//    textBounds.origin = bounds.origin;
+//    textBounds.size.width = ceilf(textBounds.size.width);
+//    textBounds.size.height = ceilf(textBounds.size.height);
+//    NSLog(@"bounds = %f %f",textBounds.size.width,textBounds.size.height);
+//  }
+//  @finally {
+//    // Restore the old container state before we exit under any circumstances
+//    self.textContainer.size = savedTextContainerSize;
+//    self.textContainer.maximumNumberOfLines = savedTextContainerNumberOfLines;
+//  }
+//  
+//  return textBounds;
+//}
 
 #pragma mark - Truncation Handlers
 
@@ -206,13 +210,18 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   }
   //Check for truncation range and append truncation token if required
   tokenRange = [self rangeForTokenInsertion:stringToDisplay];
+  NSLog(@"String to display = %@",stringToDisplay);
   if (tokenRange.location != NSNotFound) {
-    [self.textStorage replaceCharactersInRange:tokenRange withAttributedString:self.attributedTruncationToken];
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithAttributedString:self.attributedText];
+    [str replaceCharactersInRange:tokenRange withAttributedString:self.attributedTruncationToken];
+    [self updateTextStorage:str];
   }
 }
 
 - (NSRange)rangeForTokenInsertion:(NSString *)text {
-  NSInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:text.length-1];
+  self.textContainer.size = self.bounds.size;
+  NSLog(@"bound = %f %f",self.textContainer.size.width,self.textContainer.size.height);
+  NSInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:text.length - 1];
   NSRange range = [self.layoutManager truncatedGlyphRangeInLineFragmentForGlyphAtIndex:glyphIndex];
   if (range.location != NSNotFound) {
     range.length += self.attributedTruncationToken.length;
@@ -286,7 +295,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 - (void)applyAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
-  NSRange truncationRange = [self truncationRange];
+//  NSRange truncationRange = [self truncationRange];
+  NSRange truncationRange = NSMakeRange(0, 0);
+  if (self.attributedTruncationToken) {
+    truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
+  }
+  NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
   NSArray *ranges = [patternDescriptor patternRangesForString:self.textStorage.string];
   [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
     BOOL doesIntesectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length > 0);
@@ -294,7 +308,8 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     //Don't apply attributes if the range gets truncated.
     if (isTruncationRange || !doesIntesectTruncationRange) {
       if (patternDescriptor.patternAttributes)
-        [self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
+        [str addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
+      [self updateTextStorage:str];
     }
   }];
 }

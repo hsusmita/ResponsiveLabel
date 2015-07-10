@@ -22,7 +22,19 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.label.userInteractionEnabled =  YES;
-  [self.label setText:@"ResponsiveLabel Usage" withTruncation:NO];
+//  [self.label setText:@"ResponsiveLabel Usage" withTruncation:NO];
+//  [self.label setText:@"label RLHighlightedBackgroundColorAttributeName"];
+  PatternTapResponder stringTapAction = ^(NSString *tappedString) {
+    NSLog(@"tapped string = %@",tappedString);
+  };
+  [self.label enableStringDetection:@"label" withAttributes:@{RLTapResponderAttributeName:stringTapAction,NSForegroundColorAttributeName:[UIColor redColor]}];
+//  [self.label setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"
+//                                                                          attributes:@{NSFontAttributeName:self.label.font}]
+//                                            withAction:^(NSString *tappedString) {
+//    NSLog(@"get more");
+//
+//  }];
+//  [self.label setText:@"label RLHighlightedBackgroundColorAttributeName" withTruncation:YES];
   self.expandedIndexPaths = [NSMutableArray array];
   self.tableView.estimatedRowHeight = 50.0f;
 }
@@ -33,7 +45,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return 5;
+  return 0;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -62,7 +74,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:NO];
   NSLog(@"did tap the cell");
-  
 }
 
 - (void)didTapOnMoreButton:(CustomTableViewCell *)cell {
