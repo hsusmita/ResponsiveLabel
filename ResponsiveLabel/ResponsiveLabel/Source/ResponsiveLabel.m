@@ -69,7 +69,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     [_textStorage addLayoutManager:self.layoutManager];
     [self.layoutManager setTextStorage:_textStorage];
   }
-  
   return _textStorage;
 }
 
@@ -83,7 +82,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     _textContainer.size = self.frame.size;
     [_textContainer setLayoutManager:self.layoutManager];
   }
-
   return _textContainer;
 }
 
@@ -101,28 +99,17 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)setFrame:(CGRect)frame {
   [super setFrame:frame];
-  
-  CGSize size = frame.size;
-  size.width = MAX(size.width, self.preferredMaxLayoutWidth);
-  size.height = 0;
-  self.textContainer.size = size;
+  [self updateTextContainerSize:frame.size];
 }
 
 - (void)setBounds:(CGRect)bounds {
   [super setBounds:bounds];
-  
-  CGSize size = bounds.size;
-  size.width = MIN(size.width, self.preferredMaxLayoutWidth);
-  size.height = 0;
-  self.textContainer.size = size;
+  [self updateTextContainerSize:bounds.size];
 }
 
 - (void)setPreferredMaxLayoutWidth:(CGFloat)preferredMaxLayoutWidth {
   [super setPreferredMaxLayoutWidth:preferredMaxLayoutWidth];
-  
-  CGSize size = self.bounds.size;
-  size.width = MIN(size.width, self.preferredMaxLayoutWidth);
-  self.textContainer.size = size;
+  [self updateTextContainerSize:self.bounds.size];
 }
 
 - (void)setText:(NSString *)text {
@@ -308,6 +295,13 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 #pragma mark - Helper Methods
+
+- (void)updateTextContainerSize:(CGSize)size {
+  CGSize containerSize = size;
+  containerSize.width = MIN(size.width, self.preferredMaxLayoutWidth);
+  containerSize.height = 0;
+  self.textContainer.size = containerSize;
+}
 
 - (NSUInteger)stringIndexAtLocation:(CGPoint)location {
   NSUInteger stringIndex = NSNotFound;
