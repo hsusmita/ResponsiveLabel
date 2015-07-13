@@ -42,7 +42,9 @@ static NSString *kCollapseToken = @"Read Less";
     if ([self.delegate respondsToSelector:@selector(customTableViewCell:didTapOnUserHandle:)]) {
     [self.delegate customTableViewCell:self didTapOnUserHandle:tappedString];
   }};
-	[self.customLabel enableUserHandleDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor grayColor],																	RLHighlightedForegroundColorAttributeName:[UIColor greenColor],RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],
+  
+	[self.customLabel enableUserHandleDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor grayColor],
+                                                              RLHighlightedForegroundColorAttributeName:[UIColor greenColor],RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],
                              	                                 RLTapResponderAttributeName:userHandleTapAction}];
   
   NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
@@ -68,7 +70,7 @@ static NSString *kCollapseToken = @"Read Less";
   NSMutableAttributedString *finalString;
   finalString = [[NSMutableAttributedString alloc]initWithString:str attributes:@{NSForegroundColorAttributeName:[UIColor blackColor],NSFontAttributeName:self.customLabel.font}];
   if (isExpanded) {
-    NSString *expandedString = [NSString stringWithFormat:@"%@ %@",str,kCollapseToken];
+    NSString *expandedString = [NSString stringWithFormat:@"%@%@",str,kCollapseToken];
     finalString = [[NSMutableAttributedString alloc]initWithString:expandedString attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
     PatternTapResponder tap = ^(NSString *string) {
       if ([self.delegate respondsToSelector:@selector(didTapOnMoreButton:)]) {
@@ -79,8 +81,12 @@ static NSString *kCollapseToken = @"Read Less";
                          range:[expandedString rangeOfString:kCollapseToken]];
     [finalString addAttributes:@{NSFontAttributeName:self.customLabel.font} range:NSMakeRange(0, finalString.length)];
     self.customLabel.attributedText = finalString;
+    
+//    [self.customLabel setAttributedText:finalString withTruncation:NO];
 
   }else {
+    self.customLabel.text = str;
+//    self.customLabel.shouldCustomizeTruncationToken = YES;
     [self.customLabel setText:str withTruncation:YES];
   }
 }

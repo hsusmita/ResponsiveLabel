@@ -28,15 +28,15 @@
     NSLog(@"tapped string = %@",tappedString);
   };
   [self.label enableStringDetection:@"label" withAttributes:@{RLTapResponderAttributeName:stringTapAction,NSForegroundColorAttributeName:[UIColor redColor]}];
-//  [self.label setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"
-//                                                                          attributes:@{NSFontAttributeName:self.label.font}]
-//                                            withAction:^(NSString *tappedString) {
-//    NSLog(@"get more");
-//
-//  }];
+  [self.label setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"
+                                                                          attributes:@{NSFontAttributeName:self.label.font,NSForegroundColorAttributeName:[UIColor greenColor]}]
+                                            withAction:^(NSString *tappedString) {
+    NSLog(@"get more");
+  }];
+//   [self.label enableStringDetection:@"label" withAttributes:@{RLTapResponderAttributeName:stringTapAction,NSForegroundColorAttributeName:[UIColor blueColor]}];
 //  [self.label setText:@"label RLHighlightedBackgroundColorAttributeName" withTruncation:YES];
   self.expandedIndexPaths = [NSMutableArray array];
-  self.tableView.estimatedRowHeight = 50.0f;
+  self.tableView.estimatedRowHeight = 40.0f;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,7 +45,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return 0;
+  return 5;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

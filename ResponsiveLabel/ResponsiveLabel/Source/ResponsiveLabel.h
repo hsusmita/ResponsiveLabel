@@ -22,12 +22,17 @@ static NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgr
  */
 typedef void (^PatternTapResponder)(NSString *tappedString);
 
+
+IB_DESIGNABLE
 /**
  UILabel subclass which responds to touch on specified patterns.
  This allows to replace the default truncation token with custom attributed string which can be made tappable
  */
 
 @interface ResponsiveLabel : UILabel
+
+@property (nonatomic,assign) IBInspectable BOOL shouldCustomizeTruncationToken;
+@property (nonatomic,strong) IBInspectable NSString *truncationToken;
 
 /** Method to set custom truncation token
  @param attributedTruncationToken:NSAttributedString Custom truncation token to be used instead of default ellipse
