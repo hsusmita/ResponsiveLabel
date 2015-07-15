@@ -8,7 +8,7 @@ A UILabel subclass which responds to touch on specified patterns. It has the fol
 #Installation
 
 Add following lines in your pod file  
-pod 'ResponsiveLabel', '~> 1.0.2'
+pod 'ResponsiveLabel', '~> 1.0.3'
 
 #Usage
 
@@ -81,7 +81,7 @@ numberWithInt:1],RLTapResponderAttributeName:urlTapAction}];
 ```
 
 #### Custom Truncation Token
-
+##### Set attributed string as truncation token
 ```
 NSString *expansionToken = @"Read More ...";
 NSString *str = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
@@ -91,6 +91,15 @@ NSLog(@"Tap on truncation text");
 }];
 [self.customLabel setText:str withTruncation:YES];
 ```
+##### Set image as truncation token
+```
+[self.customLabel setTruncationIndicatorImage:[UIImage imageNamed:@"more_image"] withSize:CGSizeMake(25, 5) andAction:^(NSString *tappedString) {
+    NSLog(@"tapped on image");
+ }];
+```
+##### Set from interface builder
+<img src="https://cloud.githubusercontent.com/assets/3590619/8694465/df3c1bce-2afc-11e5-9409-78e82e1f294c.png" display="inline-block">
+
 #### Highlight Patterns On Tap
 To highlight patterns, one can set the attributes:
 * RLHighlightedForegroundColorAttributeName
@@ -117,4 +126,4 @@ ResponsiveLabel is made flexible to enable detection of any pattern specified by
 The following articles were helpful in enhancing the functionalities. 
 
 * http://www.cocoanetics.com/2015/03/customizing-uilabel-hyperlinks/
-* http://www.cocoanetics.com/2015/03/tappable-uilabel-hyperlinks/ 
+* http://www.cocoanetics.com/2015/03/tappable-uilabel-hyperlinks/
