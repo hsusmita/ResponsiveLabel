@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		694CD50D1B566D4A00C838E8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 694CD50C1B566D4A00C838E8 /* MainViewController.m */; };
 		69C8E0B21B553BD000EE2FC7 /* NSAttributedString+Processing.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C8E0B11B553BD000EE2FC7 /* NSAttributedString+Processing.m */; };
 		69CCA6ED1AC58ADD00D8CAC0 /* PatternDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */; };
 		69D5E56B1AB3040D00B64BDE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E56A1AB3040D00B64BDE /* main.m */; };
@@ -31,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		694CD50B1B566D4A00C838E8 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		694CD50C1B566D4A00C838E8 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		69C8E0B01B553BD000EE2FC7 /* NSAttributedString+Processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Processing.h"; sourceTree = "<group>"; };
 		69C8E0B11B553BD000EE2FC7 /* NSAttributedString+Processing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Processing.m"; sourceTree = "<group>"; };
 		69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatternDescriptor.h; path = Source/PatternDescriptor.h; sourceTree = "<group>"; };
@@ -98,6 +101,8 @@
 				69D5E56F1AB3040D00B64BDE /* ViewController.h */,
 				69D5E5701AB3040D00B64BDE /* ViewController.m */,
 				69D5E5721AB3040D00B64BDE /* Main.storyboard */,
+				694CD50B1B566D4A00C838E8 /* MainViewController.h */,
+				694CD50C1B566D4A00C838E8 /* MainViewController.m */,
 				69D5E5921AB30DBA00B64BDE /* CustomTableViewCell.h */,
 				69D5E5931AB30DBA00B64BDE /* CustomTableViewCell.m */,
 				69D5E5751AB3040D00B64BDE /* Images.xcassets */,
@@ -250,6 +255,7 @@
 				69D5E5711AB3040D00B64BDE /* ViewController.m in Sources */,
 				69D5E56E1AB3040D00B64BDE /* AppDelegate.m in Sources */,
 				69CCA6ED1AC58ADD00D8CAC0 /* PatternDescriptor.m in Sources */,
+				694CD50D1B566D4A00C838E8 /* MainViewController.m in Sources */,
 				69D5E5901AB3045B00B64BDE /* ResponsiveLabel.m in Sources */,
 				69D5E5941AB30DBA00B64BDE /* CustomTableViewCell.m in Sources */,
 				69C8E0B21B553BD000EE2FC7 /* NSAttributedString+Processing.m in Sources */,

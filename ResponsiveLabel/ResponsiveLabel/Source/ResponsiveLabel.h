@@ -71,6 +71,10 @@ IB_DESIGNABLE
 
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor;
 
+- (void)disablePatternDetectionForRegex:(NSString *)regex;
+- (void)disableURLDetection;
+- (void)disableUserHandleDetection;
+
 /**
  Applies attributes to all the occurances of given string according to the attributes defines in the dictionary.
  @param string:NSString
@@ -112,5 +116,6 @@ IB_DESIGNABLE
  */
 
 - (void)enableUserHandleDetectionWithAttributes:(NSDictionary*)dictionary;
+- (void)disableHashTagDetection;
 
 @end

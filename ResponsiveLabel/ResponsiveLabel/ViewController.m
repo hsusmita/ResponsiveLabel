@@ -103,31 +103,5 @@
   [controller addAction:action];
 }
 
-- (IBAction)toggleCustomTruncation:(UIButton *) button {
-  button.selected = !button.selected;
-  self.label.customTruncationEnabled = button.selected;
-}
-
-- (IBAction)setImageForTrucationIndicator:(UIButton *) button {
-  button.selected = !button.selected;
-  if(button.selected) {
-    [self.label setTruncationIndicatorImage:[UIImage imageNamed:@"more_image"] withSize:CGSizeMake(25, 5) andAction:^(NSString *tappedString) {
-      NSLog(@"tapped on image");
-    }];
-  }else {
-    self.label.customTruncationEnabled = NO;
-  }
-}
-
-- (IBAction)setCustomTruncationToken:(UIButton *) button {
-  button.selected = !button.selected;
-  if (button.selected) {
-  [self.label setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"
-                                                                          attributes:@{NSFontAttributeName:self.label.font,NSForegroundColorAttributeName:[UIColor greenColor]}]
-                                            withAction:^(NSString *tappedString) {
-    NSLog(@"get more");
-  }];
-  }
-}
 
 @end
