@@ -31,7 +31,7 @@ IB_DESIGNABLE
 
 @interface ResponsiveLabel : UILabel
 
-@property (nonatomic,assign) IBInspectable BOOL shouldCustomizeTruncationToken;
+@property (nonatomic,assign) IBInspectable BOOL customTruncationEnabled;
 @property (nonatomic,strong) IBInspectable NSString *truncationToken;
 
 /** Method to set custom truncation token
@@ -40,6 +40,14 @@ IB_DESIGNABLE
  */
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapResponder)action;
+
+/** Method to set image for truncation Token
+ @param truncationIndicatorImage : UIImage
+ @param size : CGSize
+ @param action : PatternTapResponder - Action to be performed on tap on truncation token
+ */
+- (void)setTruncationIndicatorImage:(UIImage *)truncationIndicatorImage withSize:(CGSize)size andAction:(PatternTapResponder)action;
+
 
 /** Method to set text
  @param text : NSString

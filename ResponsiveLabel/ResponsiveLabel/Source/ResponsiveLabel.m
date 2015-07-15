@@ -143,8 +143,8 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   _textContainer.maximumNumberOfLines = numberOfLines;
 }
 
-- (void)setShouldCustomizeTruncationToken:(BOOL)shouldCustomizeTruncationToken {
-  _shouldCustomizeTruncationToken = shouldCustomizeTruncationToken;
+- (void)setCustomTruncationEnabled:(BOOL)customTruncationEnabled {
+  _customTruncationEnabled = customTruncationEnabled;
   if ([self shouldTruncate]) {
     [self appendTokenIfNeeded];
     [self applyAttributesToToken];
@@ -241,7 +241,19 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   if (tokenRange.location != NSNotFound) {
     [self.textStorage replaceCharactersInRange:tokenRange withAttributedString:self.attributedTruncationToken];
   }
+  
   [self setNeedsDisplay];
+}
+
+- (void)removeTokenIfPresent {
+  if (self.attributedTruncationToken.length == 0) return;
+  NSRange truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
+  if (truncationRange.location != NSNotFound) {
+    [self.textStorage replaceCharactersInRange:truncationRange withString:[self.attributedText.string substringWithRange:truncationRange]];
+    [self.textStorage appendAttributedString:
+     [[NSAttributedString alloc]initWithString:[self.attributedText.string substringWithRange:NSMakeRange(truncationRange.length, self.attributedText.length-truncationRange.location-truncationRange.length)]]];
+    [self.textStorage removeAttribute:RLTapResponderAttributeName range:truncationRange];
+  }
 }
 
 - (NSRange)rangeForTokenInsertion:(NSString *)text {
@@ -283,18 +295,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 - (BOOL)shouldTruncate {
-  return (self.textStorage.length > 0 && self.shouldCustomizeTruncationToken && self.attributedTruncationToken.length > 0);
-}
-
-- (void)removeTokenIfPresent {
-  if (self.attributedTruncationToken.length == 0) return;
-  NSRange truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
-  if (truncationRange.location != NSNotFound) {
-    [self.textStorage replaceCharactersInRange:truncationRange withString:[self.attributedText.string substringWithRange:truncationRange]];
-    [self.textStorage appendAttributedString:
-     [[NSAttributedString alloc]initWithString:[self.attributedText.string substringWithRange:NSMakeRange(truncationRange.length, self.attributedText.length-truncationRange.location-truncationRange.length)]]];
-    [self.textStorage removeAttribute:RLTapResponderAttributeName range:truncationRange];
-  }
+  return (self.textStorage.length > 0 && self.customTruncationEnabled && self.attributedTruncationToken.length > 0);
 }
 
 - (void)updateTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapResponder)action {
@@ -494,12 +495,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)setText:(NSString *)text withTruncation:(BOOL)truncation {
   [self setText:text];
-  self.shouldCustomizeTruncationToken = truncation;
+  [self setCustomTruncationEnabled:truncation];
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation {
   [self setAttributedText:attributedText];
-  self.shouldCustomizeTruncationToken = truncation;
+  [self setCustomTruncationEnabled:truncation];
 }
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapResponder)action {
@@ -509,13 +510,20 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self applyAttributesToToken];
 }
 
+- (void)setTruncationIndicatorImage:(UIImage *)truncationIndicatorImage withSize:(CGSize)size andAction:(PatternTapResponder)action {
+  NSTextAttachment *textAttachment = [[NSTextAttachment alloc]init];
+  textAttachment.bounds = CGRectMake(0, 0, size.width, size.height);
+  textAttachment.image = truncationIndicatorImage;
+  [self setAttributedTruncationToken:[NSAttributedString attributedStringWithAttachment:textAttachment] withAction:action];
+}
+
 - (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary {
   NSError *error = nil;
   NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector
                                                            withSearchType:PatternSearchTypeAll
                                                     withPatternAttributes:dictionary];
-  [self.patternDescriptorDictionary setObject:descriptor forKey:@"URL"];
+  [self.patternDescriptorDictionary setObject:descriptor forKey:@"URLPatternKey"];
   [self applyAttributesForPatternDescriptor:descriptor];
 }
 

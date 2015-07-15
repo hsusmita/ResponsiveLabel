@@ -22,19 +22,22 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.label.userInteractionEnabled =  YES;
-//  [self.label setText:@"ResponsiveLabel Usage" withTruncation:NO];
-//  [self.label setText:@"label RLHighlightedBackgroundColorAttributeName"];
   PatternTapResponder stringTapAction = ^(NSString *tappedString) {
     NSLog(@"tapped string = %@",tappedString);
   };
   [self.label enableStringDetection:@"label" withAttributes:@{RLTapResponderAttributeName:stringTapAction,NSForegroundColorAttributeName:[UIColor redColor]}];
-  [self.label setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"
-                                                                          attributes:@{NSFontAttributeName:self.label.font,NSForegroundColorAttributeName:[UIColor greenColor]}]
-                                            withAction:^(NSString *tappedString) {
-    NSLog(@"get more");
-  }];
+//  [self.label setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"
+//                                                                          attributes:@{NSFontAttributeName:self.label.font,NSForegroundColorAttributeName:[UIColor greenColor]}]
+//                                            withAction:^(NSString *tappedString) {
+//    NSLog(@"get more");
+//  }];
 //   [self.label enableStringDetection:@"label" withAttributes:@{RLTapResponderAttributeName:stringTapAction,NSForegroundColorAttributeName:[UIColor blueColor]}];
-//  [self.label setText:@"label RLHighlightedBackgroundColorAttributeName" withTruncation:YES];
+//  [self.label setText:@"label RLHighlightedBackgroundColorAttributeName"];
+  
+  [self.label setTruncationIndicatorImage:[UIImage imageNamed:@"more_image"] withSize:CGSizeMake(25, 5) andAction:^(NSString *tappedString) {
+    NSLog(@"tapped on image");
+  }];
+  
   self.expandedIndexPaths = [NSMutableArray array];
   self.tableView.estimatedRowHeight = 40.0f;
 }
