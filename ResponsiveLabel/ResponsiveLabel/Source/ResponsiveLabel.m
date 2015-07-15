@@ -248,12 +248,14 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (void)removeTokenIfPresent {
   if (self.attributedTruncationToken.length == 0) return;
   NSRange truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
+  NSMutableAttributedString *finalString = self.textStorage;
   if (truncationRange.location != NSNotFound) {
-    [self.textStorage replaceCharactersInRange:truncationRange withString:[self.attributedText.string substringWithRange:truncationRange]];
-    [self.textStorage appendAttributedString:
+    [finalString replaceCharactersInRange:truncationRange withString:[self.attributedText.string substringWithRange:truncationRange]];
+    [finalString appendAttributedString:
      [[NSAttributedString alloc]initWithString:[self.attributedText.string substringWithRange:NSMakeRange(truncationRange.length, self.attributedText.length-truncationRange.location-truncationRange.length)]]];
-    [self.textStorage removeAttribute:RLTapResponderAttributeName range:truncationRange];
+    [finalString removeAttribute:RLTapResponderAttributeName range:truncationRange];
   }
+  [self updateTextStorage:finalString];
 }
 
 - (NSRange)rangeForTokenInsertion:(NSString *)text {
@@ -569,6 +571,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor {
   [self.patternDescriptorDictionary setObject:patternDescriptor forKey:patternDescriptor.patternExpression.pattern];
   [self applyAttributesForPatternDescriptor:patternDescriptor];
- }
+}
 
 @end

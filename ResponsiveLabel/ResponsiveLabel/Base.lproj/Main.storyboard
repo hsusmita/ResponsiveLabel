@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="FTs-z6-fuB">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -16,28 +17,84 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="label RLHighlightedBackgroundColorAttributeName" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="100" translatesAutoresizingMaskIntoConstraints="NO" id="eXY-pq-mMe" customClass="ResponsiveLabel">
-                                <rect key="frame" x="250" y="140" width="100" height="50"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w1J-H3-MTr">
+                                <rect key="frame" x="16" y="64" width="568" height="200"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A very long text to demonstate the feature of adding custom truncation token" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="100" translatesAutoresizingMaskIntoConstraints="NO" id="eXY-pq-mMe" customClass="ResponsiveLabel">
+                                        <rect key="frame" x="234" y="10" width="100" height="50"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="ctm-u8-fx0"/>
+                                            <constraint firstAttribute="height" constant="50" id="drg-ji-627"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="truncationToken" value="...More"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="customTruncationEnabled" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="ctm-u8-fx0"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bGx-sH-HSG">
+                                        <rect key="frame" x="198" y="110" width="172" height="30"/>
+                                        <state key="normal" title="Enable Truncation Token">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected" title="Disable Truncation Token"/>
+                                        <connections>
+                                            <action selector="toggleCustomTruncation:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="r4V-fH-osd"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h0r-Vn-Z98">
+                                        <rect key="frame" x="209" y="170" width="151" height="30"/>
+                                        <state key="normal" title="Add Truncation Image">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected" title="Remove Truncation Image"/>
+                                        <connections>
+                                            <action selector="setImageForTrucationIndicator:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="47i-Cz-cOG"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gIP-qL-Dkg">
+                                        <rect key="frame" x="209" y="140" width="149" height="30"/>
+                                        <state key="normal" title="Add Truncation Token">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected" title="Remove Truncation Token"/>
+                                        <connections>
+                                            <action selector="setCustomTruncationToken:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="OYP-cQ-deW"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="ctm-u8-fx0"/>
-                                    <constraint firstAttribute="height" constant="50" id="drg-ji-627"/>
+                                    <constraint firstItem="eXY-pq-mMe" firstAttribute="top" secondItem="w1J-H3-MTr" secondAttribute="top" constant="10" id="2Je-AJ-Fk9"/>
+                                    <constraint firstItem="bGx-sH-HSG" firstAttribute="top" secondItem="eXY-pq-mMe" secondAttribute="bottom" constant="50" id="BrF-pF-XVN"/>
+                                    <constraint firstItem="h0r-Vn-Z98" firstAttribute="leading" secondItem="w1J-H3-MTr" secondAttribute="leading" id="OAy-7I-9Il"/>
+                                    <constraint firstAttribute="centerX" secondItem="h0r-Vn-Z98" secondAttribute="centerX" id="T6n-uS-RQg"/>
+                                    <constraint firstItem="h0r-Vn-Z98" firstAttribute="top" secondItem="gIP-qL-Dkg" secondAttribute="bottom" id="TmC-F0-hpq"/>
+                                    <constraint firstAttribute="height" constant="200" id="U4c-Q5-NfD"/>
+                                    <constraint firstItem="bGx-sH-HSG" firstAttribute="bottom" secondItem="gIP-qL-Dkg" secondAttribute="top" id="ZKd-G0-rSI"/>
+                                    <constraint firstItem="h0r-Vn-Z98" firstAttribute="top" secondItem="bGx-sH-HSG" secondAttribute="bottom" id="aiX-7b-Duv"/>
+                                    <constraint firstAttribute="centerX" secondItem="eXY-pq-mMe" secondAttribute="centerX" id="bWu-As-RuB"/>
+                                    <constraint firstAttribute="bottom" secondItem="h0r-Vn-Z98" secondAttribute="bottom" id="cnz-9O-agx"/>
+                                    <constraint firstAttribute="centerX" secondItem="gIP-qL-Dkg" secondAttribute="centerX" id="r4R-Xa-9UM"/>
+                                    <constraint firstAttribute="centerX" secondItem="bGx-sH-HSG" secondAttribute="centerX" id="ybS-d3-Vtl"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="truncationToken" value="...Less"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="customTruncationEnabled" value="YES"/>
-                                </userDefinedRuntimeAttributes>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="ctm-u8-fx0"/>
+                                        <exclude reference="OAy-7I-9Il"/>
+                                        <exclude reference="aiX-7b-Duv"/>
                                     </mask>
                                 </variation>
-                            </label>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AJf-Gv-qmy">
-                                <rect key="frame" x="0.0" y="200" width="600" height="400"/>
+                                <rect key="frame" x="0.0" y="304" width="600" height="296"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="customCell" id="BwM-D7-Ojg" customClass="CustomTableViewCell">
@@ -79,16 +136,38 @@
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="24I-2A-Gg7"/>
                                 </connections>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="23c-Ep-kT0">
+                                <rect key="frame" x="143" y="274" width="314" height="20"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Use of ResponsiveLabel in table view cell">
+                                        <attributes>
+                                            <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <font key="NSFont" size="17" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="w1J-H3-MTr" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="4tf-fJ-bam"/>
+                            <constraint firstItem="w1J-H3-MTr" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="5wY-9E-YbA"/>
+                            <constraint firstItem="23c-Ep-kT0" firstAttribute="top" secondItem="w1J-H3-MTr" secondAttribute="bottom" constant="10" id="6gM-Fs-6C9"/>
+                            <constraint firstAttribute="centerX" secondItem="23c-Ep-kT0" secondAttribute="centerX" id="7zm-Ux-rGs"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="AJf-Gv-qmy" secondAttribute="bottom" id="Ejc-OD-6f3"/>
-                            <constraint firstItem="AJf-Gv-qmy" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="200" id="KVA-tX-wmY"/>
-                            <constraint firstItem="AJf-Gv-qmy" firstAttribute="top" secondItem="eXY-pq-mMe" secondAttribute="bottom" constant="10" id="TfB-Of-wZ9"/>
+                            <constraint firstItem="23c-Ep-kT0" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="MFM-dO-K5n"/>
                             <constraint firstAttribute="trailing" secondItem="AJf-Gv-qmy" secondAttribute="trailing" id="aQa-E6-dFX"/>
-                            <constraint firstAttribute="centerX" secondItem="eXY-pq-mMe" secondAttribute="centerX" id="hLZ-s4-ppf"/>
+                            <constraint firstItem="23c-Ep-kT0" firstAttribute="bottom" secondItem="AJf-Gv-qmy" secondAttribute="top" constant="-10" id="fhB-lk-VCA"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="w1J-H3-MTr" secondAttribute="trailing" id="l6E-2s-PmT"/>
                             <constraint firstItem="AJf-Gv-qmy" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="pqa-mt-UP4"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="MFM-dO-K5n"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="dcC-R3-2tt"/>
                     <connections>
