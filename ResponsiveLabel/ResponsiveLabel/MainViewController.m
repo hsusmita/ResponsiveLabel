@@ -47,8 +47,9 @@
   PatternTapResponder hashTagTapAction = ^(NSString *tappedString){
     NSLog(@"hash tag enabled");
   };
-  [self.responsiveLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],RLHighlightedBackgroundColorAttributeName:[UIColor orangeColor],
-                                                           RLTapResponderAttributeName:hashTagTapAction}];
+  [self.responsiveLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],
+                                                    RLHighlightedBackgroundColorAttributeName:[UIColor orangeColor],
+                                                                  RLTapResponderAttributeName:hashTagTapAction}];
   }else {
     [self.responsiveLabel disableHashTagDetection];
   }
@@ -62,8 +63,9 @@
     };
     
     [self.responsiveLabel enableUserHandleDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor grayColor],
-                                                                RLHighlightedForegroundColorAttributeName:[UIColor greenColor],RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],
-                                                                    RLTapResponderAttributeName:userHandleTapAction}];
+                                                         RLHighlightedForegroundColorAttributeName:[UIColor greenColor],
+                                                         RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],
+                                                                       RLTapResponderAttributeName:userHandleTapAction}];
   }else {
     [self.responsiveLabel disableUserHandleDetection];
   }

@@ -9,8 +9,7 @@
 #import "ResponsiveLabel.h"
 #import "NSAttributedString+Processing.h"
 
-const NSString *kPatternAttribute = @"PatternAttribue";
-const NSString *kPatternAction  = @"PatternAction";
+static NSString *RLPatternName = @"RLPattern Name";
 
 static NSString *kRegexStringForHashTag = @"(?<!\\w)#([\\w\\_]+)?";
 static NSString *kRegexStringForUserHandle = @"(?<!\\w)@([\\w\\_]+)?";
@@ -26,6 +25,8 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 @property (nonatomic, strong) NSAttributedString *attributedTruncationToken;
 @property (nonatomic, strong) NSAttributedString *currentAttributedString;
 
+@property (nonatomic, assign) NSRange selectedRange;
+
 @end
 
 @implementation ResponsiveLabel
@@ -37,6 +38,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     if (self) {
       [self configureForGestures];
       self.patternDescriptorDictionary = [NSMutableDictionary new];
+      self.selectedRange = NSMakeRange(NSNotFound, 0);
     }
     return self;
   }
@@ -138,7 +140,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)setNumberOfLines:(NSInteger)numberOfLines {
   [super setNumberOfLines:numberOfLines];
-  _textContainer.maximumNumberOfLines = numberOfLines;
+  if (numberOfLines != _textContainer.maximumNumberOfLines) {
+    _textContainer.maximumNumberOfLines = numberOfLines;
+  }
 }
 
 - (void)setCustomTruncationEnabled:(BOOL)customTruncationEnabled {
@@ -329,15 +333,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   CGPoint touchLocation = [[touches anyObject] locationInView:self];
   NSInteger index = [self stringIndexAtLocation:touchLocation];
-  NSRange patternRange;
-  PatternTapResponder tapHandler = [self tapResponderAtIndex:index effectiveRange:&patternRange];
-  if (!tapHandler) {
+  NSRange range = [self getPatternRangeForIndex:index];
+
+  if (![self patternTouchInProgress] && [self shouldHandleTouchAtIndex:index]) {
+    [self handleTouchBeginForRange:range];
+  }else {
     [super touchesBegan:touches withEvent:event];
-  }
-  self.currentAttributedString = [[NSAttributedString alloc]initWithAttributedString:self.textStorage];
-  NSAttributedString *highlightedText = [self highlightedTextForIndex:index];
-  if (highlightedText.length > 0) {
-    [self updateTextStorage:[self highlightedTextForIndex:index]];
   }
 }
 
@@ -347,20 +348,106 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
   [super touchesCancelled:touches withEvent:event];
-  [self updateTextStorage:self.currentAttributedString];
+  [self handleTouchCancelled];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-  CGPoint touchLocation = [[touches anyObject] locationInView:self];
-  NSInteger index = [self stringIndexAtLocation:touchLocation];
-  NSRange patternRange;
-  PatternTapResponder tapHandler = [self tapResponderAtIndex:index effectiveRange:&patternRange];
-  if (tapHandler) {
-    tapHandler([self.textStorage.string substringWithRange:patternRange]);
-	}else {
+  if ([self patternTouchInProgress] && [self shouldHandleTouchAtIndex:self.selectedRange.location]) {
+    [self performSelector:@selector(handleTouchEnd)
+               withObject:nil
+               afterDelay:0.05];
+  }else {
     [super touchesEnded:touches withEvent:event];
   }
-  [self performSelector:@selector(updateTextStorage:) withObject:self.currentAttributedString afterDelay:0.05];
+}
+
+- (void)handleTouchBeginForRange:(NSRange)range {
+  if (![self patternTouchInProgress]) {
+    
+    //Set global variable
+    self.selectedRange = range;
+    self.currentAttributedString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
+    
+    //Highlight if needed
+    NSAttributedString *highlightedText = [self highlightedTextForIndex:range.location];
+    [self updateTextStorage:highlightedText];
+  }
+}
+
+- (void)handleTouchEnd {
+  if ([self patternTouchInProgress]) {
+    
+    [self performActionAtIndex:self.selectedRange.location];
+    [self updateTextStorage:self.currentAttributedString];
+    
+    //Clear global Variable
+    self.selectedRange = NSMakeRange(NSNotFound, 0);
+    self.currentAttributedString = nil;
+  }
+}
+
+- (void)handleTouchCancelled {
+  if ([self patternTouchInProgress]) {
+    [self updateTextStorage:self.currentAttributedString];
+    
+    //Clear global Variable
+    self.selectedRange = NSMakeRange(NSNotFound, 0);
+    self.currentAttributedString = nil;
+  }
+}
+
+- (BOOL)patternTouchInProgress {
+  return self.selectedRange.location != NSNotFound;
+}
+
+/**
+  Touch will be handled if any of these attributes are set: RLTapResponderAttributeName
+                                             or RLHighlightedBackgroundColorAttributeName
+                                             or RLHighlightedForegroundColorAttributeName
+ 
+ */
+- (BOOL)shouldHandleTouchAtIndex:(NSInteger)index {
+  if (index > self.textStorage.length) return NO;
+  NSRange range;
+  NSDictionary *dictionary = [self.textStorage attributesAtIndex:index effectiveRange:&range];
+  BOOL touchAttributesSet = (dictionary && ([dictionary.allKeys containsObject:RLTapResponderAttributeName] ||
+          [dictionary.allKeys containsObject:RLHighlightedBackgroundColorAttributeName] ||
+          [dictionary.allKeys containsObject:RLHighlightedForegroundColorAttributeName]));
+  
+  return touchAttributesSet;
+}
+
+- (void)performActionAtIndex:(NSInteger)index {
+  NSRange patternRange;
+  if (index < self.textStorage.length) {
+   PatternTapResponder tapResponder = [self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:&patternRange];
+    if (tapResponder) {
+      tapResponder([self.textStorage.string substringWithRange:patternRange]);
+    }
+  }
+}
+
+#pragma mark - Highlighting
+
+- (NSAttributedString *)highlightedTextForIndex:(NSInteger)index {
+  if (index > self.textStorage.length) return nil;
+  UIColor *backgroundcolor = nil;
+  UIColor *foregroundcolor = nil;
+  NSMutableAttributedString *highlightedText = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
+  NSRange patternRange;
+
+  if (index < self.textStorage.length) {
+    backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+    foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+    
+    if (backgroundcolor) {
+      [highlightedText addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
+    }
+    if (foregroundcolor) {
+      [highlightedText addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
+    }
+  }
+  return highlightedText;
 }
 
 #pragma mark - Pattern matching
@@ -375,6 +462,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
     //Don't apply attributes if the range gets truncated.
     if (isTruncationRange || !doesIntesectTruncationRange) {
+      [finalString addAttribute:RLPatternName value:patternDescriptor.patternExpression.pattern range:obj.rangeValue];
       if (patternDescriptor.patternAttributes)
         [finalString addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
     }
@@ -403,6 +491,17 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
     [self applyAttributesForPatternDescriptor:descriptor];
   }];
+}
+
+- (NSRange)getPatternRangeForIndex:(NSInteger)index {
+  NSRange patternRange = NSMakeRange(NSNotFound,0);
+  if (index < self.textStorage.length) {
+    NSString *patternName = [self.textStorage attribute:RLPatternName atIndex:index effectiveRange:&patternRange];
+    if (patternName.length == 0) {
+      patternRange = NSMakeRange(NSNotFound, 0);
+    }
+  }
+  return patternRange;
 }
 
 #pragma mark - Helper Methods
@@ -483,33 +582,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
                                  inTextContainer:self.textContainer];
 }
 
-- (PatternTapResponder)tapResponderAtIndex:(NSInteger)index effectiveRange:(NSRangePointer)patternRange {
-  PatternTapResponder tapResponder = nil;
-  if (index < self.textStorage.length) {
-    tapResponder = [self.textStorage attribute:RLTapResponderAttributeName atIndex:index effectiveRange:patternRange];
-  }
-  return tapResponder;
-}
 
-- (NSAttributedString *)highlightedTextForIndex:(NSInteger)index {
-  UIColor *backgroundcolor = nil;
-  UIColor *foregroundcolor = nil;
-  NSMutableAttributedString *highlightedText = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
-  NSRange patternRange;
-  
-  if (index < self.textStorage.length) {
-    backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName atIndex:index effectiveRange:&patternRange];
-    foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName atIndex:index effectiveRange:&patternRange];
-    
-    if (backgroundcolor) {
-      [highlightedText addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
-    }
-    if (foregroundcolor) {
-      [highlightedText addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
-    }
-  }
-    return highlightedText;
-}
 
 #pragma mark - Public Methods
 

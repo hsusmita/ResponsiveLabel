@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AJf-Gv-qmy">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="customCell" id="BwM-D7-Ojg" customClass="CustomTableViewCell">
@@ -51,7 +51,6 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="customLabel" destination="dXR-Ge-9gA" id="Rrv-N7-nYM"/>
-                                            <segue destination="6ow-EG-pI0" kind="show" id="Uq1-t0-igh"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -65,9 +64,15 @@
                         <constraints>
                             <constraint firstItem="AJf-Gv-qmy" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="9cy-Pw-x9t"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="AJf-Gv-qmy" secondAttribute="bottom" id="Ejc-OD-6f3"/>
+                            <constraint firstItem="AJf-Gv-qmy" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="FjT-t5-5uy"/>
                             <constraint firstAttribute="trailing" secondItem="AJf-Gv-qmy" secondAttribute="trailing" id="aQa-E6-dFX"/>
                             <constraint firstItem="AJf-Gv-qmy" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="pqa-mt-UP4"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="9cy-Pw-x9t"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="dcC-R3-2tt"/>
                     <connections>
@@ -77,33 +82,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2201" y="56"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="Nmp-p7-Ed4">
-            <objects>
-                <viewController id="6ow-EG-pI0" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ZBX-um-bSP"/>
-                        <viewControllerLayoutGuide type="bottom" id="bvI-RS-uCO"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Jub-O3-HS0">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SeR-vq-MJg">
-                                <rect key="frame" x="226" y="-118" width="600" height="600"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pBf-lp-pcC" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2248" y="93"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="DHh-Ma-g86">
@@ -145,8 +123,8 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="customTruncationEnabled" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6HH-c0-oFa">
-                                <rect key="frame" x="0.0" y="0.0" width="162" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6HH-c0-oFa">
+                                <rect key="frame" x="219" y="310" width="162" height="30"/>
                                 <state key="normal" title="Usage in table view cell">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -399,7 +377,9 @@
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="Sm2-eN-tv5" secondAttribute="centerX" id="70Z-ij-DSS"/>
                             <constraint firstAttribute="centerY" secondItem="Sm2-eN-tv5" secondAttribute="centerY" constant="100" id="RGP-vz-H0Y"/>
+                            <constraint firstItem="2P8-01-jrx" firstAttribute="top" secondItem="6HH-c0-oFa" secondAttribute="bottom" constant="10" id="Y7s-gw-N5l"/>
                             <constraint firstItem="2P8-01-jrx" firstAttribute="leading" secondItem="b7t-Y8-3kH" secondAttribute="leadingMargin" id="dnL-EG-EzY"/>
+                            <constraint firstAttribute="centerX" secondItem="6HH-c0-oFa" secondAttribute="centerX" id="fw8-LJ-rDg"/>
                             <constraint firstItem="2P8-01-jrx" firstAttribute="trailing" secondItem="b7t-Y8-3kH" secondAttribute="trailingMargin" id="gPd-Fd-neo"/>
                             <constraint firstAttribute="bottomMargin" secondItem="2P8-01-jrx" secondAttribute="bottom" id="shc-2o-J5W"/>
                         </constraints>
