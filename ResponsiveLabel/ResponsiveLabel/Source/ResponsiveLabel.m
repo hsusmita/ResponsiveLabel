@@ -16,13 +16,12 @@ static NSString *kRegexStringForHashTag = @"(?<!\\w)#([\\w\\_]+)?";
 static NSString *kRegexStringForUserHandle = @"(?<!\\w)@([\\w\\_]+)?";
 static NSString *kRegexFormatForSearchWord = @"(%@)";
 
-@interface ResponsiveLabel ()<NSLayoutManagerDelegate>
+@interface ResponsiveLabel ()
 
 @property (nonatomic, retain) NSLayoutManager *layoutManager;
 @property (nonatomic, retain) NSTextContainer *textContainer;
 @property (nonatomic, retain) NSTextStorage *textStorage;
 
-@property (nonatomic, assign) NSRange selectedRange;
 @property (nonatomic, strong) NSMutableDictionary *patternDescriptorDictionary;
 @property (nonatomic, strong) NSAttributedString *attributedTruncationToken;
 @property (nonatomic, strong) NSAttributedString *currentAttributedString;
@@ -97,7 +96,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (NSLayoutManager *)layoutManager {
   if (!_layoutManager) {
     _layoutManager = [[NSLayoutManager alloc] init];
-    _layoutManager.delegate = self;
     [_layoutManager addTextContainer:self.textContainer];
   }
   
@@ -251,10 +249,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   NSRange truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
   NSMutableAttributedString *finalString = self.textStorage;
   if (truncationRange.location != NSNotFound) {
-    [finalString replaceCharactersInRange:truncationRange withString:[self.attributedText.string substringWithRange:truncationRange]];
-    [finalString appendAttributedString:
-     [[NSAttributedString alloc]initWithString:[self.attributedText.string substringWithRange:NSMakeRange(truncationRange.length, self.attributedText.length-truncationRange.location-truncationRange.length)]]];
-    [finalString removeAttribute:RLTapResponderAttributeName range:truncationRange];
+    NSRange rangeOfTuncatedString = NSMakeRange(truncationRange.location, self.attributedText.length-truncationRange.location);
+    NSString *truncatedString = [self.attributedText.string substringWithRange:rangeOfTuncatedString];
+    [finalString replaceCharactersInRange:truncationRange withString:truncatedString];
   }
   [self updateTextStorage:finalString];
   [self generateRangesForPatterns];
@@ -292,8 +289,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (NSRange)truncationRange {
   NSRange truncationRange = NSMakeRange(NSNotFound, 0);
-  if (self.attributedTruncationToken) {
+  if (self.attributedTruncationToken && self.customTruncationEnabled) {
     truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
+  }else {
+    truncationRange = [self rangeForTokenInsertion:self.attributedText.string];
   }
   return truncationRange;
 }
@@ -336,7 +335,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     [super touchesBegan:touches withEvent:event];
   }
   self.currentAttributedString = [[NSAttributedString alloc]initWithAttributedString:self.textStorage];
-  [self updateTextStorage:[self highlightedTextForIndex:index]];
+  NSAttributedString *highlightedText = [self highlightedTextForIndex:index];
+  if (highlightedText.length > 0) {
+    [self updateTextStorage:[self highlightedTextForIndex:index]];
+  }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -365,12 +367,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)applyAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
   //Get the truncation text range if text is truncated
-  NSRange truncationRange = NSMakeRange(0, 0);
-  if (self.attributedTruncationToken) {
-    truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
-  }
+  NSRange truncationRange = [self truncationRange];
   NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
-  NSArray *ranges = [patternDescriptor patternRangesForString:finalString.string];
+  NSArray *ranges = [patternDescriptor patternRangesForString:self.textStorage.string];
   [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
     BOOL doesIntesectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length > 0);
     BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
@@ -384,14 +383,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 - (void)removeAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
-  //Get the truncation text range if text is truncated
-  NSRange truncationRange = NSMakeRange(0, 0);
-  if (self.attributedTruncationToken) {
-    truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
-  }
-  NSArray *ranges = [patternDescriptor patternRangesForString:self.textStorage.string];
-  NSMutableAttributedString *finalString = self.textStorage;
-  [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+  NSRange truncationRange = [self truncationRange];
+  NSArray *patternRanges = [patternDescriptor patternRangesForString:self.textStorage.string];
+  NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
+  [patternRanges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
     BOOL doesIntesectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length > 0);
     BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
     //Don't apply attributes if the range gets truncated.

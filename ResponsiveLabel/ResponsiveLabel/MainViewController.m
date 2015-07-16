@@ -13,6 +13,7 @@
 
 @property (weak, nonatomic) IBOutlet ResponsiveLabel *responsiveLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
+@property (weak, nonatomic) IBOutlet UIButton *truncationEnableButton;
 
 
 @end
@@ -20,11 +21,13 @@
 @implementation MainViewController
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-//  [self handleSegmentChange:nil];
-  [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"check"] withSize:CGSizeMake(55, 10) andAction:^(NSString *tappedString) {
+  [super viewDidLoad];
+  [self handleSegmentChange:nil];
+  [self handleSegmentChange:nil];
+  [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"check"] withSize:CGSizeMake(20, 20) andAction:^(NSString *tappedString) {
     NSLog(@"tapped on image");
   }];
+  self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
       // Do any additional setup after loading the view.
 }
 
@@ -76,7 +79,7 @@
   sender.selected = !sender.selected;
   if (sender.selected) {
     PatternTapResponder URLTapAction = ^(NSString *tappedString){
-      NSLog(@"URL enabled");
+      NSLog(@"URL enabled= %@",tappedString);
     };
     [self.responsiveLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor], RLTapResponderAttributeName:URLTapAction}];
   }else {
@@ -96,7 +99,7 @@
                                               }];
       break;
     case 1:
-      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"check"] withSize:CGSizeMake(55, 10) andAction:^(NSString *tappedString) {
+      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"check"] withSize:CGSizeMake(20,20) andAction:^(NSString *tappedString) {
         NSLog(@"tapped on image");
       }];
       break;
