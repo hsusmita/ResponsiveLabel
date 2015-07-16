@@ -534,9 +534,14 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)setTruncationIndicatorImage:(UIImage *)truncationIndicatorImage withSize:(CGSize)size andAction:(PatternTapResponder)action {
   NSTextAttachment *textAttachment = [[NSTextAttachment alloc]init];
-  textAttachment.bounds = CGRectMake(0, 0, size.width, size.height);
   textAttachment.image = truncationIndicatorImage;
-  [self setAttributedTruncationToken:[NSAttributedString attributedStringWithAttachment:textAttachment] withAction:action];
+  textAttachment.bounds = CGRectMake(0, -self.font.descender - self.font.lineHeight/2,size.width,size.height);
+  NSAttributedString *imageAttributedString = [NSAttributedString attributedStringWithAttachment:textAttachment];
+  NSAttributedString *paddingString = [[NSAttributedString alloc]initWithString:@"  "];
+  NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:paddingString];
+  [finalString appendAttributedString:imageAttributedString];
+  [finalString appendAttributedString:paddingString];
+  [self setAttributedTruncationToken:finalString withAction:action];
 }
 
 - (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary {

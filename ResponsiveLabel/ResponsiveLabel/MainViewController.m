@@ -23,12 +23,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   [self handleSegmentChange:nil];
-  [self handleSegmentChange:nil];
-  [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"check"] withSize:CGSizeMake(20, 20) andAction:^(NSString *tappedString) {
-    NSLog(@"tapped on image");
-  }];
   self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
-      // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
@@ -99,7 +94,7 @@
                                               }];
       break;
     case 1:
-      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"check"] withSize:CGSizeMake(20,20) andAction:^(NSString *tappedString) {
+      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"Add-Caption-Plus"] withSize:CGSizeMake(20,20) andAction:^(NSString *tappedString) {
         NSLog(@"tapped on image");
       }];
       break;
