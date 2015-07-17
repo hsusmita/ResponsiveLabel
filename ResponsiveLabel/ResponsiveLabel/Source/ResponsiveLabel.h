@@ -71,7 +71,7 @@ IB_DESIGNABLE
 
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor;
 
-- (void)disablePatternDetectionForRegex:(NSString *)regex;
+- (void)disablePatternDetection:(PatternDescriptor *)patternDescriptor;
 - (void)disableURLDetection;
 - (void)disableUserHandleDetection;
 
