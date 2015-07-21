@@ -41,14 +41,6 @@ IB_DESIGNABLE
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapResponder)action;
 
-/** Method to set image for truncation Token
- @param truncationIndicatorImage : UIImage
- @param size : CGSize
- @param action : PatternTapResponder - Action to be performed on tap on truncation token
- */
-- (void)setTruncationIndicatorImage:(UIImage *)truncationIndicatorImage withSize:(CGSize)size andAction:(PatternTapResponder)action;
-
-
 /** Method to set text
  @param text : NSString
  @param withTruncation : BOOL
@@ -70,8 +62,8 @@ IB_DESIGNABLE
  */
 
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor;
-
 - (void)disablePatternDetection:(PatternDescriptor *)patternDescriptor;
+
 - (void)disableURLDetection;
 - (void)disableUserHandleDetection;
 
