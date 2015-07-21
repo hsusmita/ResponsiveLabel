@@ -86,7 +86,6 @@
 
 
 - (IBAction)handleSegmentChange:(UISegmentedControl*)sender {
-  NSLog(@"tapped truncate");
   switch (self.segmentControl.selectedSegmentIndex) {
     case 0: {
       [self.responsiveLabel setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"

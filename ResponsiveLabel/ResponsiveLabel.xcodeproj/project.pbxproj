@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6907ADA41B5E645800723CFF /* NSAttributedString+Processing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6907ADA31B5E645800723CFF /* NSAttributedString+Processing.m */; };
 		694CD50D1B566D4A00C838E8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 694CD50C1B566D4A00C838E8 /* MainViewController.m */; };
-		69C8E0B21B553BD000EE2FC7 /* NSAttributedString+Processing.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C8E0B11B553BD000EE2FC7 /* NSAttributedString+Processing.m */; };
 		69CCA6ED1AC58ADD00D8CAC0 /* PatternDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */; };
 		69D5E56B1AB3040D00B64BDE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E56A1AB3040D00B64BDE /* main.m */; };
 		69D5E56E1AB3040D00B64BDE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E56D1AB3040D00B64BDE /* AppDelegate.m */; };
@@ -32,10 +32,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSAttributedString+Processing.h"; path = "Source/NSAttributedString+Processing.h"; sourceTree = "<group>"; };
+		6907ADA31B5E645800723CFF /* NSAttributedString+Processing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSAttributedString+Processing.m"; path = "Source/NSAttributedString+Processing.m"; sourceTree = "<group>"; };
 		694CD50B1B566D4A00C838E8 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		694CD50C1B566D4A00C838E8 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
-		69C8E0B01B553BD000EE2FC7 /* NSAttributedString+Processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Processing.h"; sourceTree = "<group>"; };
-		69C8E0B11B553BD000EE2FC7 /* NSAttributedString+Processing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Processing.m"; sourceTree = "<group>"; };
 		69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatternDescriptor.h; path = Source/PatternDescriptor.h; sourceTree = "<group>"; };
 		69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PatternDescriptor.m; path = Source/PatternDescriptor.m; sourceTree = "<group>"; };
 		69D5E5651AB3040D00B64BDE /* ResponsiveLabel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResponsiveLabel.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,12 +142,12 @@
 		69D5E5911AB3045F00B64BDE /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */,
+				6907ADA31B5E645800723CFF /* NSAttributedString+Processing.m */,
 				69D5E58E1AB3045B00B64BDE /* ResponsiveLabel.h */,
 				69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */,
 				69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */,
 				69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */,
-				69C8E0B01B553BD000EE2FC7 /* NSAttributedString+Processing.h */,
-				69C8E0B11B553BD000EE2FC7 /* NSAttributedString+Processing.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -256,9 +256,9 @@
 				69D5E56E1AB3040D00B64BDE /* AppDelegate.m in Sources */,
 				69CCA6ED1AC58ADD00D8CAC0 /* PatternDescriptor.m in Sources */,
 				694CD50D1B566D4A00C838E8 /* MainViewController.m in Sources */,
+				6907ADA41B5E645800723CFF /* NSAttributedString+Processing.m in Sources */,
 				69D5E5901AB3045B00B64BDE /* ResponsiveLabel.m in Sources */,
 				69D5E5941AB30DBA00B64BDE /* CustomTableViewCell.m in Sources */,
-				69C8E0B21B553BD000EE2FC7 /* NSAttributedString+Processing.m in Sources */,
 				69D5E56B1AB3040D00B64BDE /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
