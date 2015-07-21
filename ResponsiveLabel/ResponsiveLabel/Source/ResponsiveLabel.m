@@ -8,6 +8,7 @@
 
 #import "ResponsiveLabel.h"
 #import "NSAttributedString+Processing.h"
+#import "InlineTextAttachment.h"
 
 static NSString *kRegexStringForHashTag = @"(?<!\\w)#([\\w\\_]+)?";
 static NSString *kRegexStringForUserHandle = @"(?<!\\w)@([\\w\\_]+)?";
@@ -648,6 +649,34 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   if (self.customTruncationEnabled) {
     [self appendTokenIfNeeded];
   }
+}
+
+- (void)setTruncationIndicatorImage:(UIImage *)image withSize:(CGSize)size andAction:(PatternTapResponder)action {
+  InlineTextAttachment *textAttachment = [[InlineTextAttachment alloc]init];
+  textAttachment.image = image;
+  textAttachment.fontDescender = self.font.descender;
+  textAttachment.bounds = CGRectMake(0, -self.font.descender - self.font.lineHeight/2,size.width,size.height);
+  NSAttributedString *imageAttributedString = [NSAttributedString attributedStringWithAttachment:textAttachment];
+
+  NSAttributedString *paddingString = [[NSAttributedString alloc]initWithString:@"  "];
+  
+//  NSMutableAttributedString *mutableTextAttachment = [[NSMutableAttributedString alloc] initWithAttributedString:imageAttributedString];
+//  [mutableTextAttachment addAttribute:NSBaselineOffsetAttributeName value:[NSNumber numberWithInt:-2] range:NSMakeRange(0, [imageAttributedString length])  ];
+  NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:paddingString];
+  
+  [finalString appendAttributedString:imageAttributedString];
+  [finalString appendAttributedString:paddingString];
+  [self removeTokenIfPresent];
+  NSLog(@"current size = %@",NSStringFromCGSize(self.bounds.size));
+  [self updateTruncationToken:finalString withAction:action];
+  if (self.customTruncationEnabled) {
+    [self appendTokenIfNeeded];
+  }
+//  CGRect frame = self.frame;
+//  frame.size = [self sizeThatFits:self.bounds.size];
+//  self.frame = frame;
+//  NSLog(@"after size = %@",NSStringFromCGSize([self sizeThatFits:self.bounds.size]));
+
 }
 
 - (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary {

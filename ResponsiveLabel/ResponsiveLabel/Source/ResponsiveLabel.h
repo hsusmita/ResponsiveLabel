@@ -34,6 +34,8 @@ IB_DESIGNABLE
 @property (nonatomic,assign) IBInspectable BOOL customTruncationEnabled;
 @property (nonatomic,strong) IBInspectable NSString *truncationToken;
 
+
+- (void)setTruncationIndicatorImage:(UIImage *)image withSize:(CGSize)size andAction:(PatternTapResponder)action;
 /** Method to set custom truncation token
  @param attributedTruncationToken:NSAttributedString Custom truncation token to be used instead of default ellipse
  @param action:PatternTapResponder Action to be performed on tap on truncation token

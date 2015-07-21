@@ -95,17 +95,17 @@
                                               }];
       break;
     }
-    case 1:
-//      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"Add-Caption-Plus"] withSize:CGSizeMake(20,20) andAction:^(NSString *tappedString) {
-//        NSLog(@"tapped on image");
-//      }];
-      [self.responsiveLabel setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...Less"
-                                                                                        attributes:@{NSFontAttributeName:self.responsiveLabel.font,NSForegroundColorAttributeName:[UIColor greenColor]}]
-                                              withAction:^(NSString *tappedString) {
-                                                NSLog(@"get more");
-                                              }];
+    case 1:{
+      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"check"] withSize:CGSizeMake(30,self.responsiveLabel.font.lineHeight) andAction:^(NSString *tappedString) {
+        NSLog(@"tapped on image");
+      }];
+//      [self.responsiveLabel setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...Less"
+//                                                                                        attributes:@{NSFontAttributeName:self.responsiveLabel.font,NSForegroundColorAttributeName:[UIColor greenColor]}]
+//                                              withAction:^(NSString *tappedString) {
+//                                                NSLog(@"get more");
+//                                              }];
       break;
-      
+    }
     default:
       break;
   }
