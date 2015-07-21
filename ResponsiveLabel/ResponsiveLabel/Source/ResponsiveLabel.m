@@ -60,7 +60,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     currentText = [[NSAttributedString alloc]initWithString:self.text];
   }
   if (currentText.length > 0) {
-    [self updateContent:currentText andAttributesForDescriptors:[self.patternDescriptorDictionary allValues]];
+    [self updateTextStorage:currentText];
     [self appendTokenIfNeeded];
   }
 }
@@ -127,12 +127,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (void)setText:(NSString *)text {
   [super setText:text];
   NSAttributedString *attributedText =[[NSAttributedString alloc]initWithString:text attributes:[self attributesFromProperties]];
-  [self updateContent:attributedText andAttributesForDescriptors:[self.patternDescriptorDictionary allValues]];
+  [self updateTextStorage:attributedText];
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
   [super setAttributedText:attributedText];
-  [self updateContent:attributedText andAttributesForDescriptors:[self.patternDescriptorDictionary allValues]];
+  [self updateTextStorage:attributedText];
 }
 
 - (void)setNumberOfLines:(NSInteger)numberOfLines {
@@ -185,6 +185,13 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 + (BOOL)requiresConstraintBasedLayout {
   return YES;
+}
+
+- (void)redrawTextForRange:(NSRange)range {
+  NSRange glyphRange = NSMakeRange(NSNotFound, 0);
+  [self.layoutManager characterRangeForGlyphRange:range actualGlyphRange:&glyphRange];
+  CGRect rect = [self.layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:self.textContainer];
+  [self setNeedsDisplayInRect:rect];
 }
 
 #pragma mark - Override UILabel Methods
@@ -242,7 +249,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     if (tokenRange.location != NSNotFound) {
       [finalString replaceCharactersInRange:tokenRange withAttributedString:self.attributedTruncationToken];
     }
-    [self updateContent:finalString andAttributesForDescriptors:[self.patternDescriptorDictionary allValues]];
+    [self updateTextStorage:finalString];
   }
 }
 
@@ -256,7 +263,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
       NSAttributedString *truncatedString = [self.attributedText attributedSubstringFromRange:rangeOfTuncatedString];
       [finalString replaceCharactersInRange:truncationRange withAttributedString:truncatedString];
     }
-    [self updateContent:finalString andAttributesForDescriptors:[self.patternDescriptorDictionary allValues]];
+    [self updateTextStorage:finalString];
   }
 }
 - (NSRange)rangeForTokenInsertion {
@@ -274,9 +281,8 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 - (NSRange)rangeForTokenInsertionForStringWithNewLine {
-  NSRange rangeOfText = NSMakeRange(NSNotFound, 0);
   NSInteger numberOfLines, index, numberOfGlyphs = [self.layoutManager numberOfGlyphs];
-  NSRange lineRange;
+  NSRange lineRange = NSMakeRange(NSNotFound, 0);
   NSInteger approximateNumberOfLines = CGRectGetHeight([self.layoutManager usedRectForTextContainer:self.textContainer])/self.font.lineHeight;
   
   for (numberOfLines = 0, index = 0; index < numberOfGlyphs; numberOfLines++){
@@ -285,13 +291,13 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     if (numberOfLines == approximateNumberOfLines - 1) break;
     index = NSMaxRange(lineRange);
   }
-  rangeOfText = NSMakeRange(lineRange.location + lineRange.length - 1, self.textStorage.length - lineRange.location - lineRange.length + 1);
+  NSRange rangeOfText = NSMakeRange(lineRange.location + lineRange.length - 1, self.textStorage.length - lineRange.location - lineRange.length + 1);
   return rangeOfText;
 
 }
 
 - (NSRange)truncationRange {
-  NSRange truncationRange = NSMakeRange(NSNotFound, 0);
+  NSRange truncationRange;
   if (self.attributedTruncationToken && self.customTruncationEnabled) {
     truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
   }else {
@@ -359,25 +365,17 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)handleTouchBeginForRange:(NSRange)range {
   if (![self patternTouchInProgress]) {
-    
     //Set global variable
     self.selectedRange = range;
     self.currentAttributedString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
-    
-    //Highlight if needed
-    NSAttributedString *highlightedText = [self highlightedTextForIndex:range.location];
-    if (highlightedText.length > 0) {
-      [self updateContent:highlightedText andAttributesForDescriptors:nil];
-    }
+    [self addHighlightingForIndex:range.location];
   }
 }
 
 - (void)handleTouchEnd {
   if ([self patternTouchInProgress]) {
-    
     [self performActionAtIndex:self.selectedRange.location];
-    [self updateContent:self.currentAttributedString andAttributesForDescriptors:nil];
-    
+    [self removeHighlightingForIndex:self.selectedRange.location];
     //Clear global Variable
     self.selectedRange = NSMakeRange(NSNotFound, 0);
     self.currentAttributedString = nil;
@@ -386,8 +384,8 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)handleTouchCancelled {
   if ([self patternTouchInProgress]) {
-    [self updateContent:self.currentAttributedString andAttributesForDescriptors:nil];
-    
+    [self removeHighlightingForIndex:self.selectedRange.location];
+
     //Clear global Variable
     self.selectedRange = NSMakeRange(NSNotFound, 0);
     self.currentAttributedString = nil;
@@ -439,13 +437,57 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName atIndex:index effectiveRange:&patternRange];
     
     if (backgroundcolor) {
-      [highlightedText addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
+      [self.textStorage addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
     }
     if (foregroundcolor) {
-      [highlightedText addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
+      [self.textStorage addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
     }
   }
+  [self redrawTextForRange:patternRange];
   return highlightedText;
+}
+
+- (void)addHighlightingForIndex:(NSInteger)index {
+  if (index > self.textStorage.length) return;
+  UIColor *backgroundcolor = nil;
+  UIColor *foregroundcolor = nil;
+  NSRange patternRange;
+  
+  if (index < self.textStorage.length) {
+    backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+    foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+    
+    if (backgroundcolor) {
+      [self.textStorage addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
+    }
+    if (foregroundcolor) {
+      [self.textStorage addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
+    }
+  }
+  [self redrawTextForRange:patternRange];
+}
+
+- (void)removeHighlightingForIndex:(NSInteger)index {
+  if (self.selectedRange.location != NSNotFound && self.textStorage.length > index) {
+    UIColor *backgroundcolor = nil;
+    UIColor *foregroundcolor = nil;
+    NSRange patternRange;
+    
+    if (index < self.textStorage.length) {
+      backgroundcolor = [self.currentAttributedString attribute:NSBackgroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+      foregroundcolor = [self.currentAttributedString attribute:NSForegroundColorAttributeName atIndex:index effectiveRange:&patternRange];
+      
+      if (backgroundcolor) {
+        [self.textStorage addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
+      }else {
+        [self.textStorage removeAttribute:NSBackgroundColorAttributeName range:patternRange];
+      }
+      if (foregroundcolor) {
+        [self.textStorage addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
+      }
+    }
+    [self redrawTextForRange:patternRange];
+  }
 }
 
 #pragma mark - Pattern matching
@@ -465,11 +507,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
       [patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
         NSRange visibleRange = NSMakeRange(obj.rangeValue.location,truncationRange.location - obj.rangeValue.location);
         [self.textStorage removeAttribute:attributeName range:visibleRange];
+        [self redrawTextForRange:obj.rangeValue];
       }];
-    } else {
-      if (patternDescriptor.patternAttributes)
+    } else if (patternDescriptor.patternAttributes) {
         [self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
-    }
+        [self redrawTextForRange:obj.rangeValue];
+      }
   }];
 }
 
@@ -488,6 +531,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
       [patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
         [self.textStorage removeAttribute:attributeName range:obj.rangeValue];
       }];
+      [self redrawTextForRange:obj.rangeValue];
     }
   }];
 }
@@ -503,12 +547,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   return key;
 }
 
-- (void)generateRangesForPatterns {
-  [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
-    [self addAttributesForPatternDescriptor:descriptor];
-  }];
-}
-
 #pragma mark - Helper Methods
 
 - (void)updateTextContainerSize:(CGSize)size {
@@ -516,6 +554,16 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   containerSize.width = MIN(size.width, self.preferredMaxLayoutWidth);
   containerSize.height = 0;
   self.textContainer.size = containerSize;
+}
+
+- (void)updateTextStorage:(NSAttributedString *)attributedText {
+  if (attributedText.length > 0) {
+    [self.textStorage setAttributedString:attributedText];
+    [self redrawTextForRange:NSMakeRange(0, attributedText.length)];
+  }
+  [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
+    [self addAttributesForPatternDescriptor:descriptor];
+  }];
 }
 
 - (NSUInteger)stringIndexAtLocation:(CGPoint)location {
@@ -654,13 +702,11 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self.patternDescriptorDictionary setObject:patternDescriptor
                                        forKey:[self patternNameKeyForPatternDescriptor:patternDescriptor]];
   [self addAttributesForPatternDescriptor:patternDescriptor];
-  [self setNeedsDisplay];
 }
 
 - (void)disablePatternDetection:(PatternDescriptor *)patternDescriptor {
   [self.patternDescriptorDictionary removeObjectForKey:[self patternNameKeyForPatternDescriptor:patternDescriptor]];
   [self removeAttributesForPatternDescriptor:patternDescriptor];
-  [self setNeedsDisplay];
 }
 
 - (void)disableURLDetection {
@@ -686,18 +732,5 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     [self disableStringDetection:string];
   }];
 }
-
-- (void)updateContent:(NSAttributedString *)attributedText andAttributesForDescriptors:(NSArray *)descriptors {
-  if (attributedText.length > 0) {
-    [self.textStorage setAttributedString:attributedText];
-  }
-  if (descriptors.count > 0) {
-    [descriptors enumerateObjectsUsingBlock:^(PatternDescriptor *descriptor, NSUInteger idx, BOOL *stop) {
-      [self addAttributesForPatternDescriptor:descriptor];
-    }];
-  }
-  [self setNeedsDisplay];
-}
-
 
 @end

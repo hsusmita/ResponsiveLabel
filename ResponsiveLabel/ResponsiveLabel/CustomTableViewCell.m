@@ -68,7 +68,6 @@ static NSString *kCollapseToken = @"Read Less";
 
 - (void)configureText:(NSString*)str forExpandedState:(BOOL)isExpanded {
   NSMutableAttributedString *finalString;
-  finalString = [[NSMutableAttributedString alloc]initWithString:str attributes:@{NSForegroundColorAttributeName:[UIColor blackColor],NSFontAttributeName:self.customLabel.font}];
   if (isExpanded) {
     NSString *expandedString = [NSString stringWithFormat:@"%@%@",str,kCollapseToken];
     finalString = [[NSMutableAttributedString alloc]initWithString:expandedString attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
@@ -80,13 +79,13 @@ static NSString *kCollapseToken = @"Read Less";
     [finalString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],RLTapResponderAttributeName:tap}
                          range:[expandedString rangeOfString:kCollapseToken]];
     [finalString addAttributes:@{NSFontAttributeName:self.customLabel.font} range:NSMakeRange(0, finalString.length)];
-    self.customLabel.attributedText = finalString;
-    
-//    [self.customLabel setAttributedText:finalString withTruncation:NO];
+//    self.customLabel.attributedText = finalString;
+//    self.customLabel.customTruncationEnabled = NO;
+    [self.customLabel setAttributedText:finalString withTruncation:NO];
 
   }else {
-    self.customLabel.text = str;
-//    self.customLabel.shouldCustomizeTruncationToken = YES;
+//    self.customLabel.text = str;
+//    self.customLabel.customTruncationEnabled = YES;
     [self.customLabel setText:str withTruncation:YES];
   }
 }
