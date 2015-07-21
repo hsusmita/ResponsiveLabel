@@ -273,7 +273,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   }
   NSInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:self.textStorage.length - 1];
   NSRange range = [self.layoutManager truncatedGlyphRangeInLineFragmentForGlyphAtIndex:glyphIndex];
-  if (range.location != NSNotFound) {
+  if (range.location != NSNotFound && self.customTruncationEnabled) {
     range.length += self.attributedTruncationToken.length;
     range.location -= self.attributedTruncationToken.length;
   }
