@@ -300,7 +300,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   return rangeOfText;
 }
 
-- (NSRange)rangeForTruncationToken {
+- (NSRange)rangeOfTruncationToken {
   NSRange truncationRange;
   if (self.attributedTruncationToken && self.customTruncationEnabled) {
     truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
@@ -509,7 +509,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)addAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
   //Get the truncation text range if text is truncated
-  NSRange truncationRange = [self rangeForTruncationToken];
+  NSRange truncationRange = [self rangeOfTruncationToken];
   //Generate ranges for current text of textStorage
   NSArray *patternRanges = [patternDescriptor patternRangesForString:self.textStorage.string];
   
@@ -525,7 +525,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)removeAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
   //Get the truncation text range if text is truncated
-  NSRange truncationRange = [self rangeForTruncationToken];
+  NSRange truncationRange = [self rangeOfTruncationToken];
   //Generate ranges for current text of textStorage
   NSArray *patternRanges = [patternDescriptor patternRangesForString:self.textStorage.string];
   
@@ -542,7 +542,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 - (void)removeAttributeForTruncatedRange {
-  NSRange truncationRange = [self rangeForTruncationToken];
+  NSRange truncationRange = [self rangeOfTruncationToken];
   [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
     NSArray *ranges = [descriptor patternRangesForString:self.attributedText.string];
     [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
@@ -738,15 +738,19 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor {
   NSString *patternkey = [self patternNameKeyForPatternDescriptor:patternDescriptor];
-  [self.patternDescriptorDictionary setObject:patternDescriptor
+  if (patternkey.length > 0) {
+    [self.patternDescriptorDictionary setObject:patternDescriptor
                                        forKey:patternkey];
-   [self addAttributesForPatternDescriptor:patternDescriptor];
+    [self addAttributesForPatternDescriptor:patternDescriptor];
+  }
 }
 
 - (void)disablePatternDetection:(PatternDescriptor *)patternDescriptor {
   NSString *patternkey = [self patternNameKeyForPatternDescriptor:patternDescriptor];
-  [self.patternDescriptorDictionary removeObjectForKey:patternkey];
-  [self removeAttributesForPatternDescriptor:patternDescriptor];
+  if (patternkey.length > 0) {
+    [self.patternDescriptorDictionary removeObjectForKey:patternkey];
+    [self removeAttributesForPatternDescriptor:patternDescriptor];
+  }
 }
 
 - (void)disableURLDetection {
