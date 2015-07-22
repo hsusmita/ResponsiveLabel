@@ -23,23 +23,12 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   [self handleSegmentChange:nil];
-  self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (IBAction)enableHashTagButton:(UIButton *)sender {
   sender.selected = !sender.selected;
@@ -96,15 +85,10 @@
       break;
     }
     case 1:{
-      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"Add-Caption-Plus"] withSize:CGSizeMake(20,self.responsiveLabel.font.lineHeight-5) andAction:^(NSString *tappedString) {
+      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"Add-Caption-Plus"] withSize:CGSizeMake(20,self.responsiveLabel.font.lineHeight) andAction:^(NSString *tappedString) {
         NSLog(@"tapped on image");
       }];
-//      [self.responsiveLabel setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...Less"
-//                                                                                        attributes:@{NSFontAttributeName:self.responsiveLabel.font,NSForegroundColorAttributeName:[UIColor greenColor]}]
-//                                              withAction:^(NSString *tappedString) {
-//                                                NSLog(@"get more");
-//                                              }];
-      break;
+     break;
     }
     default:
       break;

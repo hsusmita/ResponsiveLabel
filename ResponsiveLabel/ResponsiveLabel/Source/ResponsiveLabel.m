@@ -234,7 +234,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (void)appendTokenIfNeeded {
   if ([self shouldAppendTruncationToken]) {
     //Return if truncation token is already appended
-    //    NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
     BOOL tokenAppended = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string].location != NSNotFound;
     if (tokenAppended) return;
     
@@ -440,28 +439,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 #pragma mark - Highlighting
 
-- (NSAttributedString *)highlightedTextForIndex:(NSInteger)index {
-  if (index > self.textStorage.length) return nil;
-  UIColor *backgroundcolor = nil;
-  UIColor *foregroundcolor = nil;
-  NSMutableAttributedString *highlightedText = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
-  NSRange patternRange;
-
-  if (index < self.textStorage.length) {
-    backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName atIndex:index effectiveRange:&patternRange];
-    foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName atIndex:index effectiveRange:&patternRange];
-    
-    if (backgroundcolor) {
-      [self.textStorage addAttribute:NSBackgroundColorAttributeName value:backgroundcolor range:patternRange];
-    }
-    if (foregroundcolor) {
-      [self.textStorage addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
-    }
-  }
-  [self redrawTextForRange:patternRange];
-  return highlightedText;
-}
-
 - (void)addHighlightingForIndex:(NSInteger)index {
   if (index > self.textStorage.length) return;
   UIColor *backgroundcolor = nil;
@@ -479,7 +456,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
       [self.textStorage addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
     }
   }
-  [self redrawTextForRange:patternRange];
+  [self setNeedsDisplay];
 }
 
 - (void)removeHighlightingForIndex:(NSInteger)index {
@@ -501,7 +478,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:foregroundcolor range:patternRange];
       }
     }
-    [self redrawTextForRange:patternRange];
+    [self setNeedsDisplay];
   }
 }
 
@@ -688,15 +665,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self setAttributedTruncationToken:finalString withAction:action];
 }
 
-- (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary {
-  NSError *error = nil;
-  NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
-  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector
-                                                           withSearchType:PatternSearchTypeAll
-                                                    withPatternAttributes:dictionary];
-  [self enablePatternDetection:descriptor];
-}
-
 - (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary {
   NSError *error;
   NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:kRegexStringForHashTag options:0 error:&error];
@@ -704,6 +672,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
                                                            withSearchType:PatternSearchTypeAll
                                                     withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
+}
+
+- (void)disableHashTagDetection {
+  [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:kRegexStringForHashTag]];
 }
 
 - (void)enableUserHandleDetectionWithAttributes:(NSDictionary*)dictionary {
@@ -715,6 +687,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
                                                            withSearchType:PatternSearchTypeAll
                                                     withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
+}
+
+- (void)disableUserHandleDetection {
+  [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:kRegexStringForUserHandle]];
 }
 
 - (void)enableStringDetection:(NSString *)string withAttributes:(NSDictionary*)dictionary {
@@ -730,9 +706,20 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self enablePatternDetection:descriptor];
 }
 
+- (void)disableStringDetection:(NSString *)string {
+  NSString *key = [NSString stringWithFormat:kRegexFormatForSearchWord,string];
+  [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:key]];
+}
+
 - (void)enableDetectionForStrings:(NSArray *)stringsArray withAttributes:(NSDictionary *)dictionary {
   [stringsArray enumerateObjectsUsingBlock:^(NSString *string, NSUInteger idx, BOOL *stop) {
     [self enableStringDetection:string withAttributes:dictionary];
+  }];
+}
+
+- (void)disableDetectionForStrings:(NSArray *)stringsArray {
+  [stringsArray enumerateObjectsUsingBlock:^(NSString *string, NSUInteger idx, BOOL *stop) {
+    [self disableStringDetection:string];
   }];
 }
 
@@ -753,28 +740,20 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   }
 }
 
+- (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary {
+  NSError *error = nil;
+  NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector
+                                                           withSearchType:PatternSearchTypeAll
+                                                    withPatternAttributes:dictionary];
+  [self enablePatternDetection:descriptor];
+}
+
 - (void)disableURLDetection {
   NSString *key = [NSString stringWithFormat:@"%llu",NSTextCheckingTypeLink];
   [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:key]];
 }
 
-- (void)disableHashTagDetection {
-  [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:kRegexStringForHashTag]];
-}
 
-- (void)disableUserHandleDetection {
-  [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:kRegexStringForUserHandle]];
-}
-
-- (void)disableStringDetection:(NSString *)string {
-  NSString *key = [NSString stringWithFormat:kRegexFormatForSearchWord,string];
-  [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:key]];
-}
-
-- (void)disableDetectionForStrings:(NSArray *)stringsArray {
-  [stringsArray enumerateObjectsUsingBlock:^(NSString *string, NSUInteger idx, BOOL *stop) {
-    [self disableStringDetection:string];
-  }];
-}
 
 @end

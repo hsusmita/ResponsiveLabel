@@ -35,13 +35,21 @@ IB_DESIGNABLE
 @property (nonatomic,strong) IBInspectable NSString *truncationToken;
 
 
-- (void)setTruncationIndicatorImage:(UIImage *)image withSize:(CGSize)size andAction:(PatternTapResponder)action;
 /** Method to set custom truncation token
  @param attributedTruncationToken:NSAttributedString Custom truncation token to be used instead of default ellipse
  @param action:PatternTapResponder Action to be performed on tap on truncation token
  */
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapResponder)action;
+
+/** Method to set an image as truncation indicator
+ @param image: UIImage
+ @param size: CGSize : The height of image size should be approximately equal to or less than the font height. Otherwise the image will rendered properly
+ @param action:PatternTapResponder Action to be performed on tap on the image
+ */
+
+- (void)setTruncationIndicatorImage:(UIImage *)image withSize:(CGSize)size andAction:(PatternTapResponder)action;
+
 
 /** Method to set text
  @param text : NSString
@@ -64,52 +72,82 @@ IB_DESIGNABLE
  */
 
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor;
+
+/**
+ Removes previously applied attributes from all the occurance of pattern dictated by pattern descriptor
+ */
 - (void)disablePatternDetection:(PatternDescriptor *)patternDescriptor;
 
-- (void)disableURLDetection;
-- (void)disableUserHandleDetection;
 
 /**
  Applies attributes to all the occurances of given string according to the attributes defines in the dictionary.
  @param string:NSString
  @param dictionary:NSDictionary
- A dictionary containing the attributes to add. To make hashtags tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
+ A dictionary containing the attributes to add. To make the string tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
 - (void)enableStringDetection:(NSString *)string withAttributes:(NSDictionary*)dictionary;
 
 /**
+ Removes previously applied attributes from all the occurances of given string
+ @param string:NSString
+ */
+- (void)disableStringDetection:(NSString *)string;
+
+/**
  Applies attributes to all the occurances of strings specified in the array according to the attributes defines in the dictionary.
  @param stringsArray : NSArray
  @param dictionary:NSDictionary
- A dictionary containing the attributes to add. To make hashtags tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
+ A dictionary containing the attributes to add. To make the strings tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
 - (void)enableDetectionForStrings:(NSArray *)stringsArray withAttributes:(NSDictionary*)dictionary;
 
 /**
+ Removes previously applied attributes from all the occurances of strings contained in the array
+ @param string:NSArray
+ */
+- (void)disableDetectionForStrings:(NSArray *)stringsArray;
+
+/**
  Applies attributes to all the occurances of hashtags according to the attributes defines in the dictionary.
  @param dictionary:NSDictionary
- A dictionary containing the attributes to add. To make hashtags tappable, set @attribute RLTapResponderAttributeName key with block of type PatternTapResponder
+ A dictionary containing the attributes to add. To make the strings tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
 - (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary;
 
 /**
+ Removes previously applied attributes from all the occurance of hashtags
+ */
+- (void)disableHashTagDetection;
+
+/**
  Applies attributes to all the occurances of urls according to the attributes defines in the dictionary.
  @param dictionary:NSDictionary
- A dictionary containing the attributes to add. To make hashtags tappable, set @attribute RLTapResponderAttributeName key with block of type PatternTapResponder
+ A dictionary containing the attributes to add. To make URLs tappable, set @attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
 - (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary;
 
 /**
+ Removes previously applied attributes from all the occurance of URLs
+ */
+- (void)disableURLDetection;
+
+
+/**
  Applies attributes to all the occurances of user handles according to the attributes defines in the dictionary.
  @param dictionary:NSDictionary
- A dictionary containing the attributes to add. To make hashtags tappable, set @attribute RLTapResponderAttributeName key with block of type PatternTapResponder
+ A dictionary containing the attributes to add. To make userhandles tappable, set @attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
 - (void)enableUserHandleDetectionWithAttributes:(NSDictionary*)dictionary;
-- (void)disableHashTagDetection;
+
+/**
+ Removes previously applied attributes from all the occurance of user handles
+ */
+
+- (void)disableUserHandleDetection;
 
 @end
