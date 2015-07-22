@@ -336,10 +336,16 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   CGPoint touchLocation = [[touches anyObject] locationInView:self];
   NSInteger index = [self stringIndexAtLocation:touchLocation];
-  NSRange range = [self.layoutManager rangeOfNominallySpacedGlyphsContainingIndex:index];
-
-  if (![self patternTouchInProgress] && [self shouldHandleTouchAtIndex:index]) {
-    [self handleTouchBeginForRange:range];
+  NSRange rangeOfTappedText;
+  if (index < self.textStorage.length) {
+   rangeOfTappedText = [self.layoutManager rangeOfNominallySpacedGlyphsContainingIndex:index];
+  }
+  
+  if (rangeOfTappedText.location != NSNotFound &&
+      ![self patternTouchInProgress] &&
+      [self shouldHandleTouchAtIndex:index]) {
+  
+    [self handleTouchBeginForRange:rangeOfTappedText];
   }else {
     [super touchesBegan:touches withEvent:event];
   }
