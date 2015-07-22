@@ -23,7 +23,6 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 @property (nonatomic, strong) NSMutableDictionary *patternDescriptorDictionary;
 @property (nonatomic, strong) NSAttributedString *attributedTruncationToken;
 @property (nonatomic, strong) NSAttributedString *currentAttributedString;
-
 @property (nonatomic, assign) NSRange selectedRange;
 
 @end
@@ -235,28 +234,32 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (void)appendTokenIfNeeded {
   if ([self shouldAppendTruncationToken]) {
     //Return if truncation token is already appended
-    NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
-    BOOL tokenAppended = [finalString.string rangeOfString:self.attributedTruncationToken.string].location != NSNotFound;
+    //    NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
+    BOOL tokenAppended = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string].location != NSNotFound;
     if (tokenAppended) return;
     
-    if ([finalString isNewLinePresent]) {
+    if ([self.textStorage isNewLinePresent]) {
       //Append token string at the end of last visible line
-      [finalString replaceCharactersInRange:[self rangeForTokenInsertionForStringWithNewLine]
-                       withAttributedString:self.attributedTruncationToken];
+      [self.textStorage replaceCharactersInRange:[self rangeForTokenInsertionForStringWithNewLine]
+                            withAttributedString:self.attributedTruncationToken];
     }
     
     //Check for truncation range and append truncation token if required
     NSRange tokenRange =[self rangeForTokenInsertion];
     if (tokenRange.location != NSNotFound) {
-      [finalString replaceCharactersInRange:tokenRange withAttributedString:self.attributedTruncationToken];
+      [self.textStorage replaceCharactersInRange:tokenRange withAttributedString:self.attributedTruncationToken];
     }
-    [self updateTextStorage:finalString];
+    [self redrawTextForRange:NSMakeRange(0, self.textStorage.length)];
+    [self removeAttributeForTruncatedRange];
+    NSString *key = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
+    [self addAttributesForPatternDescriptor:[self.patternDescriptorDictionary objectForKey:key]];
   }
 }
 
 - (void)removeTokenIfPresent {
   if ([self truncationTokenAppended]) {
     if (self.attributedTruncationToken.length == 0) return;
+
     NSRange truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
     NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
     if (truncationRange.location != NSNotFound) {
@@ -267,6 +270,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     [self updateTextStorage:finalString];
   }
 }
+
 - (NSRange)rangeForTokenInsertion {
   self.textContainer.size = self.bounds.size;
   if (self.text.length == 0) {
@@ -294,10 +298,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   }
   NSRange rangeOfText = NSMakeRange(lineRange.location + lineRange.length - 1, self.textStorage.length - lineRange.location - lineRange.length + 1);
   return rangeOfText;
-
 }
 
-- (NSRange)truncationRange {
+- (NSRange)rangeForTruncationToken {
   NSRange truncationRange;
   if (self.attributedTruncationToken && self.customTruncationEnabled) {
     truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
@@ -318,13 +321,18 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)updateTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapResponder)action {
   NSError *error;
+  if (self.attributedTruncationToken.length > 0) {
+    NSString *patternKey = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
+    [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:patternKey]];
+  }
+  
   self.attributedTruncationToken = attributedTruncationToken;
   NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
   NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
                                                            withSearchType:PatternSearchTypeLast
                                                     withPatternAttributes:@{RLTapResponderAttributeName:action}];
-  [self.patternDescriptorDictionary setObject:descriptor forKey:pattern];
+  [self enablePatternDetection:descriptor];
 }
 
 #pragma mark - Touch Handlers
@@ -501,45 +509,54 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)addAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
   //Get the truncation text range if text is truncated
-  NSRange truncationRange = [self truncationRange];
+  NSRange truncationRange = [self rangeForTruncationToken];
+  //Generate ranges for current text of textStorage
   NSArray *patternRanges = [patternDescriptor patternRangesForString:self.textStorage.string];
   
-  [patternRanges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-   
-    BOOL doesIntersectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length > 0);
-    BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
-    
-    if (doesIntersectTruncationRange && !isTruncationRange) {
-      //remove existing attributes from the ranges which overlaps with truncation range
-      [patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
-        NSRange visibleRange = NSMakeRange(obj.rangeValue.location,truncationRange.location - obj.rangeValue.location);
-        [self.textStorage removeAttribute:attributeName range:visibleRange];
-        [self redrawTextForRange:obj.rangeValue];
-      }];
-    } else if (patternDescriptor.patternAttributes) {
-        [self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
-        [self redrawTextForRange:obj.rangeValue];
-      }
+   [patternRanges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+     BOOL shouldAddAttributes = (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0)
+                                ||(NSEqualRanges(obj.rangeValue, truncationRange));
+     if (shouldAddAttributes) { //Do nothing if range is truncated
+       [self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
+       [self redrawTextForRange:obj.rangeValue];
+     }
   }];
 }
 
 - (void)removeAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
   //Get the truncation text range if text is truncated
-  NSRange truncationRange = [self truncationRange];
+  NSRange truncationRange = [self rangeForTruncationToken];
+  //Generate ranges for current text of textStorage
   NSArray *patternRanges = [patternDescriptor patternRangesForString:self.textStorage.string];
   
   [patternRanges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-    
-    BOOL doesIntesectTruncationRange = (NSIntersectionRange(obj.rangeValue, truncationRange).length > 0);
-    BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
-  
-    //Do nothing if it gets truncates
-    if (!doesIntesectTruncationRange || isTruncationRange) {
+    BOOL shouldRemoveAttributes = (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0)
+                                  ||(NSEqualRanges(obj.rangeValue, truncationRange));
+    if (shouldRemoveAttributes) {//Do nothing if range is truncated
       [patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
         [self.textStorage removeAttribute:attributeName range:obj.rangeValue];
       }];
       [self redrawTextForRange:obj.rangeValue];
     }
+  }];
+}
+
+- (void)removeAttributeForTruncatedRange {
+  NSRange truncationRange = [self rangeForTruncationToken];
+  [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
+    NSArray *ranges = [descriptor patternRangesForString:self.attributedText.string];
+    [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+      NSRange interSectionRange = NSIntersectionRange(obj.rangeValue, truncationRange);
+      BOOL doesIntersectTruncationRange = (interSectionRange.length > 0);
+      BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
+      if (doesIntersectTruncationRange && !isTruncationRange) {
+        NSRange visibleRange = NSMakeRange(obj.rangeValue.location,obj.rangeValue.length - interSectionRange.length);
+        [descriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+          [self.textStorage removeAttribute:key range:visibleRange];
+          [self redrawTextForRange:visibleRange];
+        }];
+      }
+    }];
   }];
 }
 
@@ -569,7 +586,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     [self redrawTextForRange:NSMakeRange(0, attributedText.length)];
   }
   [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
-    [self addAttributesForPatternDescriptor:descriptor];
+     [self addAttributesForPatternDescriptor:descriptor];
   }];
 }
 
@@ -664,25 +681,11 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   textAttachment.bounds = CGRectMake(0, -self.font.descender - self.font.lineHeight/2,size.width,size.height);
   NSAttributedString *imageAttributedString = [NSAttributedString attributedStringWithAttachment:textAttachment];
 
-  NSAttributedString *paddingString = [[NSAttributedString alloc]initWithString:@"  "];
-  
-//  NSMutableAttributedString *mutableTextAttachment = [[NSMutableAttributedString alloc] initWithAttributedString:imageAttributedString];
-//  [mutableTextAttachment addAttribute:NSBaselineOffsetAttributeName value:[NSNumber numberWithInt:-2] range:NSMakeRange(0, [imageAttributedString length])  ];
+  NSAttributedString *paddingString = [[NSAttributedString alloc]initWithString:@" "];
   NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:paddingString];
-  
   [finalString appendAttributedString:imageAttributedString];
   [finalString appendAttributedString:paddingString];
-  [self removeTokenIfPresent];
-  NSLog(@"current size = %@",NSStringFromCGSize(self.bounds.size));
-  [self updateTruncationToken:finalString withAction:action];
-  if (self.customTruncationEnabled) {
-    [self appendTokenIfNeeded];
-  }
-//  CGRect frame = self.frame;
-//  frame.size = [self sizeThatFits:self.bounds.size];
-//  self.frame = frame;
-//  NSLog(@"after size = %@",NSStringFromCGSize([self sizeThatFits:self.bounds.size]));
-
+  [self setAttributedTruncationToken:finalString withAction:action];
 }
 
 - (void)enableURLDetectionWithAttributes:(NSDictionary*)dictionary {
@@ -734,13 +737,15 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor {
+  NSString *patternkey = [self patternNameKeyForPatternDescriptor:patternDescriptor];
   [self.patternDescriptorDictionary setObject:patternDescriptor
-                                       forKey:[self patternNameKeyForPatternDescriptor:patternDescriptor]];
-  [self addAttributesForPatternDescriptor:patternDescriptor];
+                                       forKey:patternkey];
+   [self addAttributesForPatternDescriptor:patternDescriptor];
 }
 
 - (void)disablePatternDetection:(PatternDescriptor *)patternDescriptor {
-  [self.patternDescriptorDictionary removeObjectForKey:[self patternNameKeyForPatternDescriptor:patternDescriptor]];
+  NSString *patternkey = [self patternNameKeyForPatternDescriptor:patternDescriptor];
+  [self.patternDescriptorDictionary removeObjectForKey:patternkey];
   [self removeAttributesForPatternDescriptor:patternDescriptor];
 }
 

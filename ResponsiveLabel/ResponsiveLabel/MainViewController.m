@@ -96,7 +96,7 @@
       break;
     }
     case 1:{
-      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"check"] withSize:CGSizeMake(30,self.responsiveLabel.font.lineHeight) andAction:^(NSString *tappedString) {
+      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"Add-Caption-Plus"] withSize:CGSizeMake(20,self.responsiveLabel.font.lineHeight-5) andAction:^(NSString *tappedString) {
         NSLog(@"tapped on image");
       }];
 //      [self.responsiveLabel setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...Less"
