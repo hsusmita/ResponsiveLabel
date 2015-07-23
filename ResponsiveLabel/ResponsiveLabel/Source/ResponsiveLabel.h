@@ -59,8 +59,8 @@ IB_DESIGNABLE
 - (void)setText:(NSString *)text withTruncation:(BOOL)truncation;
 
 /** Method to set attributed text
- @param attributedText : NSAttributedString
- @param withTruncation : BOOL
+ @param attributedText: NSAttributedString
+ @param withTruncation: BOOL
  */
 - (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation;
 
@@ -81,8 +81,8 @@ IB_DESIGNABLE
 
 /**
  Applies attributes to all the occurances of given string according to the attributes defines in the dictionary.
- @param string:NSString
- @param dictionary:NSDictionary
+ @param string: NSString
+ @param dictionary: NSDictionary
  A dictionary containing the attributes to add. To make the string tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
@@ -90,14 +90,14 @@ IB_DESIGNABLE
 
 /**
  Removes previously applied attributes from all the occurances of given string
- @param string:NSString
+ @param string: NSString
  */
 - (void)disableStringDetection:(NSString *)string;
 
 /**
  Applies attributes to all the occurances of strings specified in the array according to the attributes defines in the dictionary.
- @param stringsArray : NSArray
- @param dictionary:NSDictionary
+ @param stringsArray: NSArray
+ @param dictionary: NSDictionary
  A dictionary containing the attributes to add. To make the strings tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
@@ -105,13 +105,13 @@ IB_DESIGNABLE
 
 /**
  Removes previously applied attributes from all the occurances of strings contained in the array
- @param string:NSArray
+ @param string: NSArray
  */
 - (void)disableDetectionForStrings:(NSArray *)stringsArray;
 
 /**
  Applies attributes to all the occurances of hashtags according to the attributes defines in the dictionary.
- @param dictionary:NSDictionary
+ @param dictionary: NSDictionary
  A dictionary containing the attributes to add. To make the strings tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
@@ -124,7 +124,7 @@ IB_DESIGNABLE
 
 /**
  Applies attributes to all the occurances of urls according to the attributes defines in the dictionary.
- @param dictionary:NSDictionary
+ @param dictionary: NSDictionary
  A dictionary containing the attributes to add. To make URLs tappable, set @attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
@@ -134,7 +134,6 @@ IB_DESIGNABLE
  Removes previously applied attributes from all the occurance of URLs
  */
 - (void)disableURLDetection;
-
 
 /**
  Applies attributes to all the occurances of user handles according to the attributes defines in the dictionary.
