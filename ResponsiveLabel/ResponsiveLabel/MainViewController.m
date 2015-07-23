@@ -14,7 +14,7 @@
 @property (weak, nonatomic) IBOutlet ResponsiveLabel *responsiveLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 @property (weak, nonatomic) IBOutlet UIButton *truncationEnableButton;
-
+@property (weak, nonatomic) IBOutlet UILabel *messageLabel;
 
 @end
 
@@ -35,7 +35,7 @@
   sender.selected = !sender.selected;
   if (sender.selected) {
   PatternTapResponder hashTagTapAction = ^(NSString *tappedString){
-    NSLog(@"hash tag enabled");
+    self.messageLabel.text = [NSString stringWithFormat:@"You have tapped hashTag: %@",tappedString];
   };
   [self.responsiveLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],
                                                     RLHighlightedBackgroundColorAttributeName:[UIColor orangeColor],
@@ -49,7 +49,7 @@
   sender.selected = !sender.selected;
   if (sender.selected) {
     PatternTapResponder userHandleTapAction = ^(NSString *tappedString){
-      NSLog(@"userhandle enabled");
+      self.messageLabel.text = [NSString stringWithFormat:@"You have tapped user handle: %@",tappedString];
     };
     
     [self.responsiveLabel enableUserHandleDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor grayColor],
@@ -66,7 +66,7 @@
   sender.selected = !sender.selected;
   if (sender.selected) {
     PatternTapResponder URLTapAction = ^(NSString *tappedString){
-      NSLog(@"URL enabled= %@",tappedString);
+      self.messageLabel.text = [NSString stringWithFormat:@"You have tapped URL: %@",tappedString];
     };
     [self.responsiveLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor], RLTapResponderAttributeName:URLTapAction}];
   }else {
@@ -81,13 +81,15 @@
       [self.responsiveLabel setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"
                                                                                         attributes:@{NSFontAttributeName:self.responsiveLabel.font,NSForegroundColorAttributeName:[UIColor greenColor]}]
                                               withAction:^(NSString *tappedString) {
-                                                NSLog(@"get more");
+                                                self.messageLabel.text = @"You have tapped token string";
                                               }];
       break;
     }
     case 1:{
-      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"Add-Caption-Plus"] withSize:CGSizeMake(20,self.responsiveLabel.font.lineHeight) andAction:^(NSString *tappedString) {
-        NSLog(@"tapped on image");
+      [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"Add-Caption-Plus"]
+                                               withSize:CGSizeMake(20,self.responsiveLabel.font.lineHeight)
+                                              andAction:^(NSString *tappedString) {
+        self.messageLabel.text = @"You have tapped token image";
       }];
      break;
     }

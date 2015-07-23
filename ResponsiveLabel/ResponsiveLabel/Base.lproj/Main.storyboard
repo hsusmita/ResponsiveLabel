@@ -117,6 +117,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2fp-1m-s3S">
+                                <rect key="frame" x="300" y="120" width="0.0" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;A long text with #hashTag text, @username URL http://www.google.com text long enough text  enough text  " lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="Sm2-eN-tv5" userLabel="&quot;A long text with #hashTag text, with @username and URL  = http://www.google.com                  text long enough text" customClass="ResponsiveLabel">
                                 <rect key="frame" x="200" y="140" width="200" height="120"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -386,11 +392,14 @@
                             <constraint firstItem="2P8-01-jrx" firstAttribute="leading" secondItem="b7t-Y8-3kH" secondAttribute="leadingMargin" id="dnL-EG-EzY"/>
                             <constraint firstAttribute="centerX" secondItem="6HH-c0-oFa" secondAttribute="centerX" id="fw8-LJ-rDg"/>
                             <constraint firstItem="2P8-01-jrx" firstAttribute="trailing" secondItem="b7t-Y8-3kH" secondAttribute="trailingMargin" id="gPd-Fd-neo"/>
+                            <constraint firstAttribute="centerX" secondItem="2fp-1m-s3S" secondAttribute="centerX" id="gkM-tj-qBj"/>
+                            <constraint firstItem="Sm2-eN-tv5" firstAttribute="top" secondItem="2fp-1m-s3S" secondAttribute="bottom" constant="20" id="qRP-dw-neu"/>
                             <constraint firstAttribute="bottomMargin" secondItem="2P8-01-jrx" secondAttribute="bottom" id="shc-2o-J5W"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="bdV-yS-Xbq"/>
                     <connections>
+                        <outlet property="messageLabel" destination="2fp-1m-s3S" id="1wr-1X-v6X"/>
                         <outlet property="responsiveLabel" destination="Sm2-eN-tv5" id="Asg-MS-xJs"/>
                         <outlet property="segmentControl" destination="ox6-iz-JZl" id="gwu-Nd-AVW"/>
                         <outlet property="truncationEnableButton" destination="3rC-fX-JEB" id="w9W-7H-C1d"/>
