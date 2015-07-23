@@ -44,7 +44,7 @@ IB_DESIGNABLE
 
 /** Method to set an image as truncation indicator
  @param image: UIImage
- @param size: CGSize : The height of image size should be approximately equal to or less than the font height. Otherwise the image will rendered properly
+ @param size: CGSize : The height of image size should be approximately equal to or less than the font height. Otherwise the image will not be rendered properly
  @param action:PatternTapResponder Action to be performed on tap on the image
  */
 

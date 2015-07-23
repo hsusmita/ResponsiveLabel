@@ -79,27 +79,6 @@ NSLog(@"URL Tapped = %@",tappedString);
 @{NSForegroundColorAttributeName:[UIColor cyanColor],NSUnderlineStyleAttributeName:[NSNumber
 numberWithInt:1],RLTapResponderAttributeName:urlTapAction}];
 ```
-
-#### Custom Truncation Token
-##### Set attributed string as truncation token
-```
-NSString *expansionToken = @"Read More ...";
-NSString *str = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken attributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font}];
-[self.customLabel setAttributedTruncationToken:attribString withAction:^(NSString *tappedString) {
-NSLog(@"Tap on truncation text");
-}];
-[self.customLabel setText:str withTruncation:YES];
-```
-##### Set image as truncation token
-```
-[self.customLabel setTruncationIndicatorImage:[UIImage imageNamed:@"more_image"] withSize:CGSizeMake(25, 5) andAction:^(NSString *tappedString) {
-    NSLog(@"tapped on image");
- }];
-```
-##### Set from interface builder
-<img src="https://cloud.githubusercontent.com/assets/3590619/8694465/df3c1bce-2afc-11e5-9409-78e82e1f294c.png" display="inline-block">
-
 #### Highlight Patterns On Tap
 To highlight patterns, one can set the attributes:
 * RLHighlightedForegroundColorAttributeName
@@ -113,6 +92,26 @@ NSLog(@"Username Handler Tapped = %@",tappedString);
 [self.customLabel enableUserHandleDetectionWithAttributes:
 @{NSForegroundColorAttributeName:[UIColor grayColor],RLHighlightedForegroundColorAttributeName:[UIColor greenColor],RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],RLTapResponderAttributeName:userHandleTapAction}];
 ```
+#### Custom Truncation Token
+##### Set attributed string as truncation token
+```
+NSString *expansionToken = @"Read More ...";
+NSString *str = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken attributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font}];
+[self.customLabel setAttributedTruncationToken:attribString withAction:^(NSString *tappedString) {
+NSLog(@"Tap on truncation text");
+}];
+[self.customLabel setText:str withTruncation:YES];
+```
+##### Set image as truncation token
+The height of image size should be approximately equal to or less than the font height. Otherwise the image will not be rendered properly
+```
+[self.customLabel setTruncationIndicatorImage:[UIImage imageNamed:@"more_image"] withSize:CGSizeMake(25, 5) andAction:^(NSString *tappedString) {
+    NSLog(@"tapped on image");
+ }];
+```
+##### Set from interface builder
+<img src="https://cloud.githubusercontent.com/assets/3590619/8694465/df3c1bce-2afc-11e5-9409-78e82e1f294c.png" display="inline-block">
 
 # Screenshots
 <img src="https://cloud.githubusercontent.com/assets/3590619/7828584/f7ba853a-0452-11e5-9d6a-c9923d89ee8a.png" width="400" display="inline-block">
