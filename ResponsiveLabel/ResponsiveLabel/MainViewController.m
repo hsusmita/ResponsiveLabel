@@ -23,6 +23,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   [self handleSegmentChange:nil];
+  self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
 }
 
 - (void)didReceiveMemoryWarning {

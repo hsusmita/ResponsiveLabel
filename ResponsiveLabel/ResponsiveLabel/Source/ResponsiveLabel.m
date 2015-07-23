@@ -490,15 +490,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 #pragma mark - Pattern matching
 
 - (void)addAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
-  //Get the truncation text range if text is truncated
-  NSRange truncationRange = [self rangeOfTruncationToken];
-  //Generate ranges for current text of textStorage
-  NSArray *patternRanges = [patternDescriptor patternRangesForString:self.textStorage.string];
-  
+  //Generate ranges for attributed text of the label
+  NSArray *patternRanges = [patternDescriptor patternRangesForString:self.attributedText.string];
+
+  //Apply attributes to the ranges conditionally
    [patternRanges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-     BOOL shouldAddAttributes = (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0)
-                                ||(NSEqualRanges(obj.rangeValue, truncationRange));
-     if (shouldAddAttributes) { //Do nothing if range is truncated
+     if ([self shouldAddAttributesAtRange:obj.rangeValue]) {
        [self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
        [self redrawTextForRange:obj.rangeValue];
      }
@@ -506,15 +503,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 - (void)removeAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
-  //Get the truncation text range if text is truncated
-  NSRange truncationRange = [self rangeOfTruncationToken];
   //Generate ranges for current text of textStorage
   NSArray *patternRanges = [patternDescriptor patternRangesForString:self.textStorage.string];
   
+  //Remove attributes from the ranges conditionally
   [patternRanges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-    BOOL shouldRemoveAttributes = (NSIntersectionRange(obj.rangeValue, truncationRange).length == 0)
-                                  ||(NSEqualRanges(obj.rangeValue, truncationRange));
-    if (shouldRemoveAttributes) {//Do nothing if range is truncated
+    if ([self shouldRemoveAttributesFromRange:obj.rangeValue]) {//Do nothing if range is truncated
       [patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
         [self.textStorage removeAttribute:attributeName range:obj.rangeValue];
       }];
@@ -523,15 +517,35 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   }];
 }
 
+- (BOOL)shouldAddAttributesAtRange:(NSRange)range {
+  NSRange truncationRange = [self rangeOfTruncationToken];
+  BOOL isTruncationRange = NSEqualRanges(range, truncationRange);
+  BOOL doesIntersectTruncationRange = NSIntersectionRange(range, truncationRange).length == 0;
+  BOOL isRangeOutOfBound = (range.location + range.length) > self.textStorage.length;
+  return ((!isRangeOutOfBound && doesIntersectTruncationRange) || isTruncationRange);
+}
+
+- (BOOL)shouldRemoveAttributesFromRange:(NSRange)range {
+  NSRange truncationRange = [self rangeOfTruncationToken];
+  BOOL isTruncationRange = NSEqualRanges(range, truncationRange);
+  BOOL doesIntersectTruncationRange = NSIntersectionRange(range, truncationRange).length == 0;
+  return (isTruncationRange || doesIntersectTruncationRange);
+}
+
 - (void)removeAttributeForTruncatedRange {
   NSRange truncationRange = [self rangeOfTruncationToken];
+
   [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
     NSArray *ranges = [descriptor patternRangesForString:self.attributedText.string];
+
     [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+    
       NSRange interSectionRange = NSIntersectionRange(obj.rangeValue, truncationRange);
       BOOL doesIntersectTruncationRange = (interSectionRange.length > 0);
       BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
+      
       if (doesIntersectTruncationRange && !isTruncationRange) {
+      
         NSRange visibleRange = NSMakeRange(obj.rangeValue.location,obj.rangeValue.length - interSectionRange.length);
         [descriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
           [self.textStorage removeAttribute:key range:visibleRange];
@@ -580,6 +594,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     [self.textStorage setAttributedString:attributedText];
     [self redrawTextForRange:NSMakeRange(0, attributedText.length)];
   }
+
   [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
      [self addAttributesForPatternDescriptor:descriptor];
   }];
@@ -771,7 +786,5 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   NSString *key = [NSString stringWithFormat:@"%llu",NSTextCheckingTypeLink];
   [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:key]];
 }
-
-
 
 @end
