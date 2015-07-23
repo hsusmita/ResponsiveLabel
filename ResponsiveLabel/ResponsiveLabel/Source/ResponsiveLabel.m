@@ -239,14 +239,24 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     }
     
     //Check for truncation range and append truncation token if required
-    NSRange tokenRange =[self rangeForTokenInsertion];
+     NSRange tokenRange =[self rangeForTokenInsertion];
+    
     if (tokenRange.location != NSNotFound) {
       [self.textStorage replaceCharactersInRange:tokenRange withAttributedString:self.attributedTruncationToken];
+      [self redrawTextForRange:NSMakeRange(0, self.textStorage.length)];
     }
-    [self redrawTextForRange:NSMakeRange(0, self.textStorage.length)];
-    [self removeAttributeForTruncatedRange];
-    NSString *key = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
-    [self addAttributesForPatternDescriptor:[self.patternDescriptorDictionary objectForKey:key]];
+    
+    //Apply attributes if truncation token appended
+    NSRange truncationRange = [self rangeOfTruncationToken];
+    if (truncationRange.location != NSNotFound) {
+      [self removeAttributeForTruncatedRange];
+      NSString *key = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
+      PatternDescriptor *descriptor = [self.patternDescriptorDictionary objectForKey:key];
+      if (descriptor) {
+        [self.textStorage addAttributes:descriptor.patternAttributes range:truncationRange];
+        [self redrawTextForRange:truncationRange];
+      }
+    }
   }
 }
 
