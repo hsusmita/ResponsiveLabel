@@ -26,6 +26,16 @@
   self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+  self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+  [super viewWillDisappear:animated];
+  self.navigationController.navigationBarHidden = NO;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -38,7 +48,7 @@
     self.messageLabel.text = [NSString stringWithFormat:@"You have tapped hashTag: %@",tappedString];
   };
   [self.responsiveLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],
-                                                    RLHighlightedBackgroundColorAttributeName:[UIColor orangeColor],
+                                                    RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],
                                                                   RLTapResponderAttributeName:hashTagTapAction}];
   }else {
     [self.responsiveLabel disableHashTagDetection];
@@ -80,7 +90,7 @@
   switch (self.segmentControl.selectedSegmentIndex) {
     case 0: {
       [self.responsiveLabel setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"
-                                                                                        attributes:@{NSFontAttributeName:self.responsiveLabel.font,NSForegroundColorAttributeName:[UIColor greenColor]}]
+                                                                                        attributes:@{NSFontAttributeName:self.responsiveLabel.font,NSForegroundColorAttributeName:[UIColor brownColor]}]
                                               withAction:^(NSString *tappedString) {
                                                 self.messageLabel.text = @"You have tapped token string";
                                               }];
@@ -88,7 +98,7 @@
     }
     case 1:{
       [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"Add-Caption-Plus"]
-                                               withSize:CGSizeMake(25,self.responsiveLabel.font.lineHeight)
+                                               withSize:CGSizeMake(22,self.responsiveLabel.font.lineHeight)
                                               andAction:^(NSString *tappedString) {
         self.messageLabel.text = @"You have tapped token image";
       }];

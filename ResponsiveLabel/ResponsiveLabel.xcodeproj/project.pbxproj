@@ -81,13 +81,13 @@
 		6919B93F1B60EB60000EE885 /* Demo Project */ = {
 			isa = PBXGroup;
 			children = (
-				6919B9401B60EB60000EE885 /* AppDelegate.h */,
-				6919B9411B60EB60000EE885 /* AppDelegate.m */,
+				6919B9481B60EB60000EE885 /* Images.xcassets */,
 				6919B9421B60EB60000EE885 /* LaunchScreen.xib */,
 				6919B9441B60EB60000EE885 /* Main.storyboard */,
+				6919B9401B60EB60000EE885 /* AppDelegate.h */,
+				6919B9411B60EB60000EE885 /* AppDelegate.m */,
 				6919B9461B60EB60000EE885 /* CustomTableViewCell.h */,
 				6919B9471B60EB60000EE885 /* CustomTableViewCell.m */,
-				6919B9481B60EB60000EE885 /* Images.xcassets */,
 				6919B9491B60EB60000EE885 /* MainViewController.h */,
 				6919B94A1B60EB60000EE885 /* MainViewController.m */,
 				6919B94B1B60EB60000EE885 /* ViewController.h */,
