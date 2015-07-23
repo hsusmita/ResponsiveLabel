@@ -53,16 +53,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (void)awakeFromNib {
   [super awakeFromNib];
-  NSAttributedString *currentText;
-  if (self.attributedText.length > 0) {
-    currentText = [self.attributedText wordWrappedAttributedString];
-  }else if (self.text.length > 0){
-    currentText = [[NSAttributedString alloc]initWithString:self.text];
-  }
-  if (currentText.length > 0) {
-    [self updateTextStorage:currentText];
-    [self appendTokenIfNeeded];
-  }
+  [self configureText];
 }
 
 - (void)layoutSubviews {
@@ -139,6 +130,8 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [super setNumberOfLines:numberOfLines];
   if (numberOfLines != _textContainer.maximumNumberOfLines) {
     _textContainer.maximumNumberOfLines = numberOfLines;
+    [self layoutIfNeeded];
+    [self configureText];
   }
 }
 
@@ -213,8 +206,10 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     textBounds = [self.layoutManager boundingRectForGlyphRange:glyphRange
                                                inTextContainer:self.textContainer];
     NSInteger totalLines = textBounds.size.height / self.font.lineHeight;
-    if (numberOfLines > 0 && numberOfLines < totalLines) {
+    if (numberOfLines > 0 && (numberOfLines < totalLines)) {
       textBounds.size.height -= (totalLines - numberOfLines) * self.font.lineHeight;
+    }else if (numberOfLines > 0 && (numberOfLines > totalLines)) {
+      textBounds.size.height += (numberOfLines - totalLines) * self.font.lineHeight;
     }
     // Position the bounds and round up the size for good measure
     textBounds.origin = bounds.origin;
@@ -549,6 +544,19 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 }
 
 #pragma mark - Helper Methods
+
+- (void)configureText {
+  NSAttributedString *currentText;
+  if (self.attributedText.length > 0) {
+    currentText = [self.attributedText wordWrappedAttributedString];
+  }else if (self.text.length > 0){
+    currentText = [[NSAttributedString alloc]initWithString:self.text];
+  }
+  if (currentText.length > 0) {
+    [self updateTextStorage:currentText];
+    [self appendTokenIfNeeded];
+  }
+}
 
 - (void)updateTextContainerSize:(CGSize)size {
   CGSize containerSize = size;
