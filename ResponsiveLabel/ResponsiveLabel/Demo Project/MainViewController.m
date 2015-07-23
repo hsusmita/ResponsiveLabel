@@ -68,7 +68,8 @@
     PatternTapResponder URLTapAction = ^(NSString *tappedString){
       self.messageLabel.text = [NSString stringWithFormat:@"You have tapped URL: %@",tappedString];
     };
-    [self.responsiveLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor], RLTapResponderAttributeName:URLTapAction}];
+    [self.responsiveLabel enableURLDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],
+                                                             RLTapResponderAttributeName:URLTapAction}];
   }else {
     [self.responsiveLabel disableURLDetection];
   }
@@ -87,7 +88,7 @@
     }
     case 1:{
       [self.responsiveLabel setTruncationIndicatorImage:[UIImage imageNamed:@"Add-Caption-Plus"]
-                                               withSize:CGSizeMake(20,self.responsiveLabel.font.lineHeight)
+                                               withSize:CGSizeMake(25,self.responsiveLabel.font.lineHeight)
                                               andAction:^(NSString *tappedString) {
         self.messageLabel.text = @"You have tapped token image";
       }];
