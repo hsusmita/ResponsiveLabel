@@ -24,7 +24,7 @@ withPatternAttributes:(NSDictionary *)patternAttributes {
 }
 
 - (NSArray *)patternRangesForString:(NSString *)string {
-  
+  if (string.length == 0) return nil;
   NSMutableArray *generatedRanges = [NSMutableArray array];
   NSArray *finalRanges = [NSArray new];
   NSRegularExpression *expression = self.patternExpression;
