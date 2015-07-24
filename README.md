@@ -1,4 +1,8 @@
-# ResponsiveLabel
+[![Version](https://img.shields.io/badge/pod-1.0.3-green.svg?style=flat)](https://cocoapods.org/pods/ResponsiveLabel)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://cocoapods.org/pods/ResponsiveLabel)
+[![Platform](https://img.shields.io/badge/platform-iOS-orange.svg?style=flat)](http://cocoadocs.org/docsets/ResponsiveLabel/1.0.3/)
+
+#ResponsiveLabel
 A UILabel subclass which responds to touch on specified patterns. It has the following features:
 
 1. It can detect pattern specified by regular expression and apply style like font, color etc.
