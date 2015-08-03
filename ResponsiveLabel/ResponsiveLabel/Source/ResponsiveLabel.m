@@ -601,11 +601,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
     [ranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
       NSRange interSectionRange = NSIntersectionRange(obj.rangeValue, truncationRange);
-      BOOL doesIntersectTruncationRange = (interSectionRange.length > 0);
-      BOOL isTruncationRange = NSEqualRanges(obj.rangeValue, truncationRange);
-      
+      BOOL isRangeTruncated = (interSectionRange.length > 0) && (obj.rangeValue.location < truncationRange.location);
       //Remove attributes if the range is truncated
-      if (doesIntersectTruncationRange && !isTruncationRange) {
+      if (isRangeTruncated) {
         NSRange visibleRange = NSMakeRange(obj.rangeValue.location,obj.rangeValue.length - interSectionRange.length);
         [descriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
           [self.textStorage removeAttribute:key range:visibleRange];
