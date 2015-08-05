@@ -24,6 +24,7 @@
   [super viewDidLoad];
   [self handleSegmentChange:nil];
   self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
+  self.responsiveLabel.numberOfLines = 0;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

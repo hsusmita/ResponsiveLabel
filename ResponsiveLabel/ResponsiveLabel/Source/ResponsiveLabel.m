@@ -65,6 +65,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 - (NSTextStorage *)textStorage {
   if (!_textStorage) {
+    [_textStorage removeLayoutManager:_layoutManager];
     _textStorage = [[NSTextStorage alloc] init];
     [_textStorage addLayoutManager:self.layoutManager];
     [self.layoutManager setTextStorage:_textStorage];
@@ -175,7 +176,8 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 - (CGPoint)textOffsetForGlyphRange:(NSRange)glyphRange {
   CGPoint textOffset = CGPointZero;
   
-  CGRect textBounds = [_layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:_textContainer];
+  CGRect textBounds = [self.layoutManager boundingRectForGlyphRange:glyphRange
+                                                    inTextContainer:self.textContainer];
   CGFloat paddingHeight = (self.bounds.size.height - textBounds.size.height) / 2.0f;
   if (paddingHeight > 0)
     textOffset.y = paddingHeight;
@@ -193,43 +195,41 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [self.layoutManager characterRangeForGlyphRange:range actualGlyphRange:&glyphRange];
   CGRect rect = [self.layoutManager boundingRectForGlyphRange:glyphRange
                                               inTextContainer:self.textContainer];
+  NSRange totalGlyphRange = [self.layoutManager
+                             glyphRangeForTextContainer:self.textContainer];
+  CGPoint point = [self textOffsetForGlyphRange:totalGlyphRange];
+  rect.origin.y += point.y;
   [self setNeedsDisplayInRect:rect];
 }
+
 
 #pragma mark - Override UILabel Methods
 
 - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines {
-  // Use our text container to calculate the bounds required. First save our
-  // current text container setup
-  CGSize savedTextContainerSize = self.textContainer.size;
-  NSInteger savedTextContainerNumberOfLines = self.textContainer.maximumNumberOfLines;
-  // Apply the new potential bounds and number of lines
-  self.textContainer.size = bounds.size;
+  CGRect requiredRect = [self rectFittingTextForContainerSize:bounds.size
+                                              forNumberOfLine:numberOfLines];
+  self.textContainer.size = requiredRect.size;
+  return requiredRect;
+}
+
+- (CGRect)rectFittingTextForContainerSize:(CGSize)size
+                          forNumberOfLine:(NSInteger)numberOfLines {
+  self.textContainer.size = size;
   self.textContainer.maximumNumberOfLines = numberOfLines;
   
-  // Measure the text with the new state
-  CGRect textBounds;
-  @try {
-    NSRange glyphRange = [self.layoutManager
-                          glyphRangeForTextContainer:self.textContainer];
-    textBounds = [self.layoutManager boundingRectForGlyphRange:glyphRange
-                                               inTextContainer:self.textContainer];
-    NSInteger totalLines = textBounds.size.height / self.font.lineHeight;
-    if (numberOfLines > 0 && (numberOfLines < totalLines)) {
-      textBounds.size.height -= (totalLines - numberOfLines) * self.font.lineHeight;
-    }else if (numberOfLines > 0 && (numberOfLines > totalLines)) {
-      textBounds.size.height += (numberOfLines - totalLines) * self.font.lineHeight;
-    }
-    // Position the bounds and round up the size for good measure
-    textBounds.origin = bounds.origin;
-    textBounds.size.width = ceilf(textBounds.size.width);
-    textBounds.size.height = ceilf(textBounds.size.height);
+  NSRange glyphRange = [self.layoutManager
+                        glyphRangeForTextContainer:self.textContainer];
+  CGRect textBounds = [self.layoutManager boundingRectForGlyphRange:glyphRange
+                                                    inTextContainer:self.textContainer];
+  NSInteger totalLines = textBounds.size.height / self.font.lineHeight;
+  
+  if (numberOfLines > 0 && (numberOfLines < totalLines)) {
+    textBounds.size.height -= (totalLines - numberOfLines) * self.font.lineHeight;
+  }else if (numberOfLines > 0 && (numberOfLines > totalLines)) {
+    textBounds.size.height += (numberOfLines - totalLines) * self.font.lineHeight;
   }
-  @finally {
-    // Restore the old container state before we exit under any circumstances
-    self.textContainer.size = savedTextContainerSize;
-    self.textContainer.maximumNumberOfLines = savedTextContainerNumberOfLines;
-  }
+  textBounds.size.width = ceilf(textBounds.size.width);
+  textBounds.size.height = ceilf(textBounds.size.height);
   return textBounds;
 }
 
@@ -802,7 +802,7 @@ and appending truncation token
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
                                                            withSearchType:PatternSearchTypeAll
                                                     withPatternAttributes:dictionary];
-  [self enablePatternDetection:descriptor];
+  [self enablePatternDetection:descriptor];  
 }
 
 - (void)disableHashTagDetection {
