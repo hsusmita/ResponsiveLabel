@@ -31,9 +31,17 @@ IB_DESIGNABLE
 
 @interface ResponsiveLabel : UILabel
 
-@property (nonatomic,assign) IBInspectable BOOL customTruncationEnabled;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+
+@property (nonatomic,assign) IBInspectable  BOOL customTruncationEnabled;
 @property (nonatomic,strong) IBInspectable NSString *truncationToken;
 
+#else
+
+@property (nonatomic,assign) BOOL customTruncationEnabled;
+@property (nonatomic,strong) NSString *truncationToken;
+
+#endif
 
 /** Method to set custom truncation token
  @param attributedTruncationToken:NSAttributedString Custom truncation token to be used instead of default ellipse

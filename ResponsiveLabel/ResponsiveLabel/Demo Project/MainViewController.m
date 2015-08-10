@@ -24,7 +24,14 @@
   [super viewDidLoad];
   [self handleSegmentChange:nil];
   self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
-  self.responsiveLabel.numberOfLines = 0;
+  PatternTapResponder stringTapAction = ^(NSString *tappedString) {
+    NSLog(@"tapped string = %@",tappedString);
+  };
+  NSError *error;
+  NSRegularExpression *expression = [[NSRegularExpression alloc]initWithPattern:@"(\"\\w+\")" options:NSRegularExpressionCaseInsensitive error:&error];
+  PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:expression
+                                                           withSearchType:PatternSearchTypeAll withPatternAttributes:@{NSForegroundColorAttributeName:[UIColor brownColor],RLTapResponderAttributeName:stringTapAction}];
+  [self.responsiveLabel enablePatternDetection:descriptor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -118,15 +118,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable Pattern Detection And Tap" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2fp-1m-s3S">
-                                <rect key="frame" x="191" y="56" width="218" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Enable Pattern Detection And Tap" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2fp-1m-s3S">
+                                <rect key="frame" x="191" y="110" width="218" height="17"/>
                                 <color key="backgroundColor" red="0.75314047494804004" green="0.87051162507909663" blue="0.97883597883597884" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;A long text with #hashTag #customLabel text, @username URL http://www.google.com text long enough text  enough text&quot; " lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="Sm2-eN-tv5" userLabel="&quot;A long text with #hashTag text, with @username and URL  = http://www.google.com                  text long enough text" customClass="ResponsiveLabel">
-                                <rect key="frame" x="200" y="136" width="200" height="129"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="&quot;A long text with #hashTag #customLabel text, @username URL http://www.google.com text long enough text  enough text&quot;" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="Sm2-eN-tv5" userLabel="&quot;A long text with #hashTag text, with @username and URL  = http://www.google.com                  text long enough text" customClass="ResponsiveLabel">
+                                <rect key="frame" x="200" y="147" width="200" height="108"/>
                                 <color key="backgroundColor" red="0.80359672652717873" green="0.9309782055980278" blue="0.97883597883597884" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
