@@ -22,7 +22,7 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  [self handleSegmentChange:nil];
+//  [self handleSegmentChange:nil];
   self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
   PatternTapResponder stringTapAction = ^(NSString *tappedString) {
     NSLog(@"tapped string = %@",tappedString);
@@ -115,12 +115,13 @@
     default:
       break;
   }
-
+  [self.responsiveLabel setNeedsDisplay];
 }
 
 - (IBAction)enableTruncation:(UIButton *)sender {
   sender.selected = !sender.selected;
   self.responsiveLabel.customTruncationEnabled = sender.selected;
+  [self.responsiveLabel setNeedsDisplay];
 }
 
 @end

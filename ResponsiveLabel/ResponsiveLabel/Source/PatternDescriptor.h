@@ -24,9 +24,9 @@ typedef NS_ENUM(NSInteger,PatternSearchType) {
 
 @interface PatternDescriptor : NSObject
 
-@property (nonatomic, strong) NSRegularExpression *patternExpression;
-@property (nonatomic, assign) PatternSearchType searchType;
-@property (nonatomic, strong) NSDictionary *patternAttributes;
+@property (nonatomic, strong,readonly) NSRegularExpression *patternExpression;
+@property (nonatomic, assign,readonly) PatternSearchType searchType;
+@property (nonatomic, strong,readonly) NSDictionary *patternAttributes;
 
 - (id)initWithRegex:(NSRegularExpression *)expression
      withSearchType:(PatternSearchType)searchType

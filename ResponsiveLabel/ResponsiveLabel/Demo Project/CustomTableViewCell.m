@@ -81,12 +81,14 @@ static NSString *kCollapseToken = @"Read Less";
     [finalString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],RLTapResponderAttributeName:tap}
                          range:[expandedString rangeOfString:kCollapseToken]];
     [finalString addAttributes:@{NSFontAttributeName:self.customLabel.font} range:NSMakeRange(0, finalString.length)];
-//    self.customLabel.attributedText = finalString;
+    self.customLabel.numberOfLines = 0;
 //    self.customLabel.customTruncationEnabled = NO;
+//    self.customLabel.attributedText = finalString;
     [self.customLabel setAttributedText:finalString withTruncation:NO];
 
   }else {
-//    self.customLabel.text = str;
+    self.customLabel.numberOfLines = 3;
+    self.customLabel.text = str;
 //    self.customLabel.customTruncationEnabled = YES;
     [self.customLabel setText:str withTruncation:YES];
   }
