@@ -2,7 +2,7 @@
 //  MainViewController.m
 //  ResponsiveLabel
 //
-//  Created by sah-fueled on 15/07/15.
+//  Created by hsusmita on 15/07/15.
 //  Copyright (c) 2015 hsusmita.com. All rights reserved.
 //
 
@@ -22,7 +22,8 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-//  [self handleSegmentChange:nil];
+  [self handleSegmentChange:nil];
+ 
   self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
   PatternTapResponder stringTapAction = ^(NSString *tappedString) {
     NSLog(@"tapped string = %@",tappedString);
@@ -115,13 +116,11 @@
     default:
       break;
   }
-  [self.responsiveLabel setNeedsDisplay];
 }
 
 - (IBAction)enableTruncation:(UIButton *)sender {
   sender.selected = !sender.selected;
   self.responsiveLabel.customTruncationEnabled = sender.selected;
-  [self.responsiveLabel setNeedsDisplay];
 }
 
 @end

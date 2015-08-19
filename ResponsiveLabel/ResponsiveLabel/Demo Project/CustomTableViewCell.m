@@ -58,8 +58,8 @@ static NSString *kCollapseToken = @"Read Less";
   PatternTapResponder stringTapAction = ^(NSString *tappedString) {
     NSLog(@"tapped string = %@",tappedString);
   };
-//  [self.customLabel enableDetectionForStrings:@[@"text",@"long"] withAttributes:@{NSForegroundColorAttributeName:[UIColor brownColor],
-//                                                                                  RLTapResponderAttributeName:stringTapAction}];
+  [self.customLabel enableDetectionForStrings:@[@"text",@"long"] withAttributes:@{NSForegroundColorAttributeName:[UIColor brownColor],
+                                                                                  RLTapResponderAttributeName:stringTapAction}];
   
 }
 
@@ -82,14 +82,10 @@ static NSString *kCollapseToken = @"Read Less";
                          range:[expandedString rangeOfString:kCollapseToken]];
     [finalString addAttributes:@{NSFontAttributeName:self.customLabel.font} range:NSMakeRange(0, finalString.length)];
     self.customLabel.numberOfLines = 0;
-//    self.customLabel.customTruncationEnabled = NO;
-//    self.customLabel.attributedText = finalString;
     [self.customLabel setAttributedText:finalString withTruncation:NO];
 
   }else {
     self.customLabel.numberOfLines = 3;
-    self.customLabel.text = str;
-//    self.customLabel.customTruncationEnabled = YES;
     [self.customLabel setText:str withTruncation:YES];
   }
 }

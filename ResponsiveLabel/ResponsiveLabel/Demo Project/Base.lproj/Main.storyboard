@@ -27,7 +27,7 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BwM-D7-Ojg" id="qjv-uc-wOT">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dXR-Ge-9gA" customClass="ResponsiveLabel">
+                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dXR-Ge-9gA" customClass="ResponsiveLabel">
                                                     <rect key="frame" x="10" y="10" width="580" height="23"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="Ov9-Dq-Ez4"/>
@@ -125,20 +125,20 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sm2-eN-tv5" userLabel="&quot;A long text with #hashTag text, with @username and URL  = http://www.google.com                  text long enough text" customClass="ResponsiveLabel">
-                                <rect key="frame" x="116" y="147" width="388" height="118"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sm2-eN-tv5" userLabel="&quot;A long text with #hashTag text, with @username and URL  = http://www.google.com                  text long enough text" customClass="ResponsiveLabel">
+                                <rect key="frame" x="116" y="147" width="388" height="108"/>
                                 <color key="backgroundColor" red="0.80359672652717873" green="0.9309782055980278" blue="0.97883597883597884" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">"A long text with #hashTag #customLabel text, @username URL http://www.google.com text long enough text  enough text enough text  enough text enough text  enough text enough text  enough text www.google.com enough text  enough text enough text  enough text"</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="truncationToken" value="..More"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="customTruncationEnabled" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="truncationToken" value="...More"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6HH-c0-oFa">
-                                <rect key="frame" x="219" y="310" width="162" height="30"/>
+                                <rect key="frame" x="219" y="300" width="162" height="40"/>
                                 <state key="normal" title="Usage in table view cell">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>

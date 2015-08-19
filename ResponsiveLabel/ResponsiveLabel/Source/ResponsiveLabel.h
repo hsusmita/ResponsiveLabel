@@ -33,7 +33,7 @@ IB_DESIGNABLE
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
 
-@property (nonatomic,assign) IBInspectable  BOOL customTruncationEnabled;
+@property (nonatomic,assign) IBInspectable BOOL customTruncationEnabled;
 @property (nonatomic,strong) IBInspectable NSString *truncationToken;
 
 #else
