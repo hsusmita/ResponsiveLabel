@@ -1,6 +1,6 @@
-[![Version](https://img.shields.io/badge/pod-1.0.4-green.svg?style=flat)](https://cocoapods.org/pods/ResponsiveLabel)
+[![Version](https://img.shields.io/badge/pod-1.0.5-green.svg?style=flat)](https://cocoapods.org/pods/ResponsiveLabel)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://cocoapods.org/pods/ResponsiveLabel)
-[![Platform](https://img.shields.io/badge/platform-iOS-orange.svg?style=flat)](http://cocoadocs.org/docsets/ResponsiveLabel/1.0.3/)
+[![Platform](https://img.shields.io/badge/platform-iOS-orange.svg?style=flat)](http://cocoadocs.org/docsets/ResponsiveLabel/1.0.5/)
 
 #ResponsiveLabel
 A UILabel subclass which responds to touch on specified patterns. It has the following features:
@@ -12,7 +12,7 @@ A UILabel subclass which responds to touch on specified patterns. It has the fol
 #Installation
 
 Add following lines in your pod file  
-pod 'ResponsiveLabel', '~> 1.0.4'
+pod 'ResponsiveLabel', '~> 1.0.5'
 
 #Usage
 
