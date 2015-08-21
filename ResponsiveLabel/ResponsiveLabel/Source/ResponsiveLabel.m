@@ -14,6 +14,11 @@ static NSString *kRegexStringForHashTag = @"(?<!\\w)#([\\w\\_]+)?";
 static NSString *kRegexStringForUserHandle = @"(?<!\\w)@([\\w\\_]+)?";
 static NSString *kRegexFormatForSearchWord = @"(%@)";
 
+NSString *RLTapResponderAttributeName = @"TapResponder";
+NSString *RLHighlightedForegroundColorAttributeName = @"HighlightedForegroundColor";
+NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundColor";
+
+
 @interface ResponsiveLabel ()
 
 @property (nonatomic, retain) NSLayoutManager *layoutManager;
@@ -262,7 +267,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
   [finalString appendAttributedString:hiddenString];
   
   [self.textStorage setAttributedString:finalString];
-
+  
   //configure truncated pattern range
   [self addAttributeForTruncatedRange];
 }
@@ -569,6 +574,9 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
         [self.textStorage addAttribute:NSForegroundColorAttributeName
                                  value:foregroundcolor
                                  range:patternRange];
+      }else {
+        [self.textStorage removeAttribute:NSForegroundColorAttributeName
+                                    range:patternRange];
       }
     }
     [self redrawTextForRange:patternRange];
@@ -676,7 +684,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
     currentText = [[NSAttributedString alloc]initWithString:self.text
                                                  attributes:[self attributesFromProperties]];
   }
- [self updateTextStorage:currentText];
+  [self updateTextStorage:currentText];
 }
 
 /** This method extects the attributes from the properties of the label
