@@ -20,6 +20,7 @@
 		69D5E56B1AB3040D00B64BDE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E56A1AB3040D00B64BDE /* main.m */; };
 		69D5E5851AB3040D00B64BDE /* ResponsiveLabelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E5841AB3040D00B64BDE /* ResponsiveLabelTests.m */; };
 		69D5E5901AB3045B00B64BDE /* ResponsiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */; };
+		69FA99861B8F26E300FD8AD8 /* CustomLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,8 @@
 		69D5E5841AB3040D00B64BDE /* ResponsiveLabelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ResponsiveLabelTests.m; sourceTree = "<group>"; };
 		69D5E58E1AB3045B00B64BDE /* ResponsiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResponsiveLabel.h; path = Source/ResponsiveLabel.h; sourceTree = "<group>"; };
 		69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResponsiveLabel.m; path = Source/ResponsiveLabel.m; sourceTree = "<group>"; };
+		69FA99841B8F26E300FD8AD8 /* CustomLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomLayoutManager.h; path = Source/CustomLayoutManager.h; sourceTree = "<group>"; };
+		69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomLayoutManager.m; path = Source/CustomLayoutManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +160,8 @@
 				6907ADA31B5E645800723CFF /* NSAttributedString+Processing.m */,
 				69D5E58E1AB3045B00B64BDE /* ResponsiveLabel.h */,
 				69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */,
+				69FA99841B8F26E300FD8AD8 /* CustomLayoutManager.h */,
+				69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */,
 				69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */,
 				69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */,
 				6907AD9F1B5E644100723CFF /* InlineTextAttachment.h */,
@@ -265,6 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69FA99861B8F26E300FD8AD8 /* CustomLayoutManager.m in Sources */,
 				69CCA6ED1AC58ADD00D8CAC0 /* PatternDescriptor.m in Sources */,
 				6907ADA11B5E644100723CFF /* InlineTextAttachment.m in Sources */,
 				6919B94D1B60EB60000EE885 /* AppDelegate.m in Sources */,

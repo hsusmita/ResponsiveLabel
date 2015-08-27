@@ -9,6 +9,7 @@
 #import "ResponsiveLabel.h"
 #import "NSAttributedString+Processing.h"
 #import "InlineTextAttachment.h"
+#import "CustomLayoutManager.h"
 
 static NSString *kRegexStringForHashTag = @"(?<!\\w)#([\\w\\_]+)?";
 static NSString *kRegexStringForUserHandle = @"(?<!\\w)@([\\w\\_]+)?";
@@ -21,7 +22,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 @interface ResponsiveLabel ()
 
-@property (nonatomic, retain) NSLayoutManager *layoutManager;
+@property (nonatomic, retain) CustomLayoutManager *layoutManager;
 @property (nonatomic, retain) NSTextContainer *textContainer;
 @property (nonatomic, retain) NSTextStorage *textStorage;
 
@@ -33,7 +34,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 @property (nonatomic, assign) NSRange selectedRange;
 @property (nonatomic, assign) NSRange truncatedRange;
 @property (nonatomic, assign) NSRange truncatedPatternRange;
-
+@property (nonatomic, strong) NSMutableArray *rects;
+@property (nonatomic, strong) NSMutableArray *glyphranges;
 @end
 
 @implementation ResponsiveLabel
@@ -46,6 +48,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     [self configureForGestures];
     self.patternDescriptorDictionary = [NSMutableDictionary new];
     self.selectedRange = NSMakeRange(NSNotFound, 0);
+    self.rects = [NSMutableArray new];
+    self.glyphranges = [NSMutableArray new];
   }
   return self;
 }
@@ -56,6 +60,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     [self configureForGestures];
     self.patternDescriptorDictionary = [NSMutableDictionary new];
     self.selectedRange = NSMakeRange(NSNotFound, 0);
+    self.rects = [NSMutableArray new];
+    self.glyphranges = [NSMutableArray new];
+
   }
   return self;
 }
@@ -97,7 +104,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (NSLayoutManager *)layoutManager {
   if (!_layoutManager) {
-    _layoutManager = [[NSLayoutManager alloc] init];
+    _layoutManager = [[CustomLayoutManager alloc] init];
     [_layoutManager addTextContainer:self.textContainer];
   }
   return _layoutManager;
@@ -168,13 +175,30 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
   //Draw after truncation process is complete
   NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
-  
-  // Calculate the offset of the text in the view
+
   CGPoint textOffset = [self textOffsetForGlyphRange:glyphRange];
+
+  //Draw after truncation process is complete
+
+  [self.glyphranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+    CGPoint point = CGPointMake(textOffset.x, textOffset.y);
+    [_layoutManager drawBackgroundForGlyphRange:obj.rangeValue atPoint:point];
+    [_layoutManager drawGlyphsForGlyphRange:obj.rangeValue atPoint:point];
+  }];
   
-  // Drawing code
-  [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
-  [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
+  if (self.glyphranges.count == 0) {
+    //Draw after truncation process is complete
+    NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
+    
+    // Calculate the offset of the text in the view
+    CGPoint textOffset = [self textOffsetForGlyphRange:glyphRange];
+    
+    // Drawing code
+    [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
+    [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
+    
+  }
+  [self.glyphranges removeAllObjects];
 }
 
 /**
@@ -209,6 +233,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   CGPoint point = [self textOffsetForGlyphRange:totalGlyphRange];
   rect.origin.y += point.y;
   [self setNeedsDisplayInRect:rect];
+  [self.rects addObject:[NSValue valueWithCGRect:rect]];
+  [self.glyphranges addObject:[NSValue valueWithRange:range]];
 }
 
 
@@ -534,9 +560,11 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
                                    effectiveRange:&patternRange];
     
     if (backgroundcolor) {
-      [self.textStorage addAttribute:NSBackgroundColorAttributeName
-                               value:backgroundcolor
-                               range:patternRange];
+      self.layoutManager.outlineColor = backgroundcolor;
+//      [self.layoutManager drawBackgroundForGlyphRange:patternRange atPoint:[self textOffsetForGlyphRange:patternRange]];
+//      [self.textStorage addAttribute:NSBackgroundColorAttributeName
+//                               value:backgroundcolor
+//                               range:patternRange];
     }
     if (foregroundcolor) {
       [self.textStorage addAttribute:NSForegroundColorAttributeName
@@ -562,12 +590,15 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
                                                  effectiveRange:&patternRange];
       
       if (backgroundcolor) {
-        [self.textStorage addAttribute:NSBackgroundColorAttributeName
-                                 value:backgroundcolor
-                                 range:patternRange];
+
+//        [self.textStorage addAttribute:NSBackgroundColorAttributeName
+//                                 value:backgroundcolor
+//                                 range:patternRange];
       }else {
-        [self.textStorage removeAttribute:NSBackgroundColorAttributeName
-                                    range:patternRange];
+        self.layoutManager.outlineColor = [UIColor clearColor];
+
+//        [self.textStorage removeAttribute:NSBackgroundColorAttributeName
+//                                    range:patternRange];
       }
       if (foregroundcolor) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName
