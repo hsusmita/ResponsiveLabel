@@ -141,8 +141,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   [super setNumberOfLines:numberOfLines];
   if (numberOfLines != _textContainer.maximumNumberOfLines) {
     _textContainer.maximumNumberOfLines = numberOfLines;
-    [self layoutIfNeeded];
     [self initialTextConfiguration];
+    [self layoutIfNeeded];
   }
 }
 
@@ -162,9 +162,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   // Don't call super implementation. Might want to uncomment this out when
   // debugging layout and rendering problems.
   //   [super drawTextInRect:rect];
-  
+
   //Handle truncation
-  self.customTruncationEnabled ? [self appendTokenIfNeeded] : [self removeTokenIfPresent];
+    self.customTruncationEnabled ? [self appendTokenIfNeeded] : [self removeTokenIfPresent];
   
   //Draw after truncation process is complete
   NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
@@ -460,8 +460,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (void)handleTouchEnd {
   if ([self patternTouchInProgress]) {
-    [self performActionAtIndex:self.selectedRange.location];
     [self removeHighlightingForIndex:self.selectedRange.location];
+    //Perform action after heighlight is removed
+    [self performActionAtIndex:self.selectedRange.location];
     
     //Clear global Variable
     self.selectedRange = NSMakeRange(NSNotFound, 0);
@@ -579,6 +580,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
         [self.textStorage removeAttribute:NSForegroundColorAttributeName
                                     range:patternRange];
       }
+      [self.textStorage removeAttribute:NSForegroundColorAttributeName
+                                  range:patternRange];
+
     }
     [self redrawTextForRange:patternRange];
   }
@@ -607,7 +611,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     [self.rangeAttributeDictionary setObject:patternDescriptor.patternAttributes forKey:obj];
     if ([self isRangeTruncated:obj.rangeValue]) {
       self.truncatedPatternRange = obj.rangeValue;
-    }else if (obj.rangeValue.location < self.textStorage.length) {
+    }else if ((obj.rangeValue.location + obj.rangeValue.length) < self.textStorage.length) {
       [self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
       [self redrawTextForRange:obj.rangeValue];
     }
@@ -636,7 +640,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     [self.rangeAttributeDictionary removeObjectForKey:obj];
     if ([self isRangeTruncated:obj.rangeValue]) {
       self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
-    }else if (obj.rangeValue.location < self.textStorage.length) {
+    }else if ((obj.rangeValue.location + obj.rangeValue.length) < self.textStorage.length) {
       [patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
         [self.textStorage removeAttribute:attributeName range:obj.rangeValue];
       }];
@@ -708,7 +712,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   UIColor *colour = self.textColor;
   if (!self.isEnabled)
     colour = [UIColor lightGrayColor];
-  else if (self.isHighlighted)
+  else if (self.isHighlighted && self.highlightedTextColor)
     colour = self.highlightedTextColor;
   
   // Setup paragraph attributes
