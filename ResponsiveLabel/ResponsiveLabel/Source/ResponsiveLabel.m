@@ -126,7 +126,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (void)setText:(NSString *)text {
   [super setText:text];
-  NSAttributedString *attributedText =[[NSAttributedString alloc]initWithString:text
+  NSString *finalText = (text!= nil) ? text : @"";
+  NSAttributedString *attributedText =[[NSAttributedString alloc]initWithString:finalText
                                                                      attributes:[self attributesFromProperties]];
   [self updateTextStorage:attributedText];
 }
@@ -741,7 +742,10 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (void)updateTextStorage:(NSAttributedString *)attributedText {
   self.rangeAttributeDictionary = [NSMutableDictionary new];
-  if (attributedText.length > 0) {
+  if (attributedText == nil) {
+    NSAttributedString *emptyString = [[NSAttributedString alloc]initWithString:@""];
+    [self.textStorage setAttributedString:emptyString];
+  }else {
     [self.textStorage setAttributedString:attributedText];
   }
   
