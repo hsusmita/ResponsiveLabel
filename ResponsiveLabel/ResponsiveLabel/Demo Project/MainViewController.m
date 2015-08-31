@@ -8,6 +8,7 @@
 
 #import "MainViewController.h"
 #import "ResponsiveLabel.h"
+#import "NSAttributedString+Processing.h"
 
 @interface MainViewController ()
 
@@ -102,6 +103,10 @@
                                                                                         attributes:@{NSFontAttributeName:self.responsiveLabel.font,NSForegroundColorAttributeName:[UIColor brownColor]}]
                                               withAction:^(NSString *tappedString) {
                                                 self.messageLabel.text = @"You have tapped token string";
+                                                self.responsiveLabel.numberOfLines = 0;
+//                                                self.responsiveLabel.customTruncationEnabled = NO;
+//                                                [self.responsiveLabel setAttributedText:[self.responsiveLabel.attributedText wordWrappedAttributedString]withTruncation:NO];
+                                                
                                               }];
       break;
     }
