@@ -103,7 +103,12 @@
                                                                                         attributes:@{NSFontAttributeName:self.responsiveLabel.font,NSForegroundColorAttributeName:[UIColor brownColor]}]
                                               withAction:^(NSString *tappedString) {
                                                 self.messageLabel.text = @"You have tapped token string";
-                                                self.responsiveLabel.numberOfLines = 0;
+                                                if (self.responsiveLabel.numberOfLines == 0) {
+                                                  self.responsiveLabel.numberOfLines = 4;
+                                                }else {
+                                                  self.responsiveLabel.numberOfLines = 0;
+                                                  [self.responsiveLabel layoutIfNeeded];
+                                                }
 //                                                self.responsiveLabel.customTruncationEnabled = NO;
 //                                                [self.responsiveLabel setAttributedText:[self.responsiveLabel.attributedText wordWrappedAttributedString]withTruncation:NO];
                                                 
