@@ -16,6 +16,8 @@
 extern NSString *RLTapResponderAttributeName;
 extern NSString *RLHighlightedForegroundColorAttributeName;
 extern NSString *RLHighlightedBackgroundColorAttributeName;
+extern NSString *RLHighlightedBackgroundCornerRadius;
+
 
 /**
  Type for responder block to be specfied with RLTapResponderAttributeName

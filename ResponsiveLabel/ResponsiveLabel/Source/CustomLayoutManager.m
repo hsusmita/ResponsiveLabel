@@ -10,40 +10,30 @@
 
 @implementation CustomLayoutManager
 
-
 - (void)drawBackgroundForGlyphRange:(NSRange)glyphsToShow atPoint:(CGPoint)origin {
   [super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];
-//  if self.wordRange.length == 0 {
-//    return
-//  }
-//  var range = self.glyphRangeForCharacterRange(self.wordRange, actualCharacterRange:nil)
-//  range = NSIntersectionRange(glyphsToShow, range)
+  
   NSRange range = glyphsToShow;
   if (range.length == 0) {
     return;
   }
   
-  NSTextContainer *tc = [self textContainerForGlyphAtIndex:range.location effectiveRange:nil];
+  NSTextContainer *textContainer = [self textContainerForGlyphAtIndex:range.location effectiveRange:nil];
   CGRect boundingRect = [self boundingRectForGlyphRange:range
-                                        inTextContainer:tc];
+                                        inTextContainer:textContainer];
   boundingRect.origin.x += origin.x;
   boundingRect.origin.y += origin.y;
-//  boundingRect.size.height /= 2;
-//  boundingRect.size.width /= 3;
-  CGContextRef c = UIGraphicsGetCurrentContext();
-  CGContextSaveGState(c);
-//  CGContextSetStrokeColorWithColor(c, self.outlineColor.CGColor);
-//  CGContextSetLineWidth(c, 1.0);
-//  CGContextStrokeRect(c, boundingRect);
-//  
-  UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:boundingRect cornerRadius:5.0];
-  if (self.outlineColor) {
-  CGContextSetFillColorWithColor(c, self.outlineColor.CGColor);
-  //  CGContextSetStrokeColorWithColor(c, self.outlineColor.CGColor);
+  
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  CGContextSaveGState(context);
+  
+  UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:boundingRect cornerRadius:self.cornerRadius];
+  if (self.backgroundColor) {
+    CGContextSetFillColorWithColor(context, self.backgroundColor.CGColor);
     [bezierPath fill];
   }
   
-  CGContextRestoreGState(c);
+  CGContextRestoreGState(context);
 }
 
 @end

@@ -18,6 +18,7 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 NSString *RLTapResponderAttributeName = @"TapResponder";
 NSString *RLHighlightedForegroundColorAttributeName = @"HighlightedForegroundColor";
 NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundColor";
+NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRadius";
 
 
 @interface ResponsiveLabel ()
@@ -559,12 +560,10 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
                                           atIndex:index
                                    effectiveRange:&patternRange];
     
+    NSNumber *cornerRadius = [self.textStorage attribute:RLHighlightedBackgroundCornerRadius atIndex:index effectiveRange:&patternRange];
     if (backgroundcolor) {
-      self.layoutManager.outlineColor = backgroundcolor;
-//      [self.layoutManager drawBackgroundForGlyphRange:patternRange atPoint:[self textOffsetForGlyphRange:patternRange]];
-//      [self.textStorage addAttribute:NSBackgroundColorAttributeName
-//                               value:backgroundcolor
-//                               range:patternRange];
+      self.layoutManager.backgroundColor = backgroundcolor;
+      self.layoutManager.cornerRadius = cornerRadius.floatValue;
     }
     if (foregroundcolor) {
       [self.textStorage addAttribute:NSForegroundColorAttributeName
@@ -590,16 +589,12 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
                                                  effectiveRange:&patternRange];
       
       if (backgroundcolor) {
-
-//        [self.textStorage addAttribute:NSBackgroundColorAttributeName
-//                                 value:backgroundcolor
-//                                 range:patternRange];
+        self.layoutManager.backgroundColor = backgroundcolor;
       }else {
-        self.layoutManager.outlineColor = [UIColor clearColor];
-
-//        [self.textStorage removeAttribute:NSBackgroundColorAttributeName
-//                                    range:patternRange];
+        self.layoutManager.backgroundColor = [UIColor clearColor];
       }
+      self.layoutManager.cornerRadius = 0;
+
       if (foregroundcolor) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName
                                  value:foregroundcolor
