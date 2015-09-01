@@ -35,8 +35,8 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
 @property (nonatomic, assign) NSRange selectedRange;
 @property (nonatomic, assign) NSRange truncatedRange;
 @property (nonatomic, assign) NSRange truncatedPatternRange;
-@property (nonatomic, strong) NSMutableArray *rects;
-@property (nonatomic, strong) NSMutableArray *glyphranges;
+@property (nonatomic, strong) NSMutableArray *glyphRangesTobeDrawn;
+
 @end
 
 @implementation ResponsiveLabel
@@ -49,8 +49,7 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
     [self configureForGestures];
     self.patternDescriptorDictionary = [NSMutableDictionary new];
     self.selectedRange = NSMakeRange(NSNotFound, 0);
-    self.rects = [NSMutableArray new];
-    self.glyphranges = [NSMutableArray new];
+    self.glyphRangesTobeDrawn = [NSMutableArray new];
   }
   return self;
 }
@@ -61,8 +60,7 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
     [self configureForGestures];
     self.patternDescriptorDictionary = [NSMutableDictionary new];
     self.selectedRange = NSMakeRange(NSNotFound, 0);
-    self.rects = [NSMutableArray new];
-    self.glyphranges = [NSMutableArray new];
+    self.glyphRangesTobeDrawn = [NSMutableArray new];
 
   }
   return self;
@@ -172,34 +170,43 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
   //   [super drawTextInRect:rect];
   
   //Handle truncation
-    self.customTruncationEnabled ? [self appendTokenIfNeeded] : [self removeTokenIfPresent];
-
-  //Draw after truncation process is complete
-  NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
-
-  CGPoint textOffset = [self textOffsetForGlyphRange:glyphRange];
-
-  //Draw after truncation process is complete
-
-  [self.glyphranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-    CGPoint point = CGPointMake(textOffset.x, textOffset.y);
-    [_layoutManager drawBackgroundForGlyphRange:obj.rangeValue atPoint:point];
-    [_layoutManager drawGlyphsForGlyphRange:obj.rangeValue atPoint:point];
-  }];
-  
-  if (self.glyphranges.count == 0) {
-    //Draw after truncation process is complete
+//  [self handleTruncationIfNeeded];
+  self.customTruncationEnabled ? [self appendTokenIfNeeded] : [self removeTokenIfPresent];
+  if (self.glyphRangesTobeDrawn.count == 0) {
     NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
-    
-    // Calculate the offset of the text in the view
-    CGPoint textOffset = [self textOffsetForGlyphRange:glyphRange];
-    
-    // Drawing code
-    [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
-    [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
-    
+    [self.glyphRangesTobeDrawn addObject:[NSValue valueWithRange:glyphRange]];
   }
-  [self.glyphranges removeAllObjects];
+    [self.glyphRangesTobeDrawn enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+      [self drawForGlyphRange:obj.rangeValue];
+    }];
+  [self.glyphRangesTobeDrawn removeAllObjects];
+  
+}
+
+- (BOOL)handleTruncationIfNeeded {
+  BOOL handledTruncation = NO;
+  if (self.customTruncationEnabled) {
+    if ([self shouldAppendTruncationToken] && ![self truncationTokenAppended]) {
+      [self appendTokenIfNeeded];
+      [self.glyphRangesTobeDrawn removeAllObjects];
+      [self.glyphRangesTobeDrawn addObject:[NSValue valueWithRange:NSMakeRange(0, self.textStorage.length)]];
+      handledTruncation = YES;
+    }
+  }else if ([self truncationTokenAppended]) {
+    [self removeTokenIfPresent];
+    [self.glyphRangesTobeDrawn removeAllObjects];
+    [self.glyphRangesTobeDrawn addObject:[NSValue valueWithRange:NSMakeRange(0, self.textStorage.length)]];
+    handledTruncation = YES;
+  }
+  return handledTruncation;
+}
+
+- (void)drawForGlyphRange:(NSRange)glyphRange {
+  //Draw after truncation process is complete
+  NSRange totalGlyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
+  CGPoint textOffset = [self textOffsetForGlyphRange:totalGlyphRange];
+  [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
+  [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
 }
 
 /**
@@ -228,14 +235,16 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
 - (void)redrawTextForRange:(NSRange)range {
   NSRange glyphRange = NSMakeRange(NSNotFound, 0);
   [self.layoutManager characterRangeForGlyphRange:range actualGlyphRange:&glyphRange];
-  CGRect rect = [self.layoutManager usedRectForTextContainer:self.textContainer];
+  CGRect rect = [self.layoutManager boundingRectForGlyphRange:glyphRange inTextContainer:self.textContainer];
+
   NSRange totalGlyphRange = [self.layoutManager
                              glyphRangeForTextContainer:self.textContainer];
   CGPoint point = [self textOffsetForGlyphRange:totalGlyphRange];
   rect.origin.y += point.y;
+//  [self setNeedsDisplay];
+  [self.glyphRangesTobeDrawn addObject:[NSValue valueWithRange:range]];
+
   [self setNeedsDisplayInRect:rect];
-  [self.rects addObject:[NSValue valueWithCGRect:rect]];
-  [self.glyphranges addObject:[NSValue valueWithRange:range]];
 }
 
 
@@ -295,6 +304,8 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
   
   //configure truncated pattern range
   [self addAttributeForTruncatedRange];
+
+  [self.glyphRangesTobeDrawn addObject:[NSValue valueWithRange:NSMakeRange(0, self.textStorage.length)]];
 }
 
 - (void)addAttributeForTruncatedRange {
@@ -341,6 +352,8 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
       
       // Add attribute to truncation range
       [self addAttributesToTruncationToken];
+      
+      [self.glyphRangesTobeDrawn addObject:[NSValue valueWithRange:NSMakeRange(0, self.textStorage.length)]];
     }
   }
 }
@@ -593,7 +606,6 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
       }else {
         self.layoutManager.backgroundColor = [UIColor clearColor];
       }
-      self.layoutManager.cornerRadius = 0;
 
       if (foregroundcolor) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName
@@ -603,9 +615,6 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
         [self.textStorage removeAttribute:NSForegroundColorAttributeName
                                     range:patternRange];
       }
-      [self.textStorage removeAttribute:NSForegroundColorAttributeName
-                                  range:patternRange];
-
     }
     [self redrawTextForRange:patternRange];
   }
@@ -779,6 +788,8 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
   [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
     [self addAttributesForPatternDescriptor:descriptor];
   }];
+  [self.glyphRangesTobeDrawn removeAllObjects];
+  [self.glyphRangesTobeDrawn addObject:[NSValue valueWithRange:NSMakeRange(0, [self.layoutManager numberOfGlyphs])]];
 }
 
 /**

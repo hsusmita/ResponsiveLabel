@@ -26,6 +26,8 @@
   
   CGContextRef context = UIGraphicsGetCurrentContext();
   CGContextSaveGState(context);
+  NSLog(@"glyph range = %@",NSStringFromRange(glyphsToShow));
+  NSLog(@"bounding rect = %@",NSStringFromCGRect(boundingRect));
   
   UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:boundingRect cornerRadius:self.cornerRadius];
   if (self.backgroundColor) {
