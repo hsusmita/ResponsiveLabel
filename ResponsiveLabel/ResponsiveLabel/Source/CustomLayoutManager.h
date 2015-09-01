@@ -10,6 +10,7 @@
 
 @interface CustomLayoutManager : NSLayoutManager
 
-@property (nonatomic,strong) UIColor *outlineColor;
+@property (nonatomic,strong) UIColor *backgroundColor;
+@property (nonatomic,assign) CGFloat cornerRadius;
 
 @end
