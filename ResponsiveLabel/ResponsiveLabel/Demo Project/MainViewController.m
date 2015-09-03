@@ -59,7 +59,7 @@
     self.messageLabel.text = [NSString stringWithFormat:@"You have tapped hashTag: %@",tappedString];
   };
   [self.responsiveLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor redColor],
-                                                               RLHighlightedBackgroundColorAttributeName:[UIColor blackColor], RLHighlightedBackgroundCornerRadius:@3.5,
+                                                               RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],NSBackgroundColorAttributeName:[UIColor cyanColor],RLHighlightedBackgroundCornerRadius:@5,
                                                                   RLTapResponderAttributeName:hashTagTapAction}];
   }else {
     [self.responsiveLabel disableHashTagDetection];

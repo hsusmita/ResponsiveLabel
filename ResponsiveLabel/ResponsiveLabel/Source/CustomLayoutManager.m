@@ -7,33 +7,39 @@
 //
 
 #import "CustomLayoutManager.h"
+#import "ResponsiveLabel.h"
 
 @implementation CustomLayoutManager
 
 - (void)drawBackgroundForGlyphRange:(NSRange)glyphsToShow atPoint:(CGPoint)origin {
-  [super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];
-  
+
   NSRange range = glyphsToShow;
   if (range.length == 0) {
     return;
   }
   
   NSTextContainer *textContainer = [self textContainerForGlyphAtIndex:range.location effectiveRange:nil];
-  CGRect boundingRect = [self boundingRectForGlyphRange:range
-                                        inTextContainer:textContainer];
-  boundingRect.origin.x += origin.x;
-  boundingRect.origin.y += origin.y;
-  
   CGContextRef context = UIGraphicsGetCurrentContext();
   CGContextSaveGState(context);
-  
-  UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:boundingRect cornerRadius:self.cornerRadius];
-  if (self.backgroundColor) {
-    CGContextSetFillColorWithColor(context, self.backgroundColor.CGColor);
-    [bezierPath fill];
-  }
-  
+  [self.textStorage enumerateAttribute:NSBackgroundColorAttributeName inRange:range options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(id value, NSRange range, BOOL *stop) {
+    CGRect boundingRect = [self boundingRectForGlyphRange:range
+                                          inTextContainer:textContainer];
+    boundingRect.origin.x += origin.x;
+    boundingRect.origin.y += origin.y;
+    NSLog(@"rect = %@",NSStringFromCGRect(boundingRect));
+    UIColor *backgroundColor = [self.textStorage attribute:NSBackgroundColorAttributeName atIndex:range.location effectiveRange:nil];
+    CGFloat cornerRadius = ((NSNumber *)[self.textStorage attribute:RLHighlightedBackgroundCornerRadius atIndex:range.location effectiveRange:nil]).floatValue;
+    UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:boundingRect cornerRadius:cornerRadius];
+    if (backgroundColor) {
+      CGContextSetFillColorWithColor(context, backgroundColor.CGColor);
+      [bezierPath fill];
+    }else {
+//      [super drawBackgroundForGlyphRange:glyphsToShow atPoint:origin];
+    }
+    
+  }];
   CGContextRestoreGState(context);
+ 
 }
 
 @end

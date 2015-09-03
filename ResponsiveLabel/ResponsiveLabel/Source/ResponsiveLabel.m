@@ -37,6 +37,7 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
 @property (nonatomic, assign) NSRange truncatedPatternRange;
 @property (nonatomic, strong) NSMutableArray *rects;
 @property (nonatomic, strong) NSMutableArray *glyphranges;
+@property (nonatomic, strong) NSMutableArray *glyphrangesForHighlightedBG;
 @end
 
 @implementation ResponsiveLabel
@@ -176,29 +177,31 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
 
   //Draw after truncation process is complete
   NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
-
+//
   CGPoint textOffset = [self textOffsetForGlyphRange:glyphRange];
+  [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
+
+  [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
 
   //Draw after truncation process is complete
 
-  [self.glyphranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-    CGPoint point = CGPointMake(textOffset.x, textOffset.y);
-    [_layoutManager drawBackgroundForGlyphRange:obj.rangeValue atPoint:point];
-    [_layoutManager drawGlyphsForGlyphRange:obj.rangeValue atPoint:point];
-  }];
-  
-  if (self.glyphranges.count == 0) {
-    //Draw after truncation process is complete
-    NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
-    
-    // Calculate the offset of the text in the view
-    CGPoint textOffset = [self textOffsetForGlyphRange:glyphRange];
-    
-    // Drawing code
-    [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
-    [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
-    
-  }
+//  [self.glyphranges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+//    CGPoint point = CGPointMake(textOffset.x, textOffset.y);
+//    [_layoutManager drawBackgroundForGlyphRange:obj.rangeValue atPoint:point];
+//    [_layoutManager drawGlyphsForGlyphRange:obj.rangeValue atPoint:point];
+//  }];
+
+//  if (self.glyphranges.count == 0) {
+//    //Draw after truncation process is complete
+//    NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
+//    
+//    // Calculate the offset of the text in the view
+//    CGPoint textOffset = [self textOffsetForGlyphRange:glyphRange];
+//    
+//    // Drawing code
+//    [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
+//    [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
+//  }
   [self.glyphranges removeAllObjects];
 }
 
@@ -226,16 +229,17 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
  */
 
 - (void)redrawTextForRange:(NSRange)range {
-  NSRange glyphRange = NSMakeRange(NSNotFound, 0);
-  [self.layoutManager characterRangeForGlyphRange:range actualGlyphRange:&glyphRange];
-  CGRect rect = [self.layoutManager usedRectForTextContainer:self.textContainer];
-  NSRange totalGlyphRange = [self.layoutManager
-                             glyphRangeForTextContainer:self.textContainer];
-  CGPoint point = [self textOffsetForGlyphRange:totalGlyphRange];
-  rect.origin.y += point.y;
-  [self setNeedsDisplayInRect:rect];
-  [self.rects addObject:[NSValue valueWithCGRect:rect]];
+//  NSRange glyphRange = NSMakeRange(NSNotFound, 0);
+//  [self.layoutManager characterRangeForGlyphRange:range actualGlyphRange:&glyphRange];
+//  CGRect rect = [self.layoutManager usedRectForTextContainer:self.textContainer];
+//  NSRange totalGlyphRange = [self.layoutManager
+//                             glyphRangeForTextContainer:self.textContainer];
+//  CGPoint point = [self textOffsetForGlyphRange:totalGlyphRange];
+//  rect.origin.y += point.y;
+//  [self setNeedsDisplayInRect:rect];
+//  [self.rects addObject:[NSValue valueWithCGRect:rect]];
   [self.glyphranges addObject:[NSValue valueWithRange:range]];
+  [self setNeedsDisplay];
 }
 
 
@@ -563,6 +567,9 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
     NSNumber *cornerRadius = [self.textStorage attribute:RLHighlightedBackgroundCornerRadius atIndex:index effectiveRange:&patternRange];
     if (backgroundcolor) {
       self.layoutManager.backgroundColor = backgroundcolor;
+      [self.textStorage addAttribute:NSBackgroundColorAttributeName
+                               value:backgroundcolor
+                               range:patternRange];
       self.layoutManager.cornerRadius = cornerRadius.floatValue;
     }
     if (foregroundcolor) {
@@ -589,12 +596,14 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
                                                  effectiveRange:&patternRange];
       
       if (backgroundcolor) {
-        self.layoutManager.backgroundColor = backgroundcolor;
+        [self.textStorage addAttribute:NSBackgroundColorAttributeName
+                                 value:backgroundcolor
+                                 range:patternRange];
       }else {
-        self.layoutManager.backgroundColor = [UIColor clearColor];
-      }
-      self.layoutManager.cornerRadius = 0;
 
+        [self.textStorage removeAttribute:NSBackgroundColorAttributeName range:patternRange];
+      }
+      
       if (foregroundcolor) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName
                                  value:foregroundcolor
@@ -603,9 +612,6 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
         [self.textStorage removeAttribute:NSForegroundColorAttributeName
                                     range:patternRange];
       }
-      [self.textStorage removeAttribute:NSForegroundColorAttributeName
-                                  range:patternRange];
-
     }
     [self redrawTextForRange:patternRange];
   }
