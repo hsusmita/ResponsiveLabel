@@ -19,7 +19,7 @@ pod 'ResponsiveLabel', '~> 1.0.6'
 The following snippets explain the usage of public methods. These snippets assume an instance of ResponsiveLabel named "customLabel".
 
 #### Pattern Detection
-```
+```objc
 //Detects email in text
 NSString *emailRegexString = @"[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}";
 NSError *error;
@@ -32,7 +32,7 @@ withPatternAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]}];
 ```
 
 #### String Detection
-```
+```objc
 self.customLabel.userInteractionEnabled = YES;
 PatternTapResponder tapResponder = ^(NSString *string) {
     NSLog(@"tapped = %@",string);
@@ -42,7 +42,7 @@ PatternTapResponder tapResponder = ^(NSString *string) {
 ```
 
 #### Array of String Detection
-```
+```objc
 self.customLabel.userInteractionEnabled = YES;
 PatternTapResponder stringTapAction = ^(NSString *tappedString) {
     NSLog(@"tapped string = %@",tappedString);
@@ -52,7 +52,7 @@ PatternTapResponder stringTapAction = ^(NSString *tappedString) {
 ```
 
 #### HashTag Detection
-```
+```objc
 self.customLabel.userInteractionEnabled = YES;
 PatternTapResponder hashTagTapAction = ^(NSString *tappedString) {
 NSLog(@"HashTag Tapped = %@",tappedString);
@@ -63,7 +63,7 @@ NSLog(@"HashTag Tapped = %@",tappedString);
 
 #### Username Handle Detection
 
-```
+```objc
 self.customLabel.userInteractionEnabled = YES;
 PatternTapResponder userHandleTapAction = ^(NSString *tappedString){
 NSLog(@"Username Handler Tapped = %@",tappedString);
@@ -74,7 +74,7 @@ NSLog(@"Username Handler Tapped = %@",tappedString);
 
 #### URL Detection
 
-```
+```objc
 self.customLabel.userInteractionEnabled = YES;
 PatternTapResponder urlTapAction = ^(NSString *tappedString) {
 NSLog(@"URL Tapped = %@",tappedString);
@@ -88,7 +88,7 @@ To highlight patterns, one can set the attributes:
 * RLHighlightedForegroundColorAttributeName
 * RLHighlightedBackgroundColorAttributeName
 
-```
+```objc
 self.customLabel.userInteractionEnabled = YES;
 PatternTapResponder userHandleTapAction = ^(NSString *tappedString){
 NSLog(@"Username Handler Tapped = %@",tappedString);
@@ -98,7 +98,7 @@ NSLog(@"Username Handler Tapped = %@",tappedString);
 ```
 #### Custom Truncation Token
 ##### Set attributed string as truncation token
-```
+```objc
 NSString *expansionToken = @"Read More ...";
 NSString *str = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken attributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font}];
@@ -109,7 +109,7 @@ NSLog(@"Tap on truncation text");
 ```
 ##### Set image as truncation token
 The height of image size should be approximately equal to or less than the font height. Otherwise the image will not be rendered properly
-```
+```objc
 [self.customLabel setTruncationIndicatorImage:[UIImage imageNamed:@"more_image"] withSize:CGSizeMake(25, 5) andAction:^(NSString *tappedString) {
     NSLog(@"tapped on image");
  }];
