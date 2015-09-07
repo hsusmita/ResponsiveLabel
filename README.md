@@ -87,6 +87,7 @@ numberWithInt:1],RLTapResponderAttributeName:urlTapAction}];
 To highlight patterns, one can set the attributes:
 * RLHighlightedForegroundColorAttributeName
 * RLHighlightedBackgroundColorAttributeName
+* RLHighlightedBackgroundCornerRadius
 
 ```objc
 self.customLabel.userInteractionEnabled = YES;
@@ -94,7 +95,7 @@ PatternTapResponder userHandleTapAction = ^(NSString *tappedString){
 NSLog(@"Username Handler Tapped = %@",tappedString);
 };
 [self.customLabel enableUserHandleDetectionWithAttributes:
-@{NSForegroundColorAttributeName:[UIColor grayColor],RLHighlightedForegroundColorAttributeName:[UIColor greenColor],RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],RLTapResponderAttributeName:userHandleTapAction}];
+@{NSForegroundColorAttributeName:[UIColor grayColor],RLHighlightedForegroundColorAttributeName:[UIColor greenColor],RLHighlightedBackgroundCornerRadius:@5,RLHighlightedBackgroundColorAttributeName:[UIColor blackColor],RLTapResponderAttributeName:userHandleTapAction}];
 ```
 #### Custom Truncation Token
 ##### Set attributed string as truncation token
