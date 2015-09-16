@@ -580,9 +580,6 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
         [self.textStorage removeAttribute:NSForegroundColorAttributeName
                                     range:patternRange];
       }
-      [self.textStorage removeAttribute:NSForegroundColorAttributeName
-                                  range:patternRange];
-
     }
     [self redrawTextForRange:patternRange];
   }
@@ -767,39 +764,29 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (NSUInteger)characterIndexAtLocation:(CGPoint)location {
   NSUInteger chracterIndex = NSNotFound;
   if (self.textStorage.string.length > 0) {
-    NSUInteger glyphIndex = [self glyphIndexForLocation:location];
+    CGPoint textOffset = [self textOffsetForGlyphRange:
+                         [self.layoutManager glyphRangeForTextContainer:self.textContainer]];
+    
+    // Get the touch location and use text offset to convert to text cotainer coords
+    location.x -= textOffset.x;
+    location.y -= textOffset.y;
+    
+    NSUInteger glyphIndex =
+    [self.layoutManager glyphIndexForPoint:location
+                           inTextContainer:self.textContainer];
+    
     // If the touch is in white space after the last glyph on the line we don't
     // count it as a hit on the text
     NSRange lineRange;
     CGRect lineRect = [self.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
                                                                effectiveRange:&lineRange];
     lineRect.size.height = 60;  //Adjustment to increase tap area
+    
     if (CGRectContainsPoint(lineRect, location)) {
       chracterIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
     }
   }
   return chracterIndex;
-}
-
-/**
- Returns glyph index for a given point
- @param location: CGPoint
- @return glyph index for given point
- */
-
-- (NSUInteger)glyphIndexForLocation:(CGPoint)location {
-  // Get offset of the text in the view
-  CGPoint textOffset;
-  NSRange glyphRange = [self.layoutManager
-                        glyphRangeForTextContainer:self.textContainer];
-  textOffset = [self textOffsetForGlyphRange:glyphRange];
-  
-  // Get the touch location and use text offset to convert to text cotainer coords
-  location.x -= textOffset.x;
-  location.y -= textOffset.y;
-  
-  return  [self.layoutManager glyphIndexForPoint:location
-                                 inTextContainer:self.textContainer];
 }
 
 #pragma mark - Public Methods
