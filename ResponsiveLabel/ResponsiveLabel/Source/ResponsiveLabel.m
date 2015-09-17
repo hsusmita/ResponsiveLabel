@@ -46,6 +46,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     [self configureForGestures];
     self.patternDescriptorDictionary = [NSMutableDictionary new];
     self.selectedRange = NSMakeRange(NSNotFound, 0);
+    self.truncatedRange = NSMakeRange(NSNotFound, 0);
+    self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
   }
   return self;
 }
@@ -56,6 +58,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     [self configureForGestures];
     self.patternDescriptorDictionary = [NSMutableDictionary new];
     self.selectedRange = NSMakeRange(NSNotFound, 0);
+    self.truncatedRange = NSMakeRange(NSNotFound, 0);
+    self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
   }
   return self;
 }
@@ -275,6 +279,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (void)addAttributeForTruncatedRange {
   NSDictionary *patternAttributes = [self.rangeAttributeDictionary objectForKey:[NSValue valueWithRange:self.truncatedPatternRange]];
+  if (patternAttributes)
   [self.textStorage addAttributes:patternAttributes range:self.truncatedPatternRange];
 }
 
@@ -299,16 +304,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     NSRange tokenRange =[self rangeForTokenInsertion];
     
     if (tokenRange.location != NSNotFound) {
-      // set truncated range
-      self.truncatedRange = NSMakeRange(tokenRange.location, self.textStorage.length - tokenRange.location);
-      // set truncatedPatternRange
-      [self.rangeAttributeDictionary.allKeys enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-        if ([self isRangeTruncated:obj.rangeValue]) {
-          self.truncatedPatternRange = obj.rangeValue;
-        }
-      }];
-      // Append truncation token
-      [self.textStorage replaceCharactersInRange:tokenRange withAttributedString:self.attributedTruncationToken];
+      [self updateTextStorageReplacingRange:tokenRange];
     }
     
     if ([self rangeOfTruncationToken].location != NSNotFound) {
@@ -319,6 +315,20 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
       [self addAttributesToTruncationToken];
     }
   }
+}
+
+- (void)updateTextStorageReplacingRange:(NSRange)replaceRange {
+  // set truncated range
+  self.truncatedRange = NSMakeRange(replaceRange.location, self.textStorage.length - replaceRange.location);
+  // set truncatedPatternRange
+  [self.rangeAttributeDictionary.allKeys enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
+    if ([self isRangeTruncated:obj.rangeValue]) {
+      self.truncatedPatternRange = obj.rangeValue;
+    }
+  }];
+  // Append truncation token
+  [self.textStorage replaceCharactersInRange:replaceRange
+                        withAttributedString:self.attributedTruncationToken];
 }
 
 - (void)removeAttributeForTruncatedRange {
