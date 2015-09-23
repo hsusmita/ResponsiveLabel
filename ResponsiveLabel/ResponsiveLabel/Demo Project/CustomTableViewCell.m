@@ -60,7 +60,8 @@ static NSString *kCollapseToken = @"Read Less";
   };
   [self.customLabel enableDetectionForStrings:@[@"text",@"long"] withAttributes:@{NSForegroundColorAttributeName:[UIColor brownColor],
                                                                                   RLTapResponderAttributeName:stringTapAction}];
-  
+  [self.secondaryLabel enableHashTagDetectionWithAttributes:@{NSForegroundColorAttributeName:[UIColor brownColor],
+															  RLTapResponderAttributeName:stringTapAction}];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

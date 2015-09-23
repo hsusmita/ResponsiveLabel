@@ -618,7 +618,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     [self.rangeAttributeDictionary setObject:patternDescriptor.patternAttributes forKey:obj];
     if ([self isRangeTruncated:obj.rangeValue]) {
       self.truncatedPatternRange = obj.rangeValue;
-    }else if ((obj.rangeValue.location + obj.rangeValue.length) < self.textStorage.length) {
+    }else if ((obj.rangeValue.location + obj.rangeValue.length) <= self.textStorage.length) {
       [self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
       [self redrawTextForRange:obj.rangeValue];
     }
@@ -647,7 +647,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     [self.rangeAttributeDictionary removeObjectForKey:obj];
     if ([self isRangeTruncated:obj.rangeValue]) {
       self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
-    }else if ((obj.rangeValue.location + obj.rangeValue.length) < self.textStorage.length) {
+    }else if ((obj.rangeValue.location + obj.rangeValue.length) <= self.textStorage.length) {
       [patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
         [self.textStorage removeAttribute:attributeName range:obj.rangeValue];
       }];

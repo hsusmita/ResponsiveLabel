@@ -14,6 +14,8 @@
 @property (weak, nonatomic) IBOutlet ResponsiveLabel *label;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *expandedIndexPaths;
+@property (strong, nonatomic) NSArray *titleArray;
+@property (strong, nonatomic) NSArray *descArray;
 
 @end
 
@@ -24,6 +26,32 @@
   self.label.userInteractionEnabled =  YES;
   self.expandedIndexPaths = [NSMutableArray array];
   self.tableView.estimatedRowHeight = 50.0f;
+  
+  self.titleArray = @[@"@susmita Having fun",
+					  @"@Gulu having fun",
+					  @"@Gulu1 having fun",
+					  @"@Gulu2 having fun",
+					  @"@Gulu3 having fun",
+					  @"@Gulu4 having fun",
+					  @"@Gulu5 having fun",
+					  @"@Gulu6 having fun",
+					  @"@Gulu7 having fun",
+					  @"@Gulu8 having fun",
+					  @"@Gulu9 having fun",
+					  @"@Gulu10 having fun",
+					  @"@Gulu11 having fun",
+					  @"@Gulu12 having fun",
+					  @"@Gulu13 having fun",
+					  @"@Gulu14 having fun",
+					  @"@Gulu15 having fun",
+					  @"@Gulu16 having fun",];
+  self.descArray = @[
+					 @"#funny Lorem ipsum # dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #hello#funfactor",
+					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #masti",@"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #funny",
+					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #funny1",
+					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu #funny2#dhoom2 ",
+					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu #dhoom3",@"#dhoom4",@"#dhoom5",@"#dhoom6",@"#dhoom7",@"#dhoom8",@"#dhoom9",@"#dhoom10",@"#dhoom11",@"#dhoom12",@"#dhoom13",@"#dhoom14",@"#dhoom15",@"#dhoom16",@"#dhoom17",@"#dhoom18"];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,7 +60,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return 5;
+  return self.titleArray.count;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -43,7 +71,7 @@
   }
   str = [NSString stringWithFormat:@"%@",str];
   [cell configureText:str forExpandedState:[self.expandedIndexPaths containsObject:indexPath]];
-  
+  cell.secondaryLabel.text = [self.descArray objectAtIndex:indexPath.row];
   cell.delegate = self;
   return cell;
 }

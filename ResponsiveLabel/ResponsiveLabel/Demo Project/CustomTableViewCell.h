@@ -15,6 +15,7 @@
 
 @property (weak, nonatomic) IBOutlet ResponsiveLabel *customLabel;
 @property (nonatomic, weak) id<CustomTableViewCellDelegate>delegate;
+@property (weak, nonatomic) IBOutlet ResponsiveLabel *secondaryLabel;
 
 - (void)configureText:(NSString*)str forExpandedState:(BOOL)isExpanded;
 
