@@ -10,8 +10,8 @@
 #import "NSAttributedString+Processing.h"
 #import "InlineTextAttachment.h"
 
-static NSString *kRegexStringForHashTag = @"(?<!\\w)#([\\w\\_]+)?";
-static NSString *kRegexStringForUserHandle = @"(?<!\\w)@([\\w\\_]+)?";
+static NSString *kRegexStringForHashTag = @"#(\\w+){1,}?";
+static NSString *kRegexStringForUserHandle = @"@(\\w+){1,}?";
 static NSString *kRegexFormatForSearchWord = @"(%@)";
 
 NSString *RLTapResponderAttributeName = @"TapResponder";

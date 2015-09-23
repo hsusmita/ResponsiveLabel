@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="FTs-z6-fuB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="FTs-z6-fuB">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -26,8 +27,8 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BwM-D7-Ojg" id="qjv-uc-wOT">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dXR-Ge-9gA" customClass="ResponsiveLabel">
-                                                    <rect key="frame" x="10" y="10" width="580" height="23"/>
+                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dXR-Ge-9gA" customClass="ResponsiveLabel">
+                                                    <rect key="frame" x="10" y="10" width="580" height="1"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="Ov9-Dq-Ez4"/>
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="999" constant="23" id="cka-xh-mGm"/>
@@ -45,16 +46,32 @@
                                                         </mask>
                                                     </variation>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vir-Db-RNl" customClass="ResponsiveLabel">
+                                                    <rect key="frame" x="10" y="11" width="580" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="dXR-Ge-9gA" firstAttribute="trailing" secondItem="vir-Db-RNl" secondAttribute="trailing" id="8v4-Nb-6bd"/>
                                                 <constraint firstAttribute="bottom" secondItem="dXR-Ge-9gA" secondAttribute="bottom" priority="999" constant="10" id="NNd-wa-yo5"/>
+                                                <constraint firstItem="dXR-Ge-9gA" firstAttribute="leading" secondItem="vir-Db-RNl" secondAttribute="leading" id="Osl-qm-1mQ"/>
+                                                <constraint firstItem="dXR-Ge-9gA" firstAttribute="bottom" secondItem="vir-Db-RNl" secondAttribute="top" id="RUN-uj-geR"/>
                                                 <constraint firstAttribute="trailing" secondItem="dXR-Ge-9gA" secondAttribute="trailing" priority="999" constant="10" id="Y2n-ke-L55"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="vir-Db-RNl" secondAttribute="bottom" constant="3" id="ZcH-YP-m56"/>
                                                 <constraint firstItem="dXR-Ge-9gA" firstAttribute="top" secondItem="qjv-uc-wOT" secondAttribute="top" constant="10" id="bf4-da-kOl"/>
                                                 <constraint firstItem="dXR-Ge-9gA" firstAttribute="leading" secondItem="qjv-uc-wOT" secondAttribute="leading" constant="10" id="zJF-e7-AQV"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="NNd-wa-yo5"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="customLabel" destination="dXR-Ge-9gA" id="Rrv-N7-nYM"/>
+                                            <outlet property="secondaryLabel" destination="vir-Db-RNl" id="r3t-y2-5Uq"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -368,7 +385,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="Sm2-eN-tv5" userLabel="&quot;A long text with #hashTag text, with @username and URL  = http://www.google.com                  text long enough text" customClass="ResponsiveLabel">
                                 <rect key="frame" x="116" y="147" width="388" height="86"/>
                                 <color key="backgroundColor" red="0.80359672652717873" green="0.9309782055980278" blue="0.97883597883597884" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">"A long text with #hashTag #customLabel text, @username URL http://www.google.com text long enough text  enough text enough text  enough text enough text  enough text enough text  enough text www.google.com enough text  enough text enough text  enough text"</string>
+                                <string key="text">"A long text with #hashTag#customLabel text, @username@username2 URL http://www.google.com text long enough text  enough text enough text  enough text enough text  enough text enough text  enough text www.google.com enough text  enough text enough text  enough text"</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
