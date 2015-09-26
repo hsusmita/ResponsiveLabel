@@ -309,7 +309,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (void)updateTextStorageReplacingRange:(NSRange)replaceRange {
   // set truncated range
-  self.truncatedRange = NSMakeRange(replaceRange.location, self.textStorage.length - replaceRange.location);
+  self.truncatedRange = NSMakeRange(replaceRange.location, self.attributedText.length - replaceRange.location);
   
   // Append truncation token
   [self.textStorage replaceCharactersInRange:replaceRange
