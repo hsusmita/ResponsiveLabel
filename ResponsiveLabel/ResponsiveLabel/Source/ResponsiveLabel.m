@@ -274,13 +274,12 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   [self.textStorage setAttributedString:finalString];
   
   //configure truncated pattern range
-  [self addAttributeForTruncatedRange];
-}
-
-- (void)addAttributeForTruncatedRange {
   NSDictionary *patternAttributes = [self.rangeAttributeDictionary objectForKey:[NSValue valueWithRange:self.truncatedPatternRange]];
   if (patternAttributes)
   [self.textStorage addAttributes:patternAttributes range:self.truncatedPatternRange];
+  
+  self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
+  self.truncatedRange = NSMakeRange(NSNotFound, 0);
 }
 
 /**
@@ -302,17 +301,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
     
     //Check for truncation range and append truncation token if required
     NSRange tokenRange =[self rangeForTokenInsertion];
-    
     if (tokenRange.location != NSNotFound) {
       [self updateTextStorageReplacingRange:tokenRange];
-    }
-    
-    if ([self rangeOfTruncationToken].location != NSNotFound) {
-      // Remove attribute from truncated pattern
-      [self removeAttributeForTruncatedRange];
-      
-      // Add attribute to truncation range
-      [self addAttributesToTruncationToken];
     }
   }
 }
@@ -320,21 +310,30 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (void)updateTextStorageReplacingRange:(NSRange)replaceRange {
   // set truncated range
   self.truncatedRange = NSMakeRange(replaceRange.location, self.textStorage.length - replaceRange.location);
-  // set truncatedPatternRange
+  
+  // Append truncation token
+  [self.textStorage replaceCharactersInRange:replaceRange
+						withAttributedString:self.attributedTruncationToken];
+
+  //set pattern truncation range
   [self.rangeAttributeDictionary.allKeys enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
     if ([self isRangeTruncated:obj.rangeValue]) {
       self.truncatedPatternRange = obj.rangeValue;
     }
   }];
-  // Append truncation token
-  [self.textStorage replaceCharactersInRange:replaceRange
-                        withAttributedString:self.attributedTruncationToken];
+
+  // Remove attribute from truncated pattern
+  [self removeAttributeForTruncatedRange];
+
+  // Add attribute to truncation range
+  [self addAttributesToTruncationToken];
 }
 
 - (void)removeAttributeForTruncatedRange {
   NSDictionary *patternAttributes = [self.rangeAttributeDictionary objectForKey:[NSValue valueWithRange:self.truncatedPatternRange]];
   [patternAttributes enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-    [self.textStorage removeAttribute:key range:self.truncatedPatternRange];
+  	NSRange availableRange = NSMakeRange(self.truncatedPatternRange.location, self.textStorage.length - self.attributedTruncationToken.length - self.truncatedPatternRange.location);
+    [self.textStorage removeAttribute:key range:availableRange];
   }];
 }
 
@@ -380,9 +379,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 }
 
 - (NSRange)rangeOfTruncationToken {
-  NSRange truncationRange;
+  __block NSRange truncationRange;
   if (self.attributedTruncationToken && self.customTruncationEnabled) {
-    truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
+	truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
   }else {
     truncationRange = [self rangeForTokenInsertion];
   }
