@@ -383,9 +383,9 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="Sm2-eN-tv5" userLabel="&quot;A long text with #hashTag text, with @username and URL  = http://www.google.com                  text long enough text" customClass="ResponsiveLabel">
-                                <rect key="frame" x="116" y="147" width="388" height="86"/>
+                                <rect key="frame" x="56" y="147" width="488" height="86"/>
                                 <color key="backgroundColor" red="0.80359672652717873" green="0.9309782055980278" blue="0.97883597883597884" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">"A long text with #hashTag#customLabel text, @username@username2 URL http://www.google.com text long enough text  enough text enough text  enough text enough text  enough text enough text  enough text www.google.com enough text  enough text enough text  enough text"</string>
+                                <string key="text">"A long text with #hashTag #customLabel text, @username@username2 URL http://www.google.com text long enough text  enough text enough text  enough text enough text  enough text enough text  enough text www.google.com enough text  enough text enough text  enough text"</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -398,7 +398,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="Sm2-eN-tv5" secondAttribute="centerX" id="70Z-ij-DSS"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Sm2-eN-tv5" secondAttribute="trailing" constant="80" id="KVH-fD-z7F"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Sm2-eN-tv5" secondAttribute="trailing" constant="40" id="KVH-fD-z7F"/>
                             <constraint firstAttribute="centerY" secondItem="Sm2-eN-tv5" secondAttribute="centerY" constant="100" id="RGP-vz-H0Y"/>
                             <constraint firstItem="2fp-1m-s3S" firstAttribute="top" secondItem="aFg-Rd-yRH" secondAttribute="bottom" constant="46" id="RGT-Zf-VaS"/>
                             <constraint firstItem="2P8-01-jrx" firstAttribute="top" secondItem="6HH-c0-oFa" secondAttribute="bottom" constant="10" id="Y7s-gw-N5l"/>
@@ -408,7 +408,7 @@
                             <constraint firstAttribute="centerX" secondItem="2fp-1m-s3S" secondAttribute="centerX" id="gkM-tj-qBj"/>
                             <constraint firstItem="Sm2-eN-tv5" firstAttribute="top" secondItem="2fp-1m-s3S" secondAttribute="bottom" constant="20" id="qRP-dw-neu"/>
                             <constraint firstAttribute="bottomMargin" secondItem="2P8-01-jrx" secondAttribute="bottom" id="shc-2o-J5W"/>
-                            <constraint firstItem="Sm2-eN-tv5" firstAttribute="leading" secondItem="b7t-Y8-3kH" secondAttribute="leadingMargin" constant="100" id="uV9-PK-h7C"/>
+                            <constraint firstItem="Sm2-eN-tv5" firstAttribute="leading" secondItem="b7t-Y8-3kH" secondAttribute="leadingMargin" constant="40" id="uV9-PK-h7C"/>
                             <constraint firstItem="6HH-c0-oFa" firstAttribute="top" secondItem="Sm2-eN-tv5" secondAttribute="bottom" constant="45" id="yBI-SV-MHu"/>
                         </constraints>
                         <variation key="default">

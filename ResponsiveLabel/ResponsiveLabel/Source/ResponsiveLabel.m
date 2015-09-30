@@ -266,7 +266,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   
   NSAttributedString *visibleString =
   [self.textStorage attributedSubstringFromRange:NSMakeRange(0, truncationRange.location)];
-  NSAttributedString *hiddenString = [self.attributedText attributedSubstringFromRange:self.truncatedRange];
+   NSAttributedString *hiddenString = [self.attributedText attributedSubstringFromRange:self.truncatedRange];
   
   NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:visibleString];
   [finalString appendAttributedString:hiddenString];
