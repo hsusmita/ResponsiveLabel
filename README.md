@@ -16,7 +16,13 @@ pod 'ResponsiveLabel', '~> 1.0.8'
 
 #Usage
 
-The following snippets explain the usage of public methods. These snippets assume an instance of ResponsiveLabel named "customLabel".
+The following snippets explain the usage of public methods. These snippets assume an instance of ResponsiveLabel named "customLabel". 
+```objc
+#import <ResponsiveLabel.h>
+```
+
+In interface builder, set the custom class of your UILabel to ResponsiveLabel. You may get an error message saying "error: IB Designables: Failed to update auto layout status: Failed to load designables from path (null)" This appears to be an issue with Xcode and Cocoapods and does not seem to cause any problems, but some have been able to fix it, see this [Stackoverflow question](http://stackoverflow.com/questions/28204108/ib-designables-failed-to-update-auto-layout-status-failed-to-load-designables) for more details.
+
 
 #### Pattern Detection
 ```objc
