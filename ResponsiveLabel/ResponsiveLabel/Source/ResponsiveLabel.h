@@ -48,7 +48,10 @@ IB_DESIGNABLE
  @param action:PatternTapResponder Action to be performed on tap on truncation token
  */
 
-- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapResponder)action;
+- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken
+						  withAction:(PatternTapResponder) action __attribute((deprecated("use setAttributedTruncationToken:")));
+
+- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken;
 
 /** Method to set an image as truncation indicator
  @param image: UIImage

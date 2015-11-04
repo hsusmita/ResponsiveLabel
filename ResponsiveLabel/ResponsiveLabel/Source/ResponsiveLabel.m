@@ -43,11 +43,11 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    [self configureForGestures];
-    self.patternDescriptorDictionary = [NSMutableDictionary new];
-    self.selectedRange = NSMakeRange(NSNotFound, 0);
-    self.truncatedRange = NSMakeRange(NSNotFound, 0);
-    self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
+	[self configureForGestures];
+	self.patternDescriptorDictionary = [NSMutableDictionary new];
+	self.selectedRange = NSMakeRange(NSNotFound, 0);
+	self.truncatedRange = NSMakeRange(NSNotFound, 0);
+	self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
   }
   return self;
 }
@@ -55,11 +55,11 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (id)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    [self configureForGestures];
-    self.patternDescriptorDictionary = [NSMutableDictionary new];
-    self.selectedRange = NSMakeRange(NSNotFound, 0);
-    self.truncatedRange = NSMakeRange(NSNotFound, 0);
-    self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
+	[self configureForGestures];
+	self.patternDescriptorDictionary = [NSMutableDictionary new];
+	self.selectedRange = NSMakeRange(NSNotFound, 0);
+	self.truncatedRange = NSMakeRange(NSNotFound, 0);
+	self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
   }
   return self;
 }
@@ -78,31 +78,31 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (NSTextStorage *)textStorage {
   if (!_textStorage) {
-    [_textStorage removeLayoutManager:_layoutManager];
-    _textStorage = [[NSTextStorage alloc] init];
-    [_textStorage addLayoutManager:self.layoutManager];
-    [self.layoutManager setTextStorage:_textStorage];
+	[_textStorage removeLayoutManager:_layoutManager];
+	_textStorage = [[NSTextStorage alloc] init];
+	[_textStorage addLayoutManager:self.layoutManager];
+	[self.layoutManager setTextStorage:_textStorage];
   }
   return _textStorage;
 }
 
 - (NSTextContainer *)textContainer {
   if (!_textContainer) {
-    _textContainer = [[NSTextContainer alloc] init];
-    _textContainer.lineFragmentPadding = 0;
-    _textContainer.maximumNumberOfLines = self.numberOfLines;
-    _textContainer.lineBreakMode = self.lineBreakMode;
-    _textContainer.widthTracksTextView = YES;
-    _textContainer.size = self.frame.size;
-    [_textContainer setLayoutManager:self.layoutManager];
+	_textContainer = [[NSTextContainer alloc] init];
+	_textContainer.lineFragmentPadding = 0;
+	_textContainer.maximumNumberOfLines = self.numberOfLines;
+	_textContainer.lineBreakMode = self.lineBreakMode;
+	_textContainer.widthTracksTextView = YES;
+	_textContainer.size = self.frame.size;
+	[_textContainer setLayoutManager:self.layoutManager];
   }
   return _textContainer;
 }
 
 - (NSLayoutManager *)layoutManager {
   if (!_layoutManager) {
-    _layoutManager = [[NSLayoutManager alloc] init];
-    [_layoutManager addTextContainer:self.textContainer];
+	_layoutManager = [[NSLayoutManager alloc] init];
+	[_layoutManager addTextContainer:self.textContainer];
   }
   return _layoutManager;
 }
@@ -132,7 +132,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   [super setText:text];
   NSString *finalText = (text!= nil) ? text : @"";
   NSAttributedString *attributedText =[[NSAttributedString alloc]initWithString:finalText
-                                                                     attributes:[self attributesFromProperties]];
+																	 attributes:[self attributesFromProperties]];
   [self updateTextStorage:attributedText];
 }
 
@@ -144,9 +144,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (void)setNumberOfLines:(NSInteger)numberOfLines {
   [super setNumberOfLines:numberOfLines];
   if (numberOfLines != _textContainer.maximumNumberOfLines) {
-    _textContainer.maximumNumberOfLines = numberOfLines;
-    [self initialTextConfiguration];
-    [self layoutIfNeeded];
+	_textContainer.maximumNumberOfLines = numberOfLines;
+	[self initialTextConfiguration];
+	[self layoutIfNeeded];
   }
 }
 
@@ -156,8 +156,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 }
 
 - (void)setTruncationToken:(NSString *)truncationToken {
-  [self setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:truncationToken
-                                                                    attributes:[self attributesFromProperties]] withAction:nil];
+  NSAttributedString *token = [[NSAttributedString alloc]initWithString:truncationToken attributes:[self attributesFromProperties]];
+  [self setAttributedTruncationToken:token];
 }
 
 #pragma mark - Drawing
@@ -168,14 +168,14 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   //   [super drawTextInRect:rect];
 
   //Handle truncation
-    self.customTruncationEnabled ? [self appendTokenIfNeeded] : [self removeTokenIfPresent];
-  
+  self.customTruncationEnabled ? [self appendTokenIfNeeded] : [self removeTokenIfPresent];
+
   //Draw after truncation process is complete
   NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];
-  
+
   // Calculate the offset of the text in the view
   CGPoint textOffset = [self textOffsetForGlyphRange:glyphRange];
-  
+
   // Drawing code
   [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
   [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
@@ -185,17 +185,17 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
  This method calculates text offset to draw the given glyph range such that text is center aligned veritically
  @param glyphRange : NSRange
  @return CGPoint : The text offset
- 
+
  */
 - (CGPoint)textOffsetForGlyphRange:(NSRange)glyphRange {
   CGPoint textOffset = CGPointZero;
-  
+
   CGRect textBounds = [self.layoutManager boundingRectForGlyphRange:glyphRange
-                                                    inTextContainer:self.textContainer];
+													inTextContainer:self.textContainer];
   CGFloat paddingHeight = (self.bounds.size.height - textBounds.size.height) / 2.0f;
   if (paddingHeight > 0)
-    textOffset.y = paddingHeight;
-  
+	textOffset.y = paddingHeight;
+
   return textOffset;
 }
 
@@ -208,9 +208,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   NSRange glyphRange = NSMakeRange(NSNotFound, 0);
   [self.layoutManager characterRangeForGlyphRange:range actualGlyphRange:&glyphRange];
   CGRect rect = [self.layoutManager boundingRectForGlyphRange:glyphRange
-                                              inTextContainer:self.textContainer];
+											  inTextContainer:self.textContainer];
   NSRange totalGlyphRange = [self.layoutManager
-                             glyphRangeForTextContainer:self.textContainer];
+							 glyphRangeForTextContainer:self.textContainer];
   CGPoint point = [self textOffsetForGlyphRange:totalGlyphRange];
   rect.origin.y += point.y;
   [self setNeedsDisplayInRect:rect];
@@ -221,26 +221,26 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines {
   CGRect requiredRect = [self rectFittingTextForContainerSize:bounds.size
-                                              forNumberOfLine:numberOfLines];
+											  forNumberOfLine:numberOfLines];
   self.textContainer.size = requiredRect.size;
   return requiredRect;
 }
 
 - (CGRect)rectFittingTextForContainerSize:(CGSize)size
-                          forNumberOfLine:(NSInteger)numberOfLines {
+						  forNumberOfLine:(NSInteger)numberOfLines {
   self.textContainer.size = size;
   self.textContainer.maximumNumberOfLines = numberOfLines;
-  
+
   NSRange glyphRange = [self.layoutManager
-                        glyphRangeForTextContainer:self.textContainer];
+						glyphRangeForTextContainer:self.textContainer];
   CGRect textBounds = [self.layoutManager boundingRectForGlyphRange:glyphRange
-                                                    inTextContainer:self.textContainer];
+													inTextContainer:self.textContainer];
   NSInteger totalLines = textBounds.size.height / self.font.lineHeight;
-  
+
   if (numberOfLines > 0 && (numberOfLines < totalLines)) {
-    textBounds.size.height -= (totalLines - numberOfLines) * self.font.lineHeight;
+	textBounds.size.height -= (totalLines - numberOfLines) * self.font.lineHeight;
   }else if (numberOfLines > 0 && (numberOfLines > totalLines)) {
-    textBounds.size.height += (numberOfLines - totalLines) * self.font.lineHeight;
+	textBounds.size.height += (numberOfLines - totalLines) * self.font.lineHeight;
   }
   textBounds.size.width = ceilf(textBounds.size.width);
   textBounds.size.height = ceilf(textBounds.size.height);
@@ -263,21 +263,21 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   if (![self truncationTokenAppended]) return;
   NSRange truncationRange =
   [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
-  
+
   NSAttributedString *visibleString =
   [self.textStorage attributedSubstringFromRange:NSMakeRange(0, truncationRange.location)];
-   NSAttributedString *hiddenString = [self.attributedText attributedSubstringFromRange:self.truncatedRange];
-  
+  NSAttributedString *hiddenString = [self.attributedText attributedSubstringFromRange:self.truncatedRange];
+
   NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:visibleString];
   [finalString appendAttributedString:hiddenString];
-  
+
   [self.textStorage setAttributedString:finalString];
-  
+
   //configure truncated pattern range
   NSDictionary *patternAttributes = [self.rangeAttributeDictionary objectForKey:[NSValue valueWithRange:self.truncatedPatternRange]];
   if (patternAttributes)
-  [self.textStorage addAttributes:patternAttributes range:self.truncatedPatternRange];
-  
+	[self.textStorage addAttributes:patternAttributes range:self.truncatedPatternRange];
+
   self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
   self.truncatedRange = NSMakeRange(NSNotFound, 0);
 }
@@ -291,35 +291,35 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (void)appendTokenIfNeeded {
   if ([self shouldAppendTruncationToken] && ![self truncationTokenAppended]) {
-    if ([self.textStorage isNewLinePresent]) {
-      //Append token string at the end of last visible line
-      NSRange range = [self rangeForTokenInsertionForStringWithNewLine];
-      if (range.length > 0)
-        [self.textStorage replaceCharactersInRange:range
-                              withAttributedString:self.attributedTruncationToken];
-    }
-    
-    //Check for truncation range and append truncation token if required
-    NSRange tokenRange =[self rangeForTokenInsertion];
-    if (tokenRange.location != NSNotFound) {
-      [self updateTextStorageReplacingRange:tokenRange];
-    }
+	if ([self.textStorage isNewLinePresent]) {
+			//Append token string at the end of last visible line
+			NSRange range = [self rangeForTokenInsertionForStringWithNewLine];
+			if (range.length > 0)
+			  [self.textStorage replaceCharactersInRange:range
+									withAttributedString:self.attributedTruncationToken];
+	}
+
+	//Check for truncation range and append truncation token if required
+	NSRange tokenRange =[self rangeForTokenInsertion];
+	if (tokenRange.location != NSNotFound) {
+			[self updateTextStorageReplacingRange:tokenRange];
+	}
   }
 }
 
 - (void)updateTextStorageReplacingRange:(NSRange)replaceRange {
   // set truncated range
   self.truncatedRange = NSMakeRange(replaceRange.location, self.attributedText.length - replaceRange.location);
-  
+
   // Append truncation token
   [self.textStorage replaceCharactersInRange:replaceRange
 						withAttributedString:self.attributedTruncationToken];
 
   //set pattern truncation range
   [self.rangeAttributeDictionary.allKeys enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-    if ([self isRangeTruncated:obj.rangeValue]) {
-      self.truncatedPatternRange = obj.rangeValue;
-    }
+	if ([self isRangeTruncated:obj.rangeValue]) {
+			self.truncatedPatternRange = obj.rangeValue;
+	}
   }];
 
   // Remove attribute from truncated pattern
@@ -332,8 +332,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (void)removeAttributeForTruncatedRange {
   NSDictionary *patternAttributes = [self.rangeAttributeDictionary objectForKey:[NSValue valueWithRange:self.truncatedPatternRange]];
   [patternAttributes enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-  	NSRange availableRange = NSMakeRange(self.truncatedPatternRange.location, self.textStorage.length - self.attributedTruncationToken.length - self.truncatedPatternRange.location);
-    [self.textStorage removeAttribute:key range:availableRange];
+	NSRange availableRange = NSMakeRange(self.truncatedPatternRange.location, self.textStorage.length - self.attributedTruncationToken.length - self.truncatedPatternRange.location);
+	[self.textStorage removeAttribute:key range:availableRange];
   }];
 }
 
@@ -343,22 +343,22 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   NSString *key = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
   PatternDescriptor *descriptor = [self.patternDescriptorDictionary objectForKey:key];
   if (descriptor) {
-    [self.textStorage addAttributes:descriptor.patternAttributes range:truncationRange];
+	[self.textStorage addAttributes:descriptor.patternAttributes range:truncationRange];
   }
 }
 
 - (NSRange)rangeForTokenInsertion {
   self.textContainer.size = self.bounds.size;
   if (self.text.length == 0) {
-    return NSMakeRange(NSNotFound, 0);
+	return NSMakeRange(NSNotFound, 0);
   }
-  
+
   NSInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:self.textStorage.length - 1];
   NSRange range = [self.layoutManager truncatedGlyphRangeInLineFragmentForGlyphAtIndex:glyphIndex];
-  
+
   if (range.location != NSNotFound && self.customTruncationEnabled) {
-    range.length += self.attributedTruncationToken.length;
-    range.location -= self.attributedTruncationToken.length;
+	range.length += self.attributedTruncationToken.length;
+	range.location -= self.attributedTruncationToken.length;
   }
   return range;
 }
@@ -368,13 +368,13 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   NSRange lineRange = NSMakeRange(NSNotFound, 0);
   NSInteger approximateNumberOfLines = CGRectGetHeight([self.layoutManager usedRectForTextContainer:self.textContainer])/self.font.lineHeight;
   for (numberOfLines = 0, index = 0; index < numberOfGlyphs; numberOfLines++){
-    [self.layoutManager lineFragmentRectForGlyphAtIndex:index
-                                         effectiveRange:&lineRange];
-    if (numberOfLines == approximateNumberOfLines - 1) break;
-    index = NSMaxRange(lineRange);
+	[self.layoutManager lineFragmentRectForGlyphAtIndex:index
+										 effectiveRange:&lineRange];
+	if (numberOfLines == approximateNumberOfLines - 1) break;
+	index = NSMaxRange(lineRange);
   }
   NSRange rangeOfText = NSMakeRange(lineRange.location + lineRange.length - 1,
-                                    self.textStorage.length - lineRange.location - lineRange.length + 1);
+									self.textStorage.length - lineRange.location - lineRange.length + 1);
   return rangeOfText;
 }
 
@@ -383,7 +383,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   if (self.attributedTruncationToken && self.customTruncationEnabled) {
 	truncationRange = [self.textStorage.string rangeOfString:self.attributedTruncationToken.string];
   }else {
-    truncationRange = [self rangeForTokenInsertion];
+	truncationRange = [self rangeForTokenInsertion];
   }
   return truncationRange;
 }
@@ -394,24 +394,38 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (BOOL)truncationTokenAppended {
   return (self.textStorage.length > 0 && (self.attributedTruncationToken.length > 0) &&
-          ([self.textStorage.string rangeOfString:self.attributedTruncationToken.string].location != NSNotFound));
+		  ([self.textStorage.string rangeOfString:self.attributedTruncationToken.string].location != NSNotFound));
 }
 
-- (void)updateTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapResponder)action {
-  NSError *error;
+- (void)updateTruncationToken:(NSAttributedString *)attributedTruncationToken {
+  // Disable old truncation pattern detection
   if (self.attributedTruncationToken.length > 0) {
-    NSString *patternKey = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
-    [self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:patternKey]];
+	NSString *patternKey = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
+	[self disablePatternDetection:[self.patternDescriptorDictionary objectForKey:patternKey]];
   }
-  
-  self.attributedTruncationToken = attributedTruncationToken;
+
+  // Assign new truncation pattern
+  _attributedTruncationToken = attributedTruncationToken;
+
+  // Enable new truncation pattern detection
+
+  __block PatternTapResponder action;
+  [attributedTruncationToken enumerateAttribute:RLTapResponderAttributeName
+  										inRange:NSMakeRange(0, attributedTruncationToken.length)
+										options:NSAttributedStringEnumerationReverse
+									 usingBlock:^(id  _Nullable value, NSRange range, BOOL * _Nonnull stop) {
+										  action = value;
+										}];
+
+  NSError *error;
+
   if (action) {
-    NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
-    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
-    PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                             withSearchType:PatternSearchTypeLast
-                                                      withPatternAttributes:@{RLTapResponderAttributeName:action}];
-    [self enablePatternDetection:descriptor];
+	NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,self.attributedTruncationToken.string];
+	NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
+	PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
+															 withSearchType:PatternSearchTypeLast
+													  withPatternAttributes:@{RLTapResponderAttributeName:action}];
+	[self enablePatternDetection:descriptor];
   }
 }
 
@@ -426,16 +440,16 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   NSInteger index = [self characterIndexAtLocation:touchLocation];
   NSRange rangeOfTappedText;
   if (index < self.textStorage.length) {
-    rangeOfTappedText = [self.layoutManager rangeOfNominallySpacedGlyphsContainingIndex:index];
+	rangeOfTappedText = [self.layoutManager rangeOfNominallySpacedGlyphsContainingIndex:index];
   }
-  
+
   if (rangeOfTappedText.location != NSNotFound &&
-      ![self patternTouchInProgress] &&
-      [self shouldHandleTouchAtIndex:index]) {
-    
-    [self handleTouchBeginForRange:rangeOfTappedText];
+	  ![self patternTouchInProgress] &&
+	  [self shouldHandleTouchAtIndex:index]) {
+
+	[self handleTouchBeginForRange:rangeOfTappedText];
   }else {
-    [super touchesBegan:touches withEvent:event];
+	[super touchesBegan:touches withEvent:event];
   }
 }
 
@@ -450,42 +464,42 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
   if ([self patternTouchInProgress] && [self shouldHandleTouchAtIndex:self.selectedRange.location]) {
-    [self performSelector:@selector(handleTouchEnd)
-               withObject:nil
-               afterDelay:0.05];
+	[self performSelector:@selector(handleTouchEnd)
+			   withObject:nil
+			   afterDelay:0.05];
   }else {
-    [super touchesEnded:touches withEvent:event];
+	[super touchesEnded:touches withEvent:event];
   }
 }
 
 - (void)handleTouchBeginForRange:(NSRange)range {
   if (![self patternTouchInProgress]) {
-    //Set global variable
-    self.selectedRange = range;
-    self.currentAttributedString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
-    [self addHighlightingForIndex:range.location];
+	//Set global variable
+	self.selectedRange = range;
+	self.currentAttributedString = [[NSMutableAttributedString alloc]initWithAttributedString:self.textStorage];
+	[self addHighlightingForIndex:range.location];
   }
 }
 
 - (void)handleTouchEnd {
   if ([self patternTouchInProgress]) {
-    [self removeHighlightingForIndex:self.selectedRange.location];
-    //Perform action after heighlight is removed
-    [self performActionAtIndex:self.selectedRange.location];
-    
-    //Clear global Variable
-    self.selectedRange = NSMakeRange(NSNotFound, 0);
-    self.currentAttributedString = nil;
+	[self removeHighlightingForIndex:self.selectedRange.location];
+	//Perform action after heighlight is removed
+	[self performActionAtIndex:self.selectedRange.location];
+
+	//Clear global Variable
+	self.selectedRange = NSMakeRange(NSNotFound, 0);
+	self.currentAttributedString = nil;
   }
 }
 
 - (void)handleTouchCancelled {
   if ([self patternTouchInProgress]) {
-    [self removeHighlightingForIndex:self.selectedRange.location];
-    
-    //Clear global Variable
-    self.selectedRange = NSMakeRange(NSNotFound, 0);
-    self.currentAttributedString = nil;
+	[self removeHighlightingForIndex:self.selectedRange.location];
+
+	//Clear global Variable
+	self.selectedRange = NSMakeRange(NSNotFound, 0);
+	self.currentAttributedString = nil;
   }
 }
 
@@ -507,9 +521,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   NSRange range;
   NSDictionary *dictionary = [self.textStorage attributesAtIndex:index effectiveRange:&range];
   BOOL touchAttributesSet = (dictionary && ([dictionary.allKeys containsObject:RLTapResponderAttributeName] ||
-                                            [dictionary.allKeys containsObject:RLHighlightedBackgroundColorAttributeName] ||
-                                            [dictionary.allKeys containsObject:RLHighlightedForegroundColorAttributeName]));
-  
+											[dictionary.allKeys containsObject:RLHighlightedBackgroundColorAttributeName] ||
+											[dictionary.allKeys containsObject:RLHighlightedForegroundColorAttributeName]));
+
   return touchAttributesSet;
 }
 
@@ -520,12 +534,12 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (void)performActionAtIndex:(NSInteger)index {
   NSRange patternRange;
   if (index < self.textStorage.length) {
-    PatternTapResponder tapResponder = [self.textStorage attribute:RLTapResponderAttributeName
-                                                           atIndex:index
-                                                    effectiveRange:&patternRange];
-    if (tapResponder) {
-      tapResponder([self.textStorage.string substringWithRange:patternRange]);
-    }
+	PatternTapResponder tapResponder = [self.textStorage attribute:RLTapResponderAttributeName
+														   atIndex:index
+													effectiveRange:&patternRange];
+	if (tapResponder) {
+			tapResponder([self.textStorage.string substringWithRange:patternRange]);
+	}
   }
 }
 
@@ -536,61 +550,61 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   UIColor *backgroundcolor = nil;
   UIColor *foregroundcolor = nil;
   NSRange patternRange;
-  
+
   if (index < self.textStorage.length) {
-    backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName
-                                          atIndex:index
-                                   effectiveRange:&patternRange];
-    foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName
-                                          atIndex:index
-                                   effectiveRange:&patternRange];
-    
-    if (backgroundcolor) {
-      [self.textStorage addAttribute:NSBackgroundColorAttributeName
-                               value:backgroundcolor
-                               range:patternRange];
-    }
-    if (foregroundcolor) {
-      [self.textStorage addAttribute:NSForegroundColorAttributeName
-                               value:foregroundcolor
-                               range:patternRange];
-    }
+	backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName
+										  atIndex:index
+								   effectiveRange:&patternRange];
+	foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName
+										  atIndex:index
+								   effectiveRange:&patternRange];
+
+	if (backgroundcolor) {
+			[self.textStorage addAttribute:NSBackgroundColorAttributeName
+									 value:backgroundcolor
+									 range:patternRange];
+	}
+	if (foregroundcolor) {
+			[self.textStorage addAttribute:NSForegroundColorAttributeName
+									 value:foregroundcolor
+									 range:patternRange];
+	}
   }
   [self redrawTextForRange:patternRange];
 }
 
 - (void)removeHighlightingForIndex:(NSInteger)index {
   if (self.selectedRange.location != NSNotFound && self.textStorage.length > index) {
-    UIColor *backgroundcolor = nil;
-    UIColor *foregroundcolor = nil;
-    NSRange patternRange;
-    
-    if (index < self.textStorage.length) {
-      backgroundcolor = [self.currentAttributedString attribute:NSBackgroundColorAttributeName
-                                                        atIndex:index
-                                                 effectiveRange:&patternRange];
-      foregroundcolor = [self.currentAttributedString attribute:NSForegroundColorAttributeName
-                                                        atIndex:index
-                                                 effectiveRange:&patternRange];
-      
-      if (backgroundcolor) {
-        [self.textStorage addAttribute:NSBackgroundColorAttributeName
-                                 value:backgroundcolor
-                                 range:patternRange];
-      }else {
-        [self.textStorage removeAttribute:NSBackgroundColorAttributeName
-                                    range:patternRange];
-      }
-      if (foregroundcolor) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName
-                                 value:foregroundcolor
-                                 range:patternRange];
-      }else {
-        [self.textStorage removeAttribute:NSForegroundColorAttributeName
-                                    range:patternRange];
-      }
-    }
-    [self redrawTextForRange:patternRange];
+	UIColor *backgroundcolor = nil;
+	UIColor *foregroundcolor = nil;
+	NSRange patternRange;
+
+	if (index < self.textStorage.length) {
+			backgroundcolor = [self.currentAttributedString attribute:NSBackgroundColorAttributeName
+															  atIndex:index
+													   effectiveRange:&patternRange];
+			foregroundcolor = [self.currentAttributedString attribute:NSForegroundColorAttributeName
+															  atIndex:index
+													   effectiveRange:&patternRange];
+
+			if (backgroundcolor) {
+			  [self.textStorage addAttribute:NSBackgroundColorAttributeName
+									   value:backgroundcolor
+									   range:patternRange];
+			}else {
+			  [self.textStorage removeAttribute:NSBackgroundColorAttributeName
+										  range:patternRange];
+			}
+			if (foregroundcolor) {
+			  [self.textStorage addAttribute:NSForegroundColorAttributeName
+									   value:foregroundcolor
+									   range:patternRange];
+			}else {
+			  [self.textStorage removeAttribute:NSForegroundColorAttributeName
+										  range:patternRange];
+			}
+	}
+	[self redrawTextForRange:patternRange];
   }
 }
 
@@ -600,27 +614,27 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
  This method searches ranges for patternDescriptor and stores in rangeAttributeDictionary,
  adds corresponding entry to self.rangeAttributeDictionary.
  Then the attributes are added to those ranges depending upon the following conditions
- 
+
  1. The range is not truncated by truncation token
- 
+
  2. The range is out of bound of current textStorage
- 
+
  @param patternDescriptor : PatternDescriptor
  */
 
 - (void)addAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
   //Generate ranges for attributed text of the label
   NSArray *patternRanges = [patternDescriptor patternRangesForString:self.attributedText.string];
-  
+
   //Apply attributes to the ranges conditionally
   [patternRanges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-    [self.rangeAttributeDictionary setObject:patternDescriptor.patternAttributes forKey:obj];
-    if ([self isRangeTruncated:obj.rangeValue]) {
-      self.truncatedPatternRange = obj.rangeValue;
-    }else if ((obj.rangeValue.location + obj.rangeValue.length) <= self.textStorage.length) {
-      [self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
-      [self redrawTextForRange:obj.rangeValue];
-    }
+	[self.rangeAttributeDictionary setObject:patternDescriptor.patternAttributes forKey:obj];
+	if ([self isRangeTruncated:obj.rangeValue]) {
+			self.truncatedPatternRange = obj.rangeValue;
+	}else if ((obj.rangeValue.location + obj.rangeValue.length) <= self.textStorage.length) {
+			[self.textStorage addAttributes: patternDescriptor.patternAttributes range:obj.rangeValue];
+			[self redrawTextForRange:obj.rangeValue];
+	}
   }];
 }
 
@@ -628,30 +642,30 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
  This method searches ranages for patterns speficed in patternDescriptor for self.textStorage,
  removes corresponding entry from self.rangeAttributeDictionary.
  Then the attribites dictated by patternDescriptors are removed under the following conditions
- 
+
  1. The range is not truncated by truncation token
- 
+
  2. The range is out of bound of current textStorage
- 
+
  @param patternDescriptor : PatternDescriptor
- 
+
  */
 
 - (void)removeAttributesForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
   //Generate ranges for current text of textStorage
   NSArray *patternRanges = [patternDescriptor patternRangesForString:self.textStorage.string];
-  
+
   //Remove attributes from the ranges conditionally
   [patternRanges enumerateObjectsUsingBlock:^(NSValue *obj, NSUInteger idx, BOOL *stop) {
-    [self.rangeAttributeDictionary removeObjectForKey:obj];
-    if ([self isRangeTruncated:obj.rangeValue]) {
-      self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
-    }else if ((obj.rangeValue.location + obj.rangeValue.length) <= self.textStorage.length) {
-      [patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
-        [self.textStorage removeAttribute:attributeName range:obj.rangeValue];
-      }];
-      [self redrawTextForRange:obj.rangeValue];
-    }
+	[self.rangeAttributeDictionary removeObjectForKey:obj];
+	if ([self isRangeTruncated:obj.rangeValue]) {
+			self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
+	}else if ((obj.rangeValue.location + obj.rangeValue.length) <= self.textStorage.length) {
+			[patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
+			  [self.textStorage removeAttribute:attributeName range:obj.rangeValue];
+			}];
+			[self redrawTextForRange:obj.rangeValue];
+	}
   }];
 }
 
@@ -670,12 +684,12 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (NSString *)patternNameKeyForPatternDescriptor:(PatternDescriptor *)patternDescriptor {
   NSString *key;
   if ([patternDescriptor.patternExpression isKindOfClass:[NSDataDetector class]]) {
-    //As NSDataDetector class, patternExpression.pattern = nil,
-    //we need to set key according to checkingTypes
-    NSTextCheckingTypes types = ((NSDataDetector *)patternDescriptor.patternExpression).checkingTypes;
-    key = [NSString stringWithFormat:@"%llu",types];
+	//As NSDataDetector class, patternExpression.pattern = nil,
+	//we need to set key according to checkingTypes
+	NSTextCheckingTypes types = ((NSDataDetector *)patternDescriptor.patternExpression).checkingTypes;
+	key = [NSString stringWithFormat:@"%llu",types];
   }else {
-    key = patternDescriptor.patternExpression.pattern;
+	key = patternDescriptor.patternExpression.pattern;
   }
   return key;
 }
@@ -690,10 +704,10 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (void)initialTextConfiguration {
   NSAttributedString *currentText;
   if (self.attributedText.length > 0) {
-    currentText = [self.attributedText wordWrappedAttributedString];
+	currentText = [self.attributedText wordWrappedAttributedString];
   }else if (self.text.length > 0){
-    currentText = [[NSAttributedString alloc]initWithString:self.text
-                                                 attributes:[self attributesFromProperties]];
+	currentText = [[NSAttributedString alloc]initWithString:self.text
+												 attributes:[self attributesFromProperties]];
   }
   [self updateTextStorage:currentText];
 }
@@ -706,31 +720,31 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   // Setup shadow attributes
   NSShadow *shadow = shadow = [[NSShadow alloc] init];
   if (self.shadowColor) {
-    shadow.shadowColor = self.shadowColor;
-    shadow.shadowOffset = self.shadowOffset;
+	shadow.shadowColor = self.shadowColor;
+	shadow.shadowOffset = self.shadowOffset;
   }
   else {
-    shadow.shadowOffset = CGSizeMake(0, -1);
-    shadow.shadowColor = nil;
+	shadow.shadowOffset = CGSizeMake(0, -1);
+	shadow.shadowColor = nil;
   }
-  
+
   // Setup colour attributes
   UIColor *colour = self.textColor;
   if (!self.isEnabled)
-    colour = [UIColor lightGrayColor];
+	colour = [UIColor lightGrayColor];
   else if (self.isHighlighted && self.highlightedTextColor)
-    colour = self.highlightedTextColor;
-  
+	colour = self.highlightedTextColor;
+
   // Setup paragraph attributes
   NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
   paragraph.alignment = self.textAlignment;
-  
+
   // Create the dictionary
   NSDictionary *attributes = @{NSFontAttributeName : self.font,
-                               NSForegroundColorAttributeName : colour,
-                               NSShadowAttributeName : shadow,
-                               NSParagraphStyleAttributeName : paragraph,
-                               };
+							   NSForegroundColorAttributeName : colour,
+							   NSShadowAttributeName : shadow,
+							   NSParagraphStyleAttributeName : paragraph,
+							   };
   return attributes;
 }
 /** Updates text container size
@@ -753,14 +767,14 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (void)updateTextStorage:(NSAttributedString *)attributedText {
   self.rangeAttributeDictionary = [NSMutableDictionary new];
   if (attributedText == nil) {
-    NSAttributedString *emptyString = [[NSAttributedString alloc]initWithString:@""];
-    [self.textStorage setAttributedString:emptyString];
+	NSAttributedString *emptyString = [[NSAttributedString alloc]initWithString:@""];
+	[self.textStorage setAttributedString:emptyString];
   }else {
-    [self.textStorage setAttributedString:attributedText];
+	[self.textStorage setAttributedString:attributedText];
   }
-  
+
   [self.patternDescriptorDictionary enumerateKeysAndObjectsUsingBlock:^(id key, PatternDescriptor *descriptor, BOOL *stop) {
-    [self addAttributesForPatternDescriptor:descriptor];
+	[self addAttributesForPatternDescriptor:descriptor];
   }];
 }
 
@@ -773,27 +787,27 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (NSUInteger)characterIndexAtLocation:(CGPoint)location {
   NSUInteger chracterIndex = NSNotFound;
   if (self.textStorage.string.length > 0) {
-    CGPoint textOffset = [self textOffsetForGlyphRange:
-                         [self.layoutManager glyphRangeForTextContainer:self.textContainer]];
-    
-    // Get the touch location and use text offset to convert to text cotainer coords
-    location.x -= textOffset.x;
-    location.y -= textOffset.y;
-    
-    NSUInteger glyphIndex =
-    [self.layoutManager glyphIndexForPoint:location
-                           inTextContainer:self.textContainer];
-    
-    // If the touch is in white space after the last glyph on the line we don't
-    // count it as a hit on the text
-    NSRange lineRange;
-    CGRect lineRect = [self.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
-                                                               effectiveRange:&lineRange];
-    lineRect.size.height = 60;  //Adjustment to increase tap area
-    
-    if (CGRectContainsPoint(lineRect, location)) {
-      chracterIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
-    }
+	CGPoint textOffset = [self textOffsetForGlyphRange:
+						  [self.layoutManager glyphRangeForTextContainer:self.textContainer]];
+
+	// Get the touch location and use text offset to convert to text cotainer coords
+	location.x -= textOffset.x;
+	location.y -= textOffset.y;
+
+	NSUInteger glyphIndex =
+	[self.layoutManager glyphIndexForPoint:location
+						   inTextContainer:self.textContainer];
+
+	// If the touch is in white space after the last glyph on the line we don't
+	// count it as a hit on the text
+	NSRange lineRange;
+	CGRect lineRect = [self.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
+															   effectiveRange:&lineRange];
+	lineRect.size.height = 60;  //Adjustment to increase tap area
+
+	if (CGRectContainsPoint(lineRect, location)) {
+			chracterIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+	}
   }
   return chracterIndex;
 }
@@ -811,9 +825,16 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 }
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken withAction:(PatternTapResponder)action {
+  NSMutableAttributedString *token = [[NSMutableAttributedString alloc]initWithAttributedString:attributedTruncationToken];
+  [token addAttribute:RLTapResponderAttributeName value:action range:NSMakeRange(0, attributedTruncationToken.length)];
+  [self setAttributedTruncationToken:attributedTruncationToken];
+}
+
+- (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken {
   [self removeTokenIfPresent];
-  [self updateTruncationToken:attributedTruncationToken withAction:action];
+  [self updateTruncationToken:attributedTruncationToken];
   [self setNeedsDisplay];
+
 }
 
 - (void)setTruncationIndicatorImage:(UIImage *)image withSize:(CGSize)size andAction:(PatternTapResponder)action {
@@ -822,20 +843,21 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   textAttachment.fontDescender = self.font.descender;
   textAttachment.bounds = CGRectMake(0, -self.font.descender - self.font.lineHeight/2,size.width,size.height);
   NSAttributedString *imageAttributedString = [NSAttributedString attributedStringWithAttachment:textAttachment];
-  
+
   NSAttributedString *paddingString = [[NSAttributedString alloc]initWithString:@" "];
   NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:paddingString];
   [finalString appendAttributedString:imageAttributedString];
   [finalString appendAttributedString:paddingString];
-  [self setAttributedTruncationToken:finalString withAction:action];
+  [finalString addAttribute:RLTapResponderAttributeName value:action range:NSMakeRange(0, finalString.length)];
+  [self setAttributedTruncationToken:finalString];
 }
 
 - (void)enableHashTagDetectionWithAttributes:(NSDictionary*)dictionary {
   NSError *error;
   NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:kRegexStringForHashTag options:0 error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:PatternSearchTypeAll
-                                                    withPatternAttributes:dictionary];
+														   withSearchType:PatternSearchTypeAll
+													withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
 }
 
@@ -846,11 +868,11 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (void)enableUserHandleDetectionWithAttributes:(NSDictionary*)dictionary {
   NSError *error;
   NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:kRegexStringForUserHandle
-                                                                   options:0
-                                                                     error:&error];
+																   options:0
+																	 error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:PatternSearchTypeAll
-                                                    withPatternAttributes:dictionary];
+														   withSearchType:PatternSearchTypeAll
+													withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
 }
 
@@ -862,12 +884,12 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   NSError *error;
   NSString *pattern = [NSString stringWithFormat:kRegexFormatForSearchWord,string];
   NSRegularExpression	*regex = [[NSRegularExpression alloc]initWithPattern:pattern
-                                                                   options:0
-                                                                     error:&error];
-  
+																   options:0
+																	 error:&error];
+
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:regex
-                                                           withSearchType:PatternSearchTypeAll
-                                                    withPatternAttributes:dictionary];
+														   withSearchType:PatternSearchTypeAll
+													withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
 }
 
@@ -878,30 +900,30 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (void)enableDetectionForStrings:(NSArray *)stringsArray withAttributes:(NSDictionary *)dictionary {
   [stringsArray enumerateObjectsUsingBlock:^(NSString *string, NSUInteger idx, BOOL *stop) {
-    [self enableStringDetection:string withAttributes:dictionary];
+	[self enableStringDetection:string withAttributes:dictionary];
   }];
 }
 
 - (void)disableDetectionForStrings:(NSArray *)stringsArray {
   [stringsArray enumerateObjectsUsingBlock:^(NSString *string, NSUInteger idx, BOOL *stop) {
-    [self disableStringDetection:string];
+	[self disableStringDetection:string];
   }];
 }
 
 - (void)enablePatternDetection:(PatternDescriptor *)patternDescriptor {
   NSString *patternkey = [self patternNameKeyForPatternDescriptor:patternDescriptor];
   if (patternkey.length > 0) {
-    [self.patternDescriptorDictionary setObject:patternDescriptor
-                                         forKey:patternkey];
-    [self addAttributesForPatternDescriptor:patternDescriptor];
+	[self.patternDescriptorDictionary setObject:patternDescriptor
+										 forKey:patternkey];
+	[self addAttributesForPatternDescriptor:patternDescriptor];
   }
 }
 
 - (void)disablePatternDetection:(PatternDescriptor *)patternDescriptor {
   NSString *patternkey = [self patternNameKeyForPatternDescriptor:patternDescriptor];
   if (patternkey.length > 0) {
-    [self.patternDescriptorDictionary removeObjectForKey:patternkey];
-    [self removeAttributesForPatternDescriptor:patternDescriptor];
+	[self.patternDescriptorDictionary removeObjectForKey:patternkey];
+	[self removeAttributesForPatternDescriptor:patternDescriptor];
   }
 }
 
@@ -909,8 +931,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   NSError *error = nil;
   NSDataDetector *detector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:detector
-                                                           withSearchType:PatternSearchTypeAll
-                                                    withPatternAttributes:dictionary];
+														   withSearchType:PatternSearchTypeAll
+													withPatternAttributes:dictionary];
   [self enablePatternDetection:descriptor];
 }
 

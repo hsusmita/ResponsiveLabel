@@ -48,13 +48,19 @@ static NSString *kCollapseToken = @"Read Less";
                              	                                 RLTapResponderAttributeName:userHandleTapAction}];
   
   NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
-  [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font}
-                        range:NSMakeRange(3, kExpansionToken.length - 3)];
-  [self.customLabel setAttributedTruncationToken:attribString withAction:^(NSString *tappedString) {
-    if ([self.delegate respondsToSelector:@selector(didTapOnMoreButton:)]) {
-      [self.delegate didTapOnMoreButton:self];
-    }
-  }];
+
+  PatternTapResponder tapAction = ^(NSString *tappedString) {
+		 if ([self.delegate respondsToSelector:@selector(didTapOnMoreButton:)]) {
+			 [self.delegate didTapOnMoreButton:self];
+		 }
+	};
+
+  [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],
+										   NSFontAttributeName:self.customLabel.font,
+								   RLTapResponderAttributeName:tapAction}
+						range:NSMakeRange(3, kExpansionToken.length - 3)];
+	[self.customLabel setAttributedTruncationToken:attribString];
+
   PatternTapResponder stringTapAction = ^(NSString *tappedString) {
     NSLog(@"tapped string = %@",tappedString);
   };
