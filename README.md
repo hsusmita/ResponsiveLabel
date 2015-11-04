@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/pod-1.0.8-green.svg?style=flat)](https://cocoapods.org/pods/ResponsiveLabel/1.0.8/)
+[![Version](https://img.shields.io/badge/pod-1.0.9-green.svg?style=flat)](https://cocoapods.org/pods/ResponsiveLabel/1.0.9/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://cocoapods.org/pods/ResponsiveLabel)
 [![Platform](https://img.shields.io/badge/platform-iOS-orange.svg?style=flat)](http://cocoadocs.org/docsets/ResponsiveLabel)
 
@@ -12,7 +12,7 @@ A UILabel subclass which responds to touch on specified patterns. It has the fol
 #Installation
 
 Add following lines in your pod file  
-pod 'ResponsiveLabel', '~> 1.0.8'
+pod 'ResponsiveLabel', '~> 1.0.9'
 
 #Usage
 
@@ -104,6 +104,8 @@ NSLog(@"Username Handler Tapped = %@",tappedString);
 ```
 #### Custom Truncation Token
 ##### Set attributed string as truncation token
+##### Deprecated in 1.0.9
+
 ```objc
 NSString *expansionToken = @"Read More ...";
 NSString *str = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
@@ -113,6 +115,20 @@ NSLog(@"Tap on truncation text");
 }];
 [self.customLabel setText:str withTruncation:YES];
 ```
+
+##### Latest introduced on 1.0.9
+
+```objc
+NSString *expansionToken = @"Read More ...";
+NSString *str = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+PatternTapResponder tap = ^(NSString *string) {
+   NSLog(@"Tap on truncation text");
+  }
+NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken attributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:self.customLabel.font,RLTapResponderAttributeName:tap}];
+[self.customLabel setAttributedTruncationToken:attribString];
+[self.customLabel setText:str withTruncation:YES];
+```
+
 ##### Set image as truncation token
 The height of image size should be approximately equal to or less than the font height. Otherwise the image will not be rendered properly
 ```objc
