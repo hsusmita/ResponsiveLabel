@@ -16,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
 @property (weak, nonatomic) IBOutlet UIButton *truncationEnableButton;
 @property (weak, nonatomic) IBOutlet UILabel *messageLabel;
+@property (weak, nonatomic) IBOutlet UIButton *labelEnableButton;
+@property (weak, nonatomic) IBOutlet UIButton *highlightButton;
 
 @end
 
@@ -24,11 +26,27 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   [self handleSegmentChange:nil];
- 
+
   self.truncationEnableButton.selected = self.responsiveLabel.customTruncationEnabled;
+  self.labelEnableButton.selected = self.responsiveLabel.enabled;
   PatternTapResponder stringTapAction = ^(NSString *tappedString) {
     NSLog(@"tapped string = %@",tappedString);
   };
+
+  [self.responsiveLabel setHighlightedTextColor:[UIColor colorWithRed:229/255.0 green:120/255.0 blue:142/255.0 alpha:1]];
+
+  // Add collapse token
+
+  PatternTapResponder tap = ^(NSString *string) {
+	self.responsiveLabel.numberOfLines = 4;
+  };
+
+  NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc]initWithAttributedString:self.responsiveLabel.attributedText];
+  [finalString appendAttributedString:[[NSAttributedString alloc] initWithString:@"...Less"
+						   attributes:@{NSForegroundColorAttributeName:[UIColor blackColor],
+		  RLTapResponderAttributeName:tap}]];
+  [self.responsiveLabel setAttributedText:finalString];
+
   NSError *error;
   NSRegularExpression *expression = [[NSRegularExpression alloc]initWithPattern:@"(\"\\w+\")" options:NSRegularExpressionCaseInsensitive error:&error];
   PatternDescriptor *descriptor = [[PatternDescriptor alloc]initWithRegex:expression
@@ -95,20 +113,24 @@
   }
 }
 
+- (IBAction)enableResponsiveLabel:(UIButton *)sender {
+  sender.selected = !sender.selected;
+  self.responsiveLabel.enabled = sender.selected;
+  self.messageLabel.enabled = sender.selected;
+}
+
+- (IBAction)highlightLabel:(UIButton *)sender {
+  sender.selected = !sender.selected;
+  [self.responsiveLabel setHighlighted:sender.selected];
+  [self.messageLabel setHighlighted:sender.selected];
+}
 
 - (IBAction)handleSegmentChange:(UISegmentedControl*)sender {
   switch (self.segmentControl.selectedSegmentIndex) {
     case 0: {
 		PatternTapResponder action = ^(NSString *tappedString) {
 			self.messageLabel.text = @"You have tapped token string";
-			if (self.responsiveLabel.numberOfLines == 0) {
-				self.responsiveLabel.numberOfLines = 4;
-			}else {
-				self.responsiveLabel.numberOfLines = 0;
-			}
-			//                                                self.responsiveLabel.customTruncationEnabled = NO;
-			//                                                [self.responsiveLabel setAttributedText:[self.responsiveLabel.attributedText wordWrappedAttributedString]withTruncation:NO];
-
+			self.responsiveLabel.numberOfLines = 0;
 		};
 		NSAttributedString *token = [[NSAttributedString alloc]initWithString:@"...More"
 																  attributes:@{NSFontAttributeName:self.responsiveLabel.font,

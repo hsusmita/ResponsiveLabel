@@ -45,12 +45,23 @@
 					  @"@Gulu14 having fun",
 					  @"@Gulu15 having fun",
 					  @"@Gulu16 having fun",];
-  self.descArray = @[
-					 @"#funny Lorem ipsum # dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #hello#funfactor",
-					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #masti",@"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #funny",
-					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #funny1",
-					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu #funny2#dhoom2 ",
-					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu #dhoom3",@"#dhoom4",@"#dhoom5",@"#dhoom6",@"#dhoom7",@"#dhoom8",@"#dhoom9",@"#dhoom10",@"#dhoom11",@"#dhoom12",@"#dhoom13",@"#dhoom14",@"#dhoom15",@"#dhoom16",@"#dhoom17",@"#dhoom18"];
+  self.descArray = @[@"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi ",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi ",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi ",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi ",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi ",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi ",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi",
+  @"Vendo o movimento com minha irmã @gigi Watching the movement with my sis @gigi"];
+//  self.descArray = @[
+//					 @"#funny Lorem ipsum # dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #hello#funfactor",
+//					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #masti",@"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #funny",
+//					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor #funny1",
+//					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu #funny2#dhoom2 ",
+//					 @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu #dhoom3",@"#dhoom4",@"#dhoom5",@"#dhoom6",@"#dhoom7",@"#dhoom8",@"#dhoom9",@"#dhoom10",@"#dhoom11",@"#dhoom12",@"#dhoom13",@"#dhoom14",@"#dhoom15",@"#dhoom16",@"#dhoom17",@"#dhoom18"];
 
 }
 
@@ -60,7 +71,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return self.titleArray.count;
+//  return self.descArray.count;
+	return 2;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -71,7 +83,8 @@
   }
   str = [NSString stringWithFormat:@"%@",str];
   [cell configureText:str forExpandedState:[self.expandedIndexPaths containsObject:indexPath]];
-  cell.secondaryLabel.text = [self.descArray objectAtIndex:indexPath.row];
+//  cell.secondaryLabel.text = [self.descArray objectAtIndex:indexPath.row];
+//  [cell configureText:[self.descArray objectAtIndex:indexPath.row] forExpandedState:[self.expandedIndexPaths containsObject:indexPath]];
   cell.delegate = self;
   return cell;
 }
