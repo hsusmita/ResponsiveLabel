@@ -196,7 +196,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   __block NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
 
   [self.textStorage enumerateAttribute:NSParagraphStyleAttributeName
-							   inRange:fullRange options:NSAttributedStringEnumerationReverse usingBlock:^(id  _Nullable value, NSRange range, BOOL * _Nonnull stop) {
+							   inRange:fullRange
+							   options:NSAttributedStringEnumerationReverse
+							    usingBlock:^(NSMutableParagraphStyle *value, NSRange range, BOOL * stop) {
 								 paragraph = value;
 							   }];
   paragraph.alignment = self.textAlignment;
@@ -468,10 +470,9 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   [attributedTruncationToken enumerateAttribute:RLTapResponderAttributeName
   										inRange:NSMakeRange(0, attributedTruncationToken.length)
 										options:NSAttributedStringEnumerationReverse
-									 usingBlock:^(id  _Nullable value, NSRange range, BOOL * _Nonnull stop) {
+									 usingBlock:^(PatternTapResponder value, NSRange range, BOOL *stop) {
 										  action = value;
 										}];
-
   NSError *error;
 
   if (action) {
@@ -846,7 +847,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   [self.attributedText enumerateAttribute:NSForegroundColorAttributeName
 								  inRange:range
 								  options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
-							   usingBlock:^(id  _Nullable value, NSRange range, BOOL * _Nonnull stop) {
+							   usingBlock:^(UIColor *value, NSRange range, BOOL *stop) {
 								 UIColor *foregroundColor = colour;
 								 if (value) {
 								   //If text color is different than attribute color, then retain that attribute color
