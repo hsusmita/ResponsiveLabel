@@ -9,6 +9,7 @@
 #import "ResponsiveLabel.h"
 #import "NSAttributedString+Processing.h"
 #import "InlineTextAttachment.h"
+#import "CustomLayoutManager.h"
 
 static NSString *kRegexStringForHashTag = @"#(\\w+){1,}?";
 static NSString *kRegexStringForUserHandle = @"@(\\w+){1,}?";
@@ -17,11 +18,12 @@ static NSString *kRegexFormatForSearchWord = @"(%@)";
 NSString *RLTapResponderAttributeName = @"TapResponder";
 NSString *RLHighlightedForegroundColorAttributeName = @"HighlightedForegroundColor";
 NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundColor";
+NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRadius";
 
 
 @interface ResponsiveLabel ()
 
-@property (nonatomic, retain) NSLayoutManager *layoutManager;
+@property (nonatomic, retain) CustomLayoutManager *layoutManager;
 @property (nonatomic, retain) NSTextContainer *textContainer;
 @property (nonatomic, retain) NSTextStorage *textStorage;
 
@@ -30,6 +32,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 @property (nonatomic, strong) NSAttributedString *attributedTruncationToken;
 @property (nonatomic, strong) NSAttributedString *currentAttributedString;
+
 @property (nonatomic, assign) NSRange selectedRange;
 @property (nonatomic, assign) NSRange truncatedRange;
 @property (nonatomic, assign) NSRange truncatedPatternRange;
@@ -101,8 +104,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 
 - (NSLayoutManager *)layoutManager {
   if (!_layoutManager) {
-	_layoutManager = [[NSLayoutManager alloc] init];
-	[_layoutManager addTextContainer:self.textContainer];
+    _layoutManager = [[CustomLayoutManager alloc] init];
+    [_layoutManager addTextContainer:self.textContainer];
   }
   return _layoutManager;
 }
@@ -223,7 +226,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   // Don't call super implementation. Might want to uncomment this out when
   // debugging layout and rendering problems.
   //   [super drawTextInRect:rect];
-
+  
   //Handle truncation
   self.customTruncationEnabled ? [self appendTokenIfNeeded] : [self removeTokenIfPresent];
 
@@ -234,8 +237,10 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   CGPoint textOffset = [self textOffsetForGlyphRange:glyphRange];
 
   // Drawing code
+
   [_layoutManager drawBackgroundForGlyphRange:glyphRange atPoint:textOffset];
   [_layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:textOffset];
+
 }
 
 /**
@@ -264,8 +269,7 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 - (void)redrawTextForRange:(NSRange)range {
   NSRange glyphRange = NSMakeRange(NSNotFound, 0);
   [self.layoutManager characterRangeForGlyphRange:range actualGlyphRange:&glyphRange];
-  CGRect rect = [self.layoutManager boundingRectForGlyphRange:glyphRange
-											  inTextContainer:self.textContainer];
+  CGRect rect = [self.layoutManager usedRectForTextContainer:self.textContainer];
   NSRange totalGlyphRange = [self.layoutManager
 							 glyphRangeForTextContainer:self.textContainer];
   CGPoint point = [self textOffsetForGlyphRange:totalGlyphRange];
@@ -287,11 +291,8 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
 						  forNumberOfLine:(NSInteger)numberOfLines {
   self.textContainer.size = size;
   self.textContainer.maximumNumberOfLines = numberOfLines;
-
-  NSRange glyphRange = [self.layoutManager
-						glyphRangeForTextContainer:self.textContainer];
-  CGRect textBounds = [self.layoutManager boundingRectForGlyphRange:glyphRange
-													inTextContainer:self.textContainer];
+  CGRect textBounds = [self.layoutManager boundingRectForGlyphRange:NSMakeRange(0, self.layoutManager.numberOfGlyphs)
+                                                    inTextContainer:self.textContainer];
   NSInteger totalLines = textBounds.size.height / self.font.lineHeight;
 
   if (numberOfLines > 0 && (numberOfLines < totalLines)) {
@@ -610,59 +611,64 @@ NSString *RLHighlightedBackgroundColorAttributeName = @"HighlightedBackgroundCol
   NSRange patternRange;
 
   if (index < self.textStorage.length) {
-	backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName
-										  atIndex:index
-								   effectiveRange:&patternRange];
-	foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName
-										  atIndex:index
-								   effectiveRange:&patternRange];
 
-	if (backgroundcolor) {
-			[self.textStorage addAttribute:NSBackgroundColorAttributeName
-									 value:backgroundcolor
-									 range:patternRange];
-	}
-	if (foregroundcolor) {
-			[self.textStorage addAttribute:NSForegroundColorAttributeName
-									 value:foregroundcolor
-									 range:patternRange];
-	}
+    backgroundcolor = [self.textStorage attribute:RLHighlightedBackgroundColorAttributeName
+                                          atIndex:index
+                                   effectiveRange:&patternRange];
+    foregroundcolor = [self.textStorage attribute:RLHighlightedForegroundColorAttributeName
+                                          atIndex:index
+                                   effectiveRange:&patternRange];
+    
+    NSNumber *cornerRadius = [self.textStorage attribute:RLHighlightedBackgroundCornerRadius atIndex:index effectiveRange:&patternRange];
+    if (backgroundcolor) {
+      self.layoutManager.backgroundColor = backgroundcolor;
+      [self.textStorage addAttribute:NSBackgroundColorAttributeName
+                               value:backgroundcolor
+                               range:patternRange];
+      self.layoutManager.cornerRadius = cornerRadius.floatValue;
+    }
+    if (foregroundcolor) {
+      [self.textStorage addAttribute:NSForegroundColorAttributeName
+                               value:foregroundcolor
+                               range:patternRange];
+    }
   }
   [self redrawTextForRange:patternRange];
 }
 
 - (void)removeHighlightingForIndex:(NSInteger)index {
   if (self.selectedRange.location != NSNotFound && self.textStorage.length > index) {
-	UIColor *backgroundcolor = nil;
-	UIColor *foregroundcolor = nil;
-	NSRange patternRange;
+    UIColor *backgroundcolor = nil;
+    UIColor *foregroundcolor = nil;
+    NSRange patternRange;
+    
+    if (index < self.textStorage.length) {
+      backgroundcolor = [self.currentAttributedString attribute:NSBackgroundColorAttributeName
+                                                        atIndex:index
+                                                 effectiveRange:&patternRange];
+      foregroundcolor = [self.currentAttributedString attribute:NSForegroundColorAttributeName
+                                                        atIndex:index
+                                                 effectiveRange:&patternRange];
+      
+      if (backgroundcolor) {
+        [self.textStorage addAttribute:NSBackgroundColorAttributeName
+                                 value:backgroundcolor
+                                 range:patternRange];
+      }else {
 
-	if (index < self.textStorage.length) {
-			backgroundcolor = [self.currentAttributedString attribute:NSBackgroundColorAttributeName
-															  atIndex:index
-													   effectiveRange:&patternRange];
-			foregroundcolor = [self.currentAttributedString attribute:NSForegroundColorAttributeName
-															  atIndex:index
-													   effectiveRange:&patternRange];
-
-			if (backgroundcolor) {
-			  [self.textStorage addAttribute:NSBackgroundColorAttributeName
-									   value:backgroundcolor
-									   range:patternRange];
-			}else {
-			  [self.textStorage removeAttribute:NSBackgroundColorAttributeName
-										  range:patternRange];
-			}
-			if (foregroundcolor) {
-			  [self.textStorage addAttribute:NSForegroundColorAttributeName
-									   value:foregroundcolor
-									   range:patternRange];
-			}else {
-			  [self.textStorage removeAttribute:NSForegroundColorAttributeName
-										  range:patternRange];
-			}
-	}
-	[self redrawTextForRange:patternRange];
+        [self.textStorage removeAttribute:NSBackgroundColorAttributeName range:patternRange];
+      }
+      
+      if (foregroundcolor) {
+        [self.textStorage addAttribute:NSForegroundColorAttributeName
+                                 value:foregroundcolor
+                                 range:patternRange];
+      }else {
+        [self.textStorage removeAttribute:NSForegroundColorAttributeName
+                                    range:patternRange];
+      }
+    }
+    [self redrawTextForRange:patternRange];
   }
 }
 

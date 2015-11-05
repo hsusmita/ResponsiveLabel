@@ -165,6 +165,18 @@
                                 <color key="highlightedColor" red="0.8980392157" green="0.45098039220000002" blue="0.5450980392" alpha="1" colorSpace="calibratedRGB"/>
                                 <size key="shadowOffset" width="0.0" height="0.0"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" misplaced="YES" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sm2-eN-tv5" userLabel="&quot;A long text with #hashTag text, with @username and URL  = http://www.google.com                  text long enough text" customClass="ResponsiveLabel">
+                                <rect key="frame" x="116" y="147" width="388" height="86"/>
+                                <color key="backgroundColor" red="0.80359672652717873" green="0.9309782055980278" blue="0.97883597883597884" alpha="1" colorSpace="calibratedRGB"/>
+                                <string key="text">"A long text with #hashTag #customLabel text, @username URL http://www.google.com text long www.google.com enough text  enough text enough text  enough text"</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="truncationToken" value="..More"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="customTruncationEnabled" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6HH-c0-oFa">
                                 <rect key="frame" x="219" y="260" width="161" height="30"/>
                                 <state key="normal" title="Usage in table view cell">
@@ -504,19 +516,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="Sm2-eN-tv5" userLabel="&quot;A long text with #hashTag text, with @username and URL  = http://www.google.com                  text long enough text" customClass="ResponsiveLabel">
-                                <rect key="frame" x="60" y="146" width="480" height="82"/>
-                                <color key="backgroundColor" red="0.80359672652717873" green="0.9309782055980278" blue="0.97883597883597884" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">"A long text with #hashTag #customLabel text, @username@username2 URL http://www.google.com text long enough text  enough text enough text  enough text enough text  enough text enough text  enough text www.google.com enough text  enough text enough text  enough text"</string>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                <color key="textColor" red="0.078385492232967022" green="0.55687471635492558" blue="0.82084517045454541" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <size key="shadowOffset" width="0.0" height="0.0"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="truncationToken" value="..More"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="customTruncationEnabled" value="YES"/>
-                                </userDefinedRuntimeAttributes>
-                            </label>
+
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -531,14 +531,12 @@
                             <constraint firstAttribute="centerX" secondItem="2fp-1m-s3S" secondAttribute="centerX" id="gkM-tj-qBj"/>
                             <constraint firstItem="Sm2-eN-tv5" firstAttribute="top" secondItem="2fp-1m-s3S" secondAttribute="bottom" constant="20" id="qRP-dw-neu"/>
                             <constraint firstAttribute="bottomMargin" secondItem="2P8-01-jrx" secondAttribute="bottom" id="shc-2o-J5W"/>
-                            <constraint firstItem="Sm2-eN-tv5" firstAttribute="leading" secondItem="b7t-Y8-3kH" secondAttribute="leadingMargin" constant="40" id="uV9-PK-h7C"/>
-                            <constraint firstItem="6HH-c0-oFa" firstAttribute="top" secondItem="Sm2-eN-tv5" secondAttribute="bottom" constant="45" id="yBI-SV-MHu"/>
+                            <constraint firstItem="Sm2-eN-tv5" firstAttribute="leading" secondItem="b7t-Y8-3kH" secondAttribute="leadingMargin" constant="80" id="uV9-PK-h7C"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="70Z-ij-DSS"/>
                                 <exclude reference="RGP-vz-H0Y"/>
-                                <exclude reference="yBI-SV-MHu"/>
                             </mask>
                         </variation>
                     </view>
