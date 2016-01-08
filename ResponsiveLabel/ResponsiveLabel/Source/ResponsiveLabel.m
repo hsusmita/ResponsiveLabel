@@ -726,7 +726,12 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
 		self.truncatedPatternRange = NSMakeRange(NSNotFound, 0);
 	}else if ((obj.rangeValue.location + obj.rangeValue.length) <= self.textStorage.length) {
 		[patternDescriptor.patternAttributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, id attributeValue, BOOL *stop) {
-		  [self updateTextColorForRange:obj.rangeValue];
+		  if ([attributeName isEqualToString:NSForegroundColorAttributeName]) {
+		    //Color will be set based on the state of the Label whether it is enabled or highlighted
+			[self updateTextColorForRange:obj.rangeValue];
+		  }else {
+			[self.textStorage removeAttribute:attributeName range:obj.rangeValue];
+		  }
 		}];
 		[self redrawTextForRange:obj.rangeValue];
 	}
