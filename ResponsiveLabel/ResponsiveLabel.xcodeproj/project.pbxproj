@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E2AFD3C1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AFD3B1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m */; };
 		6907ADA11B5E644100723CFF /* InlineTextAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 6907ADA01B5E644100723CFF /* InlineTextAttachment.m */; };
 		6907ADA41B5E645800723CFF /* NSAttributedString+Processing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6907ADA31B5E645800723CFF /* NSAttributedString+Processing.m */; };
 		6919B94D1B60EB60000EE885 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6919B9411B60EB60000EE885 /* AppDelegate.m */; };
@@ -34,6 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableAttributedString+BoundChecker.h"; path = "Source/NSMutableAttributedString+BoundChecker.h"; sourceTree = "<group>"; };
+		4E2AFD3B1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSMutableAttributedString+BoundChecker.m"; path = "Source/NSMutableAttributedString+BoundChecker.m"; sourceTree = "<group>"; };
 		6907AD9F1B5E644100723CFF /* InlineTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InlineTextAttachment.h; path = Source/InlineTextAttachment.h; sourceTree = "<group>"; };
 		6907ADA01B5E644100723CFF /* InlineTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InlineTextAttachment.m; path = Source/InlineTextAttachment.m; sourceTree = "<group>"; };
 		6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSAttributedString+Processing.h"; path = "Source/NSAttributedString+Processing.h"; sourceTree = "<group>"; };
@@ -166,6 +169,8 @@
 				69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */,
 				6907AD9F1B5E644100723CFF /* InlineTextAttachment.h */,
 				6907ADA01B5E644100723CFF /* InlineTextAttachment.m */,
+				4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */,
+				4E2AFD3B1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -274,6 +279,7 @@
 				69CCA6ED1AC58ADD00D8CAC0 /* PatternDescriptor.m in Sources */,
 				6907ADA11B5E644100723CFF /* InlineTextAttachment.m in Sources */,
 				6919B94D1B60EB60000EE885 /* AppDelegate.m in Sources */,
+				4E2AFD3C1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m in Sources */,
 				6919B9501B60EB60000EE885 /* CustomTableViewCell.m in Sources */,
 				6919B9531B60EB60000EE885 /* ViewController.m in Sources */,
 				6919B9521B60EB60000EE885 /* MainViewController.m in Sources */,
