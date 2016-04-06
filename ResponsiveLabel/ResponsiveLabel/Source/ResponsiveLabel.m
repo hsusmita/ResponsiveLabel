@@ -617,7 +617,7 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
 	if (index > self.textStorage.length) return;
 	UIColor *backgroundcolor = nil;
 	UIColor *foregroundcolor = nil;
-	NSRange patternRange;
+	NSRange patternRange = NSMakeRange(0, self.textStorage.length);
 
 	if (index < self.textStorage.length) {
 
@@ -631,9 +631,9 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
 		NSNumber *cornerRadius = [self.textStorage attribute:RLHighlightedBackgroundCornerRadius atIndex:index effectiveRange:&patternRange];
 		if (backgroundcolor) {
 			self.layoutManager.backgroundColor = backgroundcolor;
- 	 [self.textStorage addAttributeWithBoundsCheck:NSBackgroundColorAttributeName
-											 value:backgroundcolor
-											 range:patternRange];
+			[self.textStorage addAttributeWithBoundsCheck:NSBackgroundColorAttributeName
+													value:backgroundcolor
+													range:patternRange];
 			self.layoutManager.cornerRadius = cornerRadius.floatValue;
 		}
 		if (foregroundcolor) {
@@ -649,7 +649,7 @@ NSString *RLHighlightedBackgroundCornerRadius = @"HighlightedBackgroundCornerRad
 	if (self.selectedRange.location != NSNotFound && self.textStorage.length > index) {
 		UIColor *backgroundcolor = nil;
 		UIColor *foregroundcolor = nil;
-		NSRange patternRange;
+		NSRange patternRange = NSMakeRange(0, self.textStorage.length);
 
 		if (index < self.textStorage.length) {
 			backgroundcolor = [self.currentAttributedString attribute:NSBackgroundColorAttributeName
