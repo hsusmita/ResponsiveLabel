@@ -46,8 +46,8 @@ IB_DESIGNABLE
 #endif
 
 /** Method to set custom truncation token
- @param attributedTruncationToken:NSAttributedString Custom truncation token to be used instead of default ellipse
- @param action:PatternTapResponder Action to be performed on tap on truncation token
+ @param attributedTruncationToken : NSAttributedString Custom truncation token to be used instead of default ellipse
+ @param action : PatternTapResponder Action to be performed on tap on truncation token
  */
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken
@@ -56,8 +56,8 @@ IB_DESIGNABLE
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken;
 
 /** Method to set an image as truncation indicator
- @param image: UIImage
- @param size: CGSize : The height of image size should be approximately equal to or less than the font height. Otherwise the image will not be rendered properly
+ @param image : UIImage
+ @param size : CGSize : The height of image size should be approximately equal to or less than the font height. Otherwise the image will not be rendered properly
  @param action:PatternTapResponder Action to be performed on tap on the image
  */
 
@@ -72,14 +72,14 @@ IB_DESIGNABLE
 - (void)setText:(NSString *)text withTruncation:(BOOL)truncation;
 
 /** Method to set attributed text
- @param attributedText: NSAttributedString
- @param withTruncation: BOOL
+ @param attributedText : NSAttributedString
+ @param withTruncation : BOOL
  */
 - (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation;
 
 /**
  Generates pattern, applies attributes and handles touch(If action specified) according to patternDescriptor.
- @param patternDescriptor:PatternDescriptor
+ @param patternDescriptor : PatternDescriptor
  This object encapsulates the regular expression and attributes to be added to the pattern.
  To patterns tappable, add attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
@@ -94,7 +94,7 @@ IB_DESIGNABLE
 
 /**
  Applies attributes to all the occurances of given string according to the attributes defines in the dictionary.
- @param string: NSString
+ @param string : NSString
  @param dictionary: NSDictionary
  A dictionary containing the attributes to add. To make the string tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
@@ -103,14 +103,14 @@ IB_DESIGNABLE
 
 /**
  Removes previously applied attributes from all the occurances of given string
- @param string: NSString
+ @param string : NSString
  */
 - (void)disableStringDetection:(NSString *)string;
 
 /**
  Applies attributes to all the occurances of strings specified in the array according to the attributes defines in the dictionary.
- @param stringsArray: NSArray
- @param dictionary: NSDictionary
+ @param stringsArray : NSArray
+ @param dictionary : NSDictionary
  A dictionary containing the attributes to add. To make the strings tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
@@ -118,13 +118,13 @@ IB_DESIGNABLE
 
 /**
  Removes previously applied attributes from all the occurances of strings contained in the array
- @param string: NSArray
+ @param string : NSArray
  */
 - (void)disableDetectionForStrings:(NSArray *)stringsArray;
 
 /**
  Applies attributes to all the occurances of hashtags according to the attributes defines in the dictionary.
- @param dictionary: NSDictionary
+ @param dictionary : NSDictionary
  A dictionary containing the attributes to add. To make the strings tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
@@ -137,7 +137,7 @@ IB_DESIGNABLE
 
 /**
  Applies attributes to all the occurances of urls according to the attributes defines in the dictionary.
- @param dictionary: NSDictionary
+ @param dictionary : NSDictionary
  A dictionary containing the attributes to add. To make URLs tappable, set @attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
@@ -150,7 +150,7 @@ IB_DESIGNABLE
 
 /**
  Applies attributes to all the occurances of user handles according to the attributes defines in the dictionary.
- @param dictionary:NSDictionary
+ @param dictionary : NSDictionary
  A dictionary containing the attributes to add. To make userhandles tappable, set @attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
