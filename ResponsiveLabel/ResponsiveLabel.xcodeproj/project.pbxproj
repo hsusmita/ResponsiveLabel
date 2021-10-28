@@ -64,6 +64,7 @@
 		69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResponsiveLabel.m; path = Source/ResponsiveLabel.m; sourceTree = "<group>"; };
 		69FA99841B8F26E300FD8AD8 /* CustomLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomLayoutManager.h; path = Source/CustomLayoutManager.h; sourceTree = "<group>"; };
 		69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomLayoutManager.m; path = Source/CustomLayoutManager.m; sourceTree = "<group>"; };
+		A90880DC272AE0880085B740 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +106,7 @@
 		69D5E55C1AB3040D00B64BDE = {
 			isa = PBXGroup;
 			children = (
+				A90880DC272AE0880085B740 /* Package.swift */,
 				69D5E5671AB3040D00B64BDE /* ResponsiveLabel */,
 				69D5E5811AB3040D00B64BDE /* ResponsiveLabelTests */,
 				69D5E5661AB3040D00B64BDE /* Products */,
@@ -224,6 +226,7 @@
 				TargetAttributes = {
 					69D5E5641AB3040D00B64BDE = {
 						CreatedOnToolsVersion = 6.2;
+						LastSwiftMigration = 1240;
 					};
 					69D5E57D1AB3040D00B64BDE = {
 						CreatedOnToolsVersion = 6.2;
@@ -434,11 +437,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = ResponsiveLabel/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hsusmita.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -446,11 +452,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = ResponsiveLabel/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hsusmita.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
