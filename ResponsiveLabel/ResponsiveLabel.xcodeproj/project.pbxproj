@@ -35,12 +35,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableAttributedString+BoundChecker.h"; path = "Source/NSMutableAttributedString+BoundChecker.h"; sourceTree = "<group>"; };
-		4E2AFD3B1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSMutableAttributedString+BoundChecker.m"; path = "Source/NSMutableAttributedString+BoundChecker.m"; sourceTree = "<group>"; };
-		6907AD9F1B5E644100723CFF /* InlineTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InlineTextAttachment.h; path = Source/InlineTextAttachment.h; sourceTree = "<group>"; };
-		6907ADA01B5E644100723CFF /* InlineTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InlineTextAttachment.m; path = Source/InlineTextAttachment.m; sourceTree = "<group>"; };
-		6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSAttributedString+Processing.h"; path = "Source/NSAttributedString+Processing.h"; sourceTree = "<group>"; };
-		6907ADA31B5E645800723CFF /* NSAttributedString+Processing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSAttributedString+Processing.m"; path = "Source/NSAttributedString+Processing.m"; sourceTree = "<group>"; };
+		4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+BoundChecker.h"; sourceTree = "<group>"; };
+		4E2AFD3B1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+BoundChecker.m"; sourceTree = "<group>"; };
+		6907AD9F1B5E644100723CFF /* InlineTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InlineTextAttachment.h; sourceTree = "<group>"; };
+		6907ADA01B5E644100723CFF /* InlineTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InlineTextAttachment.m; sourceTree = "<group>"; };
+		6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Processing.h"; sourceTree = "<group>"; };
+		6907ADA31B5E645800723CFF /* NSAttributedString+Processing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Processing.m"; sourceTree = "<group>"; };
 		6919B9401B60EB60000EE885 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6919B9411B60EB60000EE885 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6919B9431B60EB60000EE885 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -52,18 +52,18 @@
 		6919B94A1B60EB60000EE885 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		6919B94B1B60EB60000EE885 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		6919B94C1B60EB60000EE885 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatternDescriptor.h; path = Source/PatternDescriptor.h; sourceTree = "<group>"; };
-		69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PatternDescriptor.m; path = Source/PatternDescriptor.m; sourceTree = "<group>"; };
+		69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternDescriptor.h; sourceTree = "<group>"; };
+		69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatternDescriptor.m; sourceTree = "<group>"; };
 		69D5E5651AB3040D00B64BDE /* ResponsiveLabel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResponsiveLabel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D5E5691AB3040D00B64BDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69D5E56A1AB3040D00B64BDE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		69D5E57E1AB3040D00B64BDE /* ResponsiveLabelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResponsiveLabelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D5E5831AB3040D00B64BDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69D5E5841AB3040D00B64BDE /* ResponsiveLabelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ResponsiveLabelTests.m; sourceTree = "<group>"; };
-		69D5E58E1AB3045B00B64BDE /* ResponsiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResponsiveLabel.h; path = Source/ResponsiveLabel.h; sourceTree = "<group>"; };
-		69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResponsiveLabel.m; path = Source/ResponsiveLabel.m; sourceTree = "<group>"; };
-		69FA99841B8F26E300FD8AD8 /* CustomLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomLayoutManager.h; path = Source/CustomLayoutManager.h; sourceTree = "<group>"; };
-		69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomLayoutManager.m; path = Source/CustomLayoutManager.m; sourceTree = "<group>"; };
+		69D5E58E1AB3045B00B64BDE /* ResponsiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponsiveLabel.h; sourceTree = "<group>"; };
+		69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponsiveLabel.m; sourceTree = "<group>"; };
+		69FA99841B8F26E300FD8AD8 /* CustomLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLayoutManager.h; sourceTree = "<group>"; };
+		69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomLayoutManager.m; sourceTree = "<group>"; };
 		A90880DC272AE0880085B740 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,29 +85,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6919B93F1B60EB60000EE885 /* Demo Project */ = {
-			isa = PBXGroup;
-			children = (
-				6919B9481B60EB60000EE885 /* Images.xcassets */,
-				6919B9421B60EB60000EE885 /* LaunchScreen.xib */,
-				6919B9441B60EB60000EE885 /* Main.storyboard */,
-				6919B9401B60EB60000EE885 /* AppDelegate.h */,
-				6919B9411B60EB60000EE885 /* AppDelegate.m */,
-				6919B9461B60EB60000EE885 /* CustomTableViewCell.h */,
-				6919B9471B60EB60000EE885 /* CustomTableViewCell.m */,
-				6919B9491B60EB60000EE885 /* MainViewController.h */,
-				6919B94A1B60EB60000EE885 /* MainViewController.m */,
-				6919B94B1B60EB60000EE885 /* ViewController.h */,
-				6919B94C1B60EB60000EE885 /* ViewController.m */,
-			);
-			path = "Demo Project";
-			sourceTree = "<group>";
-		};
 		69D5E55C1AB3040D00B64BDE = {
 			isa = PBXGroup;
 			children = (
 				A90880DC272AE0880085B740 /* Package.swift */,
-				69D5E5671AB3040D00B64BDE /* ResponsiveLabel */,
+				A9088113272AE6860085B740 /* ResponsiveLabel */,
+				69D5E5671AB3040D00B64BDE /* ResponsiveLabelDemo */,
 				69D5E5811AB3040D00B64BDE /* ResponsiveLabelTests */,
 				69D5E5661AB3040D00B64BDE /* Products */,
 			);
@@ -122,14 +105,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		69D5E5671AB3040D00B64BDE /* ResponsiveLabel */ = {
+		69D5E5671AB3040D00B64BDE /* ResponsiveLabelDemo */ = {
 			isa = PBXGroup;
 			children = (
-				6919B93F1B60EB60000EE885 /* Demo Project */,
+				6919B9481B60EB60000EE885 /* Images.xcassets */,
+				6919B9421B60EB60000EE885 /* LaunchScreen.xib */,
+				6919B9441B60EB60000EE885 /* Main.storyboard */,
+				6919B9401B60EB60000EE885 /* AppDelegate.h */,
+				6919B9411B60EB60000EE885 /* AppDelegate.m */,
+				6919B9461B60EB60000EE885 /* CustomTableViewCell.h */,
+				6919B9471B60EB60000EE885 /* CustomTableViewCell.m */,
+				6919B9491B60EB60000EE885 /* MainViewController.h */,
+				6919B94A1B60EB60000EE885 /* MainViewController.m */,
+				6919B94B1B60EB60000EE885 /* ViewController.h */,
+				6919B94C1B60EB60000EE885 /* ViewController.m */,
 				69D5E5681AB3040D00B64BDE /* Supporting Files */,
-				69D5E5911AB3045F00B64BDE /* Source */,
 			);
-			path = ResponsiveLabel;
+			path = ResponsiveLabelDemo;
 			sourceTree = "<group>";
 		};
 		69D5E5681AB3040D00B64BDE /* Supporting Files */ = {
@@ -158,7 +150,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		69D5E5911AB3045F00B64BDE /* Source */ = {
+		A9088113272AE6860085B740 /* ResponsiveLabel */ = {
 			isa = PBXGroup;
 			children = (
 				6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */,
@@ -174,7 +166,7 @@
 				4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */,
 				4E2AFD3B1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m */,
 			);
-			name = Source;
+			path = ResponsiveLabel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -438,7 +430,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				INFOPLIST_FILE = ResponsiveLabel/Info.plist;
+				INFOPLIST_FILE = ResponsiveLabelDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hsusmita.$(PRODUCT_NAME:rfc1034identifier)";
@@ -453,7 +445,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				INFOPLIST_FILE = ResponsiveLabel/Info.plist;
+				INFOPLIST_FILE = ResponsiveLabelDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hsusmita.$(PRODUCT_NAME:rfc1034identifier)";
