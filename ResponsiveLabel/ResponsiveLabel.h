@@ -51,14 +51,14 @@ IB_DESIGNABLE
  */
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken
-						  withAction:(PatternTapResponder) action __attribute((deprecated("use setAttributedTruncationToken:")));
+                          withAction:(PatternTapResponder) action __attribute((deprecated("use setAttributedTruncationToken:")));
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken;
 
 /** Method to set an image as truncation indicator
  @param image : UIImage
  @param size : CGSize : The height of image size should be approximately equal to or less than the font height. Otherwise the image will not be rendered properly
- @param action:PatternTapResponder Action to be performed on tap on the image
+ @param action : PatternTapResponder: Action to be performed on tap on the image
  */
 
 - (void)setTruncationIndicatorImage:(UIImage *)image withSize:(CGSize)size andAction:(PatternTapResponder)action;
@@ -66,14 +66,15 @@ IB_DESIGNABLE
 
 /** Method to set text
  @param text : NSString
- @param withTruncation : BOOL
+ @param truncation : BOOL
  */
 
 - (void)setText:(NSString *)text withTruncation:(BOOL)truncation;
 
-/** Method to set attributed text
+/**
+ Method to set attributed text
  @param attributedText : NSAttributedString
- @param withTruncation : BOOL
+ @param truncation : BOOL
  */
 - (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation;
 
@@ -95,7 +96,7 @@ IB_DESIGNABLE
 /**
  Applies attributes to all the occurances of given string according to the attributes defines in the dictionary.
  @param string : NSString
- @param dictionary: NSDictionary
+ @param dictionary : NSDictionary
  A dictionary containing the attributes to add. To make the string tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
@@ -118,7 +119,7 @@ IB_DESIGNABLE
 
 /**
  Removes previously applied attributes from all the occurances of strings contained in the array
- @param string : NSArray
+ @param stringsArray : NSArray
  */
 - (void)disableDetectionForStrings:(NSArray *)stringsArray;
 
