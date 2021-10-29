@@ -22,6 +22,12 @@
 		69D5E5851AB3040D00B64BDE /* ResponsiveLabelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E5841AB3040D00B64BDE /* ResponsiveLabelTests.m */; };
 		69D5E5901AB3045B00B64BDE /* ResponsiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */; };
 		69FA99861B8F26E300FD8AD8 /* CustomLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */; };
+		A9E2BCB5272C2E7F00BA4A2D /* NSAttributedString+Processing.h in Headers */ = {isa = PBXBuildFile; fileRef = 6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */; };
+		A9E2BCB6272C2E7F00BA4A2D /* ResponsiveLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 69D5E58E1AB3045B00B64BDE /* ResponsiveLabel.h */; };
+		A9E2BCB7272C2E7F00BA4A2D /* CustomLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 69FA99841B8F26E300FD8AD8 /* CustomLayoutManager.h */; };
+		A9E2BCB8272C2E7F00BA4A2D /* PatternDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */; };
+		A9E2BCB9272C2E7F00BA4A2D /* InlineTextAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 6907AD9F1B5E644100723CFF /* InlineTextAttachment.h */; };
+		A9E2BCBA272C2E7F00BA4A2D /* NSMutableAttributedString+BoundChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,11 +177,28 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		A9E2BCB4272C2E6B00BA4A2D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9E2BCB5272C2E7F00BA4A2D /* NSAttributedString+Processing.h in Headers */,
+				A9E2BCB6272C2E7F00BA4A2D /* ResponsiveLabel.h in Headers */,
+				A9E2BCB7272C2E7F00BA4A2D /* CustomLayoutManager.h in Headers */,
+				A9E2BCB8272C2E7F00BA4A2D /* PatternDescriptor.h in Headers */,
+				A9E2BCB9272C2E7F00BA4A2D /* InlineTextAttachment.h in Headers */,
+				A9E2BCBA272C2E7F00BA4A2D /* NSMutableAttributedString+BoundChecker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		69D5E5641AB3040D00B64BDE /* ResponsiveLabel */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 69D5E5881AB3040D00B64BDE /* Build configuration list for PBXNativeTarget "ResponsiveLabel" */;
 			buildPhases = (
+				A9E2BCB4272C2E6B00BA4A2D /* Headers */,
 				69D5E5611AB3040D00B64BDE /* Sources */,
 				69D5E5621AB3040D00B64BDE /* Frameworks */,
 				69D5E5631AB3040D00B64BDE /* Resources */,
