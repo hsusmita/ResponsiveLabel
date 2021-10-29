@@ -14,5 +14,6 @@ let package = Package(
             name: "ResponsiveLabel",
             path: "ResponsiveLabel"
         )
-    ]
+    ],
+    publicHeadersPath: "Public"
 )
