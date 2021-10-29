@@ -12,8 +12,8 @@ let package = Package(
     targets: [
         .target(
             name: "ResponsiveLabel",
-            path: "ResponsiveLabel"
+            path: "ResponsiveLabel",
+            publicHeadersPath: "./"
         )
-    ],
-    publicHeadersPath: "Public"
+    ]
 )
