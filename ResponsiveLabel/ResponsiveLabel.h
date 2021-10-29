@@ -58,7 +58,7 @@ IB_DESIGNABLE
 /** Method to set an image as truncation indicator
  @param image : UIImage
  @param size : CGSize : The height of image size should be approximately equal to or less than the font height. Otherwise the image will not be rendered properly
- @param action : PatternTapResponder: Action to be performed on tap on the image
+ @param action:PatternTapResponder Action to be performed on tap on the image
  */
 
 - (void)setTruncationIndicatorImage:(UIImage *)image withSize:(CGSize)size andAction:(PatternTapResponder)action;
@@ -66,15 +66,14 @@ IB_DESIGNABLE
 
 /** Method to set text
  @param text : NSString
- @param truncation : BOOL
+ @param withTruncation : BOOL
  */
 
 - (void)setText:(NSString *)text withTruncation:(BOOL)truncation;
 
-/**
- Method to set attributed text
+/** Method to set attributed text
  @param attributedText : NSAttributedString
- @param truncation : BOOL
+ @param withTruncation : BOOL
  */
 - (void)setAttributedText:(NSAttributedString *)attributedText withTruncation:(BOOL)truncation;
 
@@ -96,7 +95,7 @@ IB_DESIGNABLE
 /**
  Applies attributes to all the occurances of given string according to the attributes defines in the dictionary.
  @param string : NSString
- @param dictionary : NSDictionary
+ @param dictionary: NSDictionary
  A dictionary containing the attributes to add. To make the string tappable, set attribute RLTapResponderAttributeName key with block of type PatternTapResponder
  */
 
@@ -119,7 +118,7 @@ IB_DESIGNABLE
 
 /**
  Removes previously applied attributes from all the occurances of strings contained in the array
- @param stringsArray : NSArray
+ @param string : NSArray
  */
 - (void)disableDetectionForStrings:(NSArray *)stringsArray;
 
