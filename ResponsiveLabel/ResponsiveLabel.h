@@ -51,7 +51,7 @@ IB_DESIGNABLE
  */
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken
-						  withAction:(PatternTapResponder) action __attribute((deprecated("use setAttributedTruncationToken:")));
+                          withAction:(PatternTapResponder) action __attribute((deprecated("use setAttributedTruncationToken:")));
 
 - (void)setAttributedTruncationToken:(NSAttributedString *)attributedTruncationToken;
 

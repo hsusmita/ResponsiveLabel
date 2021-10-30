@@ -128,22 +128,28 @@
 
 - (IBAction)handleSegmentChange:(UISegmentedControl*)sender {
   switch (self.segmentControl.selectedSegmentIndex) {
-    case 0: {
+    case 0: {        
+      NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:@"...More"];
 
-      [self.responsiveLabel setAttributedTruncationToken:[[NSAttributedString alloc]initWithString:@"...More"
-                                                                                        attributes:@{NSFontAttributeName:self.responsiveLabel.font,NSForegroundColorAttributeName:[UIColor brownColor]}]
-                                              withAction:^(NSString *tappedString) {
-                                                self.messageLabel.text = @"You have tapped token string";
-                                                if (self.responsiveLabel.numberOfLines == 0) {
-                                                  self.responsiveLabel.numberOfLines = 4;
-                                                }else {
-                                                  self.responsiveLabel.numberOfLines = 0;
-                                                  [self.responsiveLabel layoutIfNeeded];
-                                                }
+      PatternTapResponder tapAction = ^(NSString *tappedString) {
+        self.messageLabel.text = @"You have tapped token string";
+          if (self.responsiveLabel.numberOfLines == 0) {
+            self.responsiveLabel.numberOfLines = 4;
+          }else {
+            self.responsiveLabel.numberOfLines = 0;
+            [self.responsiveLabel layoutIfNeeded];
+          }
 //                                                self.responsiveLabel.customTruncationEnabled = NO;
 //                                                [self.responsiveLabel setAttributedText:[self.responsiveLabel.attributedText wordWrappedAttributedString]withTruncation:NO];
-                                                
-                                              }];
+            
+        };
+
+        [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor brownColor],
+                                                 NSFontAttributeName:self.responsiveLabel.font,
+                                         RLTapResponderAttributeName:tapAction}
+                              range:NSMakeRange(0, attribString.length)];
+        [self.responsiveLabel setAttributedTruncationToken:attribString];
+        
       break;
     }
     case 1:{

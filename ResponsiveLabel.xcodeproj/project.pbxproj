@@ -22,6 +22,12 @@
 		69D5E5851AB3040D00B64BDE /* ResponsiveLabelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E5841AB3040D00B64BDE /* ResponsiveLabelTests.m */; };
 		69D5E5901AB3045B00B64BDE /* ResponsiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */; };
 		69FA99861B8F26E300FD8AD8 /* CustomLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */; };
+		A9E2BCB5272C2E7F00BA4A2D /* NSAttributedString+Processing.h in Headers */ = {isa = PBXBuildFile; fileRef = 6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9E2BCB6272C2E7F00BA4A2D /* ResponsiveLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 69D5E58E1AB3045B00B64BDE /* ResponsiveLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9E2BCB7272C2E7F00BA4A2D /* CustomLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 69FA99841B8F26E300FD8AD8 /* CustomLayoutManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9E2BCB8272C2E7F00BA4A2D /* PatternDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9E2BCB9272C2E7F00BA4A2D /* InlineTextAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 6907AD9F1B5E644100723CFF /* InlineTextAttachment.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9E2BCBA272C2E7F00BA4A2D /* NSMutableAttributedString+BoundChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,12 +41,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableAttributedString+BoundChecker.h"; path = "Source/NSMutableAttributedString+BoundChecker.h"; sourceTree = "<group>"; };
-		4E2AFD3B1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSMutableAttributedString+BoundChecker.m"; path = "Source/NSMutableAttributedString+BoundChecker.m"; sourceTree = "<group>"; };
-		6907AD9F1B5E644100723CFF /* InlineTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InlineTextAttachment.h; path = Source/InlineTextAttachment.h; sourceTree = "<group>"; };
-		6907ADA01B5E644100723CFF /* InlineTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InlineTextAttachment.m; path = Source/InlineTextAttachment.m; sourceTree = "<group>"; };
-		6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSAttributedString+Processing.h"; path = "Source/NSAttributedString+Processing.h"; sourceTree = "<group>"; };
-		6907ADA31B5E645800723CFF /* NSAttributedString+Processing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSAttributedString+Processing.m"; path = "Source/NSAttributedString+Processing.m"; sourceTree = "<group>"; };
+		4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+BoundChecker.h"; sourceTree = "<group>"; };
+		4E2AFD3B1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+BoundChecker.m"; sourceTree = "<group>"; };
+		6907AD9F1B5E644100723CFF /* InlineTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InlineTextAttachment.h; sourceTree = "<group>"; };
+		6907ADA01B5E644100723CFF /* InlineTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InlineTextAttachment.m; sourceTree = "<group>"; };
+		6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Processing.h"; sourceTree = "<group>"; };
+		6907ADA31B5E645800723CFF /* NSAttributedString+Processing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Processing.m"; sourceTree = "<group>"; };
 		6919B9401B60EB60000EE885 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6919B9411B60EB60000EE885 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6919B9431B60EB60000EE885 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -52,18 +58,19 @@
 		6919B94A1B60EB60000EE885 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		6919B94B1B60EB60000EE885 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		6919B94C1B60EB60000EE885 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatternDescriptor.h; path = Source/PatternDescriptor.h; sourceTree = "<group>"; };
-		69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PatternDescriptor.m; path = Source/PatternDescriptor.m; sourceTree = "<group>"; };
+		69CCA6EB1AC58ADD00D8CAC0 /* PatternDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternDescriptor.h; sourceTree = "<group>"; };
+		69CCA6EC1AC58ADD00D8CAC0 /* PatternDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatternDescriptor.m; sourceTree = "<group>"; };
 		69D5E5651AB3040D00B64BDE /* ResponsiveLabel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ResponsiveLabel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D5E5691AB3040D00B64BDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69D5E56A1AB3040D00B64BDE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		69D5E57E1AB3040D00B64BDE /* ResponsiveLabelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResponsiveLabelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D5E5831AB3040D00B64BDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		69D5E5841AB3040D00B64BDE /* ResponsiveLabelTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ResponsiveLabelTests.m; sourceTree = "<group>"; };
-		69D5E58E1AB3045B00B64BDE /* ResponsiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResponsiveLabel.h; path = Source/ResponsiveLabel.h; sourceTree = "<group>"; };
-		69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResponsiveLabel.m; path = Source/ResponsiveLabel.m; sourceTree = "<group>"; };
-		69FA99841B8F26E300FD8AD8 /* CustomLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomLayoutManager.h; path = Source/CustomLayoutManager.h; sourceTree = "<group>"; };
-		69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomLayoutManager.m; path = Source/CustomLayoutManager.m; sourceTree = "<group>"; };
+		69D5E58E1AB3045B00B64BDE /* ResponsiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponsiveLabel.h; sourceTree = "<group>"; };
+		69D5E58F1AB3045B00B64BDE /* ResponsiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponsiveLabel.m; sourceTree = "<group>"; };
+		69FA99841B8F26E300FD8AD8 /* CustomLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLayoutManager.h; sourceTree = "<group>"; };
+		69FA99851B8F26E300FD8AD8 /* CustomLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomLayoutManager.m; sourceTree = "<group>"; };
+		A90880DC272AE0880085B740 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,28 +91,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6919B93F1B60EB60000EE885 /* Demo Project */ = {
-			isa = PBXGroup;
-			children = (
-				6919B9481B60EB60000EE885 /* Images.xcassets */,
-				6919B9421B60EB60000EE885 /* LaunchScreen.xib */,
-				6919B9441B60EB60000EE885 /* Main.storyboard */,
-				6919B9401B60EB60000EE885 /* AppDelegate.h */,
-				6919B9411B60EB60000EE885 /* AppDelegate.m */,
-				6919B9461B60EB60000EE885 /* CustomTableViewCell.h */,
-				6919B9471B60EB60000EE885 /* CustomTableViewCell.m */,
-				6919B9491B60EB60000EE885 /* MainViewController.h */,
-				6919B94A1B60EB60000EE885 /* MainViewController.m */,
-				6919B94B1B60EB60000EE885 /* ViewController.h */,
-				6919B94C1B60EB60000EE885 /* ViewController.m */,
-			);
-			path = "Demo Project";
-			sourceTree = "<group>";
-		};
 		69D5E55C1AB3040D00B64BDE = {
 			isa = PBXGroup;
 			children = (
-				69D5E5671AB3040D00B64BDE /* ResponsiveLabel */,
+				A90880DC272AE0880085B740 /* Package.swift */,
+				A9088113272AE6860085B740 /* ResponsiveLabel */,
+				69D5E5671AB3040D00B64BDE /* ResponsiveLabelDemo */,
 				69D5E5811AB3040D00B64BDE /* ResponsiveLabelTests */,
 				69D5E5661AB3040D00B64BDE /* Products */,
 			);
@@ -120,14 +111,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		69D5E5671AB3040D00B64BDE /* ResponsiveLabel */ = {
+		69D5E5671AB3040D00B64BDE /* ResponsiveLabelDemo */ = {
 			isa = PBXGroup;
 			children = (
-				6919B93F1B60EB60000EE885 /* Demo Project */,
+				6919B9481B60EB60000EE885 /* Images.xcassets */,
+				6919B9421B60EB60000EE885 /* LaunchScreen.xib */,
+				6919B9441B60EB60000EE885 /* Main.storyboard */,
+				6919B9401B60EB60000EE885 /* AppDelegate.h */,
+				6919B9411B60EB60000EE885 /* AppDelegate.m */,
+				6919B9461B60EB60000EE885 /* CustomTableViewCell.h */,
+				6919B9471B60EB60000EE885 /* CustomTableViewCell.m */,
+				6919B9491B60EB60000EE885 /* MainViewController.h */,
+				6919B94A1B60EB60000EE885 /* MainViewController.m */,
+				6919B94B1B60EB60000EE885 /* ViewController.h */,
+				6919B94C1B60EB60000EE885 /* ViewController.m */,
 				69D5E5681AB3040D00B64BDE /* Supporting Files */,
-				69D5E5911AB3045F00B64BDE /* Source */,
 			);
-			path = ResponsiveLabel;
+			path = ResponsiveLabelDemo;
 			sourceTree = "<group>";
 		};
 		69D5E5681AB3040D00B64BDE /* Supporting Files */ = {
@@ -156,7 +156,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		69D5E5911AB3045F00B64BDE /* Source */ = {
+		A9088113272AE6860085B740 /* ResponsiveLabel */ = {
 			isa = PBXGroup;
 			children = (
 				6907ADA21B5E645800723CFF /* NSAttributedString+Processing.h */,
@@ -172,16 +172,33 @@
 				4E2AFD3A1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.h */,
 				4E2AFD3B1CB507B600E8D9B9 /* NSMutableAttributedString+BoundChecker.m */,
 			);
-			name = Source;
+			path = ResponsiveLabel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A9E2BCB4272C2E6B00BA4A2D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9E2BCB5272C2E7F00BA4A2D /* NSAttributedString+Processing.h in Headers */,
+				A9E2BCB6272C2E7F00BA4A2D /* ResponsiveLabel.h in Headers */,
+				A9E2BCB7272C2E7F00BA4A2D /* CustomLayoutManager.h in Headers */,
+				A9E2BCB8272C2E7F00BA4A2D /* PatternDescriptor.h in Headers */,
+				A9E2BCB9272C2E7F00BA4A2D /* InlineTextAttachment.h in Headers */,
+				A9E2BCBA272C2E7F00BA4A2D /* NSMutableAttributedString+BoundChecker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		69D5E5641AB3040D00B64BDE /* ResponsiveLabel */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 69D5E5881AB3040D00B64BDE /* Build configuration list for PBXNativeTarget "ResponsiveLabel" */;
 			buildPhases = (
+				A9E2BCB4272C2E6B00BA4A2D /* Headers */,
 				69D5E5611AB3040D00B64BDE /* Sources */,
 				69D5E5621AB3040D00B64BDE /* Frameworks */,
 				69D5E5631AB3040D00B64BDE /* Resources */,
@@ -219,11 +236,12 @@
 		69D5E55D1AB3040D00B64BDE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = hsusmita.com;
 				TargetAttributes = {
 					69D5E5641AB3040D00B64BDE = {
 						CreatedOnToolsVersion = 6.2;
+						LastSwiftMigration = 1240;
 					};
 					69D5E57D1AB3040D00B64BDE = {
 						CreatedOnToolsVersion = 6.2;
@@ -233,7 +251,7 @@
 			};
 			buildConfigurationList = 69D5E5601AB3040D00B64BDE /* Build configuration list for PBXProject "ResponsiveLabel" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -331,24 +349,38 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -361,7 +393,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -372,17 +404,29 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -390,13 +434,14 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -407,10 +452,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = ResponsiveLabel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = ResponsiveLabelDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hsusmita.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -418,10 +466,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = ResponsiveLabel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = ResponsiveLabelDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hsusmita.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -439,6 +489,7 @@
 				);
 				INFOPLIST_FILE = ResponsiveLabelTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hsusmita.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ResponsiveLabel.app/ResponsiveLabel";
@@ -455,6 +506,7 @@
 				);
 				INFOPLIST_FILE = ResponsiveLabelTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hsusmita.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ResponsiveLabel.app/ResponsiveLabel";

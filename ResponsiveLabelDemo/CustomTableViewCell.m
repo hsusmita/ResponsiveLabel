@@ -14,6 +14,8 @@ static NSString *kCollapseToken = @"Read Less";
 @implementation CustomTableViewCell
 
 - (void)awakeFromNib {
+  [super awakeFromNib];
+    
   self.customLabel.userInteractionEnabled = YES;
   
   PatternTapResponder hashTagTapAction = ^(NSString *tappedString){

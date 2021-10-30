@@ -122,7 +122,8 @@
 - (void)customTableViewCell:(CustomTableViewCell *)cell didTapOnURL:(NSString *)urlString {
   NSURL *url = [NSURL URLWithString:urlString];
   if ([[UIApplication sharedApplication] canOpenURL:url]){
-    [[UIApplication sharedApplication] openURL:url];
+    UIApplication *application = [UIApplication sharedApplication];
+    [application openURL:url options:@{} completionHandler:nil];
   }
   else {
     [self showAlertWithMessage:@"The selected link cannot be opened."];
